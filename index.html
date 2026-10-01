@@ -195,6 +195,14 @@ input[type="text"],input[type="number"]{
 .mem.ok{
   border-color:var(--accent);
   transform:scale(1.03);
+  background:var(--accent-soft);
+}
+.mem.changed .value{
+  color:var(--accent);
+  transform:scale(1.15);
+}
+.mem .value{
+  transition:transform .18s ease,color .18s ease;
 }
 .mem .name{font-size:12px;color:var(--muted)}
 .mem .value{font-size:26px;font-weight:800;margin-top:4px}
@@ -319,7 +327,7 @@ footer{
       </div>
 
       <div id="memPanel" class="card">
-        <h3>📦 Memoria iniziale</h3>
+        <h3>📦 Memoria del programma</h3>
         <div id="mem" class="memgrid"></div>
       </div>
     </aside>
@@ -364,12 +372,12 @@ const L=[
 {p:'n=12. n%2==0 è...',o:['vera','falsa'],a:0,m:'n=12',h:'12 diviso 2 ha resto 0.'}]},
 {n:'Cicli',i:'🔁',d:'Segui contatori e accumulatori iterazione per iterazione.',e:[
 {p:'Valore finale di somma?',c:'int somma=0;\nfor(int i=1;i<=3;i++)\n  somma=somma+i;',a:'6',m:'somma=0|i=1',h:'Aggiungi 1, poi 2, poi 3.',t:'somma=1|somma=3|somma=6'},
-{p:'Valore finale di conta?',c:'int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;',a:'4',m:'conta=0|i=0',h:'i assume 0,1,2,3: quattro iterazioni.',t:'1|2|3|4'},
-{p:'Valore finale di prodotto?',c:'int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;',a:'24',m:'prodotto=1|i=1',h:'Moltiplica progressivamente per 1,2,3,4.',t:'1|2|6|24'},
+{p:'Valore finale di conta?',c:'int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;',a:'4',m:'conta=0|i=0',h:'i assume 0,1,2,3: quattro iterazioni.',t:'conta=1|conta=2|conta=3|conta=4'},
+{p:'Valore finale di prodotto?',c:'int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;',a:'24',m:'prodotto=1|i=1',h:'Moltiplica progressivamente per 1,2,3,4.',t:'prodotto=1|prodotto=2|prodotto=6|prodotto=24'},
 {p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}
 ];
 
-const S={l:0,q:0,d:new Set(),run:0};
+const S={l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[]};
 const $=s=>r.querySelector(s);
 function key(){return S.l+'-'+S.q}
 function ex(){return L[S.l].e[S.q]}
@@ -399,16 +407,85 @@ function nav(){
   }
 }
 
+function parseInitialMemory(x){
+  const state={},order=[];
+  if(!x.m)return {state,order};
+  x.m.split('|').forEach(v=>{
+    const pos=v.indexOf('=');
+    if(pos<0)return;
+    const name=v.slice(0,pos).trim();
+    const value=v.slice(pos+1).trim();
+    if(name){order.push(name);state[name]=value;}
+  });
+  return {state,order};
+}
+
 function memory(x){
   if(!x.m){
     $('#memPanel').classList.add('hidden');
+    S.mem={}; S.memOrder=[];
     return;
   }
   $('#memPanel').classList.remove('hidden');
-  $('#mem').innerHTML=x.m.split('|').map(v=>{
-    const z=v.split('=');
-    return '<div class="mem"><div class="name">'+z[0]+'</div><div class="value">'+z.slice(1).join('=')+'</div></div>';
-  }).join('');
+  const initial=parseInitialMemory(x);
+  S.mem={...initial.state};
+  S.memOrder=[...initial.order];
+  $('#mem').innerHTML=S.memOrder.map(name=>
+    '<div class="mem" data-var="'+name+'"><div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div></div>'
+  ).join('');
+}
+
+function updateMemory(changes){
+  const changedNames=Object.keys(changes);
+  changedNames.forEach(name=>{
+    S.mem[name]=String(changes[name]);
+    if(!S.memOrder.includes(name)){
+      S.memOrder.push(name);
+      const box=document.createElement('div');
+      box.className='mem';
+      box.dataset.var=name;
+      box.innerHTML='<div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div>';
+      $('#mem').appendChild(box);
+    }
+  });
+
+  r.querySelectorAll('.mem').forEach(box=>{
+    const name=box.dataset.var;
+    const value=box.querySelector('.value');
+    box.classList.remove('ok','changed');
+    if(Object.prototype.hasOwnProperty.call(S.mem,name)) value.textContent=S.mem[name];
+    if(changedNames.includes(name)) box.classList.add('ok','changed');
+  });
+
+  setTimeout(()=>r.querySelectorAll('.mem.changed').forEach(b=>b.classList.remove('changed')),350);
+}
+
+function resetMemory(x){
+  const initial=parseInitialMemory(x);
+  S.mem={...initial.state};
+  S.memOrder=[...initial.order];
+  $('#mem').innerHTML=S.memOrder.map(name=>
+    '<div class="mem" data-var="'+name+'"><div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div></div>'
+  ).join('');
+}
+
+function changesFromTraceStep(step){
+  const changes={};
+  const assignment=/([A-Za-z_]\w*)\s*=\s*([^,←→]+)/g;
+  let m;
+  while((m=assignment.exec(step))!==null){
+    const name=m[1].trim(), value=m[2].trim();
+    if(S.memOrder.includes(name) || Object.prototype.hasOwnProperty.call(S.mem,name)){
+      changes[name]=value;
+    }
+  }
+
+  if(Object.keys(changes).length===0 && step.includes('→')){
+    const tail=step.split('→').pop().trim().replace(/\s*stop.*$/i,'');
+    const unknowns=S.memOrder.filter(name=>S.mem[name]==='?');
+    if(unknowns.length===1 && tail) changes[unknowns[0]]=tail;
+  }
+  return changes;
 }
 
 function answer(x){
@@ -462,7 +539,7 @@ function render(){
     const parts=x.t.split('|');
     $('#runner').classList.remove('hidden');
     $('#runnerCount').textContent='0/'+parts.length;
-    $('#runnerState').textContent='Stato iniziale: osserva le variabili e premi “Esegui una riga”.';
+    $('#runnerState').textContent='Stato iniziale: osserva i valori nelle caselle. A ogni passo vedrai la memoria cambiare.';
   }else{
     $('#runner').classList.add('hidden');
   }
@@ -522,19 +599,23 @@ $('#runLine').addEventListener('click',()=>{
   if(!x.t)return;
   const parts=x.t.split('|');
   if(S.run<parts.length){
+    const step=parts[S.run];
+    const changes=changesFromTraceStep(step);
     S.run++;
-    $('#runnerState').innerHTML='<strong>Passo '+S.run+':</strong>&nbsp;'+parts[S.run-1];
+
+    updateMemory(changes);
+
+    const names=Object.keys(changes);
+    $('#runnerState').innerHTML=
+      '<strong>Passo '+S.run+':</strong> '+step+
+      (names.length
+        ? '<br><span class="muted small">In memoria cambia: '+names.map(n=>n+' = '+changes[n]).join(', ')+'</span>'
+        : '');
+
     $('#runnerCount').textContent=S.run+'/'+parts.length;
 
-    const mems=r.querySelectorAll('.mem');
-    mems.forEach(v=>v.classList.remove('ok'));
-    if(mems.length){
-      const target=mems[Math.min(S.run-1,mems.length-1)];
-      if(target)target.classList.add('ok');
-    }
-
     if(S.run===parts.length){
-      $('#runnerState').innerHTML+='<br><span class="muted small">Esecuzione completata.</span>';
+      $('#runnerState').innerHTML+='<br><span class="muted small"><strong>Esecuzione completata.</strong> Le caselle mostrano i valori finali.</span>';
     }
   }
 });
@@ -544,9 +625,9 @@ $('#resetRun').addEventListener('click',()=>{
   if(!x.t)return;
   const parts=x.t.split('|');
   S.run=0;
+  resetMemory(x);
   $('#runnerCount').textContent='0/'+parts.length;
-  $('#runnerState').textContent='Stato iniziale: osserva le variabili e premi “Esegui una riga”.';
-  r.querySelectorAll('.mem').forEach(v=>v.classList.remove('ok'));
+  $('#runnerState').textContent='Stato iniziale ripristinato. Premi “Esegui una riga”.';
 });
 
 $('#next').addEventListener('click',()=>{

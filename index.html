@@ -417,11 +417,11 @@ const L=[
 {p:'Valore finale di a?',c:'int a=3;\na=a+4;\na=a*2;',a:'14',m:'a=3',h:'Usa il nuovo valore dopo ogni riga.',t:'a=3|a=7|a=14'},
 {p:'Valore finale di n?',c:'int n=10;\nn=n-3;\nn=n+5;',a:'12',m:'n=10',h:'10 → 7 → ?',t:'n=10|n=7|n=12'},
 {p:'Valori finali di x e y?',c:'int x=2;\nint y=6;\nx=y;\ny=x+1;',a:'6,7',m:'x=2|y=6',h:'x=y sostituisce il vecchio valore di x.',t:'x=2,y=6|x=6,y=6|x=6,y=7'}]},
-{n:'Scambio',i:'🔄',d:'Impara a non perdere un valore quando lo sovrascrivi.',e:[
-{p:'Quale sequenza scambia correttamente a e b?',o:['a=b; b=a;','temp=a; a=b; b=temp;','temp=b; b=a; a=b;'],a:1,m:'a=10|b=20|temp=?',h:'Serve un contenitore temporaneo.'},
-{p:'Quale riga conserva x prima di modificarlo?',o:['x=y;','temp=x;','y=temp;'],a:1,m:'x=4|y=7|temp=?',h:'Copia x in un altro contenitore.'},
-{p:'Valori finali di p e q?',c:'int p=1,q=4;\nint t=p;\np=q;\nq=t;',a:'4,1',m:'p=1|q=4|t=?',h:'Segui t come una piccola cassaforte.',t:'t=1|p=4|q=1'},
-{p:'In questo tentativo di scambio, dove sta l’errore?',c:'int a=5,b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;',o:['temp viene sovrascritta prima di essere usata per ripristinare il vecchio valore di a','a=b è sbagliato: non si può assegnare b ad a','b=temp è sempre un’istruzione non valida'],a:0,m:'a=5|b=9|temp=?',h:'temp dovrebbe conservare il vecchio valore di a fino all’ultima assegnazione.',t:'temp=5|a=9|temp=9 ← il vecchio 5 è perso|b=9'}]},
+{n:'Scambio',i:'🔄',d:'Osserva come una variabile temporanea permette di scambiare due valori senza perderli.',e:[
+{p:'Esegui il programma riga per riga. Quali sono i valori finali di a e b?',c:'int a=10;\nint b=20;\nint temp;\ntemp=a;\na=b;\nb=temp;',a:'20,10',m:'a=10|b=20|temp=?',h:'Osserva soprattutto che cosa contiene temp dopo temp=a.',t:'a=10|b=20|temp=?|temp=10|a=20|b=10'},
+{p:'Esegui lo scambio. Quali sono i valori finali di x e y?',c:'int x=4;\nint y=7;\nint temp=x;\nx=y;\ny=temp;',a:'7,4',m:'x=4|y=7|temp=?',h:'temp conserva il vecchio valore di x mentre x viene modificata.',t:'x=4|y=7|temp=4|x=7|y=4'},
+{p:'Segui l’esecuzione. Quali sono i valori finali di p e q?',c:'int p=1;\nint q=4;\nint t=p;\np=q;\nq=t;',a:'4,1',m:'p=1|q=4|t=?',h:'La variabile t funziona come un contenitore di appoggio.',t:'p=1|q=4|t=1|p=4|q=1'},
+{p:'Questo programma vuole scambiare a e b, ma contiene un errore. Eseguilo riga per riga: che cosa succede?',c:'int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;',o:['Lo scambio non avviene: alla fine a=9 e b=9','Lo scambio avviene correttamente: a=9 e b=5','Il programma non può essere eseguito perché temp non è dichiarata'],a:0,m:'a=5|b=9|temp=?',h:'Guarda che cosa accade a temp quando viene eseguita la riga temp=b.',t:'a=5|b=9|temp=5|a=9|temp=9|b=9'}]},
 {n:'Espressioni',i:'🧮',d:'Calcola usando operatori e valori correnti.',e:[
 {p:'Valore finale di n?',c:'int n=4;\nn=n*3;\nn=n-2;',a:'10',m:'n=4',h:'4 → 12 → ?',t:'n=4|n=12|n=10'},
 {p:'Quanto vale c?',c:'int a=10,b=3;\nint c=a/b;',a:'3',m:'a=10|b=3|c=?',h:'Con int, 10/3 dà la parte intera.',t:'10/3 → 3'},

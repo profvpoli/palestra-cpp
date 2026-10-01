@@ -168,15 +168,57 @@ input[type="text"],input[type="number"]{
 #runner{
   background:#fff7ed;
   border-color:#fed7aa;
+  padding:18px;
 }
 #runnerState{
-  min-height:48px;
-  display:flex;
-  align-items:center;
+  min-height:138px;
   border:1px dashed var(--border);
-  border-radius:10px;
-  padding:10px 12px;
+  border-radius:12px;
+  padding:16px 18px;
   background:#fff;
+  line-height:1.6;
+}
+#runnerState .run-block{
+  display:block;
+}
+#runnerState .run-label{
+  display:block;
+  margin-bottom:4px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.05em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+#runnerState .run-source{
+  display:block;
+  margin-bottom:14px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#f8fafc;
+  border:1px solid var(--border);
+  font-family:Consolas,Monaco,monospace;
+  font-size:14px;
+}
+#runnerState .run-explain{
+  display:block;
+  margin-top:10px;
+}
+#runnerState .run-memory{
+  display:block;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--border);
+}
+#runnerState .run-end{
+  display:block;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid var(--border);
+  font-weight:700;
+}
+#runner .actions{
+  margin-top:16px;
 }
 .hidden{display:none!important}
 .method ol{padding-left:22px;line-height:1.75;margin-bottom:0}
@@ -204,6 +246,35 @@ input[type="text"],input[type="number"]{
 .mem .value{
   transition:transform .18s ease,color .18s ease;
 }
+.code-line{
+  display:block;
+  padding:4px 8px;
+  border-left:4px solid transparent;
+  border-radius:6px;
+  white-space:pre;
+}
+.code-line .ln{
+  display:inline-block;
+  width:30px;
+  margin-right:8px;
+  color:var(--muted);
+  user-select:none;
+}
+.code-line.current{
+  background:var(--accent-soft);
+  border-left-color:var(--accent);
+  font-weight:700;
+}
+.memory-empty{
+  grid-column:1/-1;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+}
+
 .mem .name{font-size:12px;color:var(--muted)}
 .mem .value{font-size:26px;font-weight:800;margin-top:4px}
 .level-score{
@@ -307,7 +378,7 @@ footer{
           </div>
           <div id="runnerState" style="margin-top:10px;font-size:15px">Premi “Esegui una riga”.</div>
           <div class="actions" style="margin-top:12px">
-            <button id="runLine" type="button" class="btn primary">Esegui una riga</button>
+            <button id="runLine" type="button" class="btn primary">Esegui riga successiva</button>
             <button id="resetRun" type="button" class="btn">Ricomincia</button>
           </div>
         </div>
@@ -328,6 +399,7 @@ footer{
 
       <div id="memPanel" class="card">
         <h3>📦 Memoria del programma</h3>
+        <p class="muted small" style="margin-bottom:12px">Stato corrente dopo l’ultima riga eseguita.</p>
         <div id="mem" class="memgrid"></div>
       </div>
     </aside>
@@ -377,7 +449,7 @@ const L=[
 {p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}
 ];
 
-const S={l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[]};
+const S={l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[],plan:[],types:{}};
 const $=s=>r.querySelector(s);
 function key(){return S.l+'-'+S.q}
 function ex(){return L[S.l].e[S.q]}
@@ -420,72 +492,225 @@ function parseInitialMemory(x){
   return {state,order};
 }
 
-function memory(x){
-  if(!x.m){
-    $('#memPanel').classList.add('hidden');
-    S.mem={}; S.memOrder=[];
+function drawMemory(changedNames=[]){
+  const mem=$('#mem');
+  if(!S.memOrder.length){
+    mem.innerHTML='<div class="memory-empty">Nessuna variabile è ancora presente in memoria.</div>';
     return;
   }
+  mem.innerHTML=S.memOrder.map(name=>
+    '<div class="mem'+(changedNames.includes(name)?' ok changed':'')+'" data-var="'+name+'">'+
+      '<div class="name">'+name+(S.types[name]?' · '+S.types[name]:'')+'</div>'+
+      '<div class="value">'+S.mem[name]+'</div>'+
+    '</div>'
+  ).join('');
+  if(changedNames.length){
+    setTimeout(()=>r.querySelectorAll('.mem.changed').forEach(b=>b.classList.remove('changed')),350);
+  }
+}
+
+function memory(x){
   $('#memPanel').classList.remove('hidden');
-  const initial=parseInitialMemory(x);
-  S.mem={...initial.state};
-  S.memOrder=[...initial.order];
-  $('#mem').innerHTML=S.memOrder.map(name=>
-    '<div class="mem" data-var="'+name+'"><div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div></div>'
+  if(x.c){
+    // Vera esecuzione: prima della prima riga non esiste ancora alcuna variabile.
+    S.mem={}; S.memOrder=[]; S.types={};
+    drawMemory();
+  }else if(x.m){
+    // Negli esercizi senza sorgente C++ i valori sono dati iniziali del problema.
+    const initial=parseInitialMemory(x);
+    S.mem={...initial.state};
+    S.memOrder=[...initial.order];
+    S.types={};
+    drawMemory();
+  }else{
+    $('#memPanel').classList.add('hidden');
+    S.mem={}; S.memOrder=[]; S.types={};
+  }
+}
+
+function numericValue(v){
+  const n=Number(v);
+  return Number.isFinite(n)?n:0;
+}
+
+function evalExpr(expr,state){
+  let safe=expr.trim();
+  safe=safe.replace(/\b([A-Za-z_]\w*)\b/g,(m,name)=>{
+    if(Object.prototype.hasOwnProperty.call(state,name)) return String(numericValue(state[name]));
+    return m;
+  });
+  if(!/^[0-9+\-*/%().\s]+$/.test(safe)) throw new Error('Espressione non supportata');
+  return Function('"use strict";return ('+safe+');')();
+}
+
+function castValue(value,type){
+  if(type==='int') return Math.trunc(value);
+  return Number(value);
+}
+
+function cloneState(state){ return JSON.parse(JSON.stringify(state)); }
+function cloneTypes(types){ return JSON.parse(JSON.stringify(types)); }
+
+function executeSimpleStatement(line,state,types){
+  const changed=[];
+  let s=line.trim().replace(/;$/,'').trim();
+
+  const decl=s.match(/^(int|double)\s+(.+)$/);
+  if(decl){
+    const type=decl[1];
+    const parts=decl[2].split(',');
+    parts.forEach(part=>{
+      const p=part.trim();
+      const eq=p.indexOf('=');
+      let name,expr;
+      if(eq>=0){ name=p.slice(0,eq).trim(); expr=p.slice(eq+1).trim(); }
+      else { name=p.trim(); expr=null; }
+      if(!/^[A-Za-z_]\w*$/.test(name)) return;
+      types[name]=type;
+      if(!Object.prototype.hasOwnProperty.call(state,name)) changed.push(name);
+      if(expr!==null){
+        const val=castValue(evalExpr(expr,state),type);
+        state[name]=String(val);
+      }else{
+        state[name]='?';
+      }
+      if(!changed.includes(name)) changed.push(name);
+    });
+    return changed;
+  }
+
+  const inc=s.match(/^([A-Za-z_]\w*)\+\+$/);
+  if(inc){
+    const name=inc[1];
+    state[name]=String(castValue(numericValue(state[name])+1,types[name]||'int'));
+    return [name];
+  }
+
+  const dec=s.match(/^([A-Za-z_]\w*)--$/);
+  if(dec){
+    const name=dec[1];
+    state[name]=String(castValue(numericValue(state[name])-1,types[name]||'int'));
+    return [name];
+  }
+
+  const ass=s.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
+  if(ass){
+    const name=ass[1],expr=ass[2];
+    const val=castValue(evalExpr(expr,state),types[name]||'double');
+    state[name]=String(val);
+    return [name];
+  }
+  return changed;
+}
+
+function evalCondition(cond,state){
+  let c=cond.trim();
+  c=c.replace(/\b([A-Za-z_]\w*)\b/g,(m,name)=>{
+    if(Object.prototype.hasOwnProperty.call(state,name)) return String(numericValue(state[name]));
+    return m;
+  });
+  if(!/^[0-9+\-*/%().<>=!&|\s]+$/.test(c)) throw new Error('Condizione non supportata');
+  return !!Function('"use strict";return ('+c+');')();
+}
+
+function buildExecutionPlan(code){
+  const lines=code.split('\n');
+  const state={},types={},plan=[];
+  let pc=0,guard=0;
+
+  const pushEvent=(lineIndex,kind,description,changed=[])=>{
+    plan.push({
+      lineIndex,
+      kind,
+      description,
+      changed:[...changed],
+      state:cloneState(state),
+      types:cloneTypes(types)
+    });
+  };
+
+  while(pc<lines.length && guard++<200){
+    const raw=lines[pc], line=raw.trim();
+    if(!line){ pc++; continue; }
+
+    const forMatch=line.match(/^for\s*\(\s*(int\s+)?([A-Za-z_]\w*)\s*=\s*([^;]+);\s*([^;]+);\s*([^)]+)\)\s*$/);
+    if(forMatch && pc+1<lines.length){
+      const varName=forMatch[2];
+      const initExpr=forMatch[3];
+      const cond=forMatch[4];
+      const inc=forMatch[5].trim();
+      types[varName]='int';
+      state[varName]=String(Math.trunc(evalExpr(initExpr,state)));
+      pushEvent(pc,'control','Inizializzazione del ciclo e controllo della condizione.',[varName]);
+
+      let loopGuard=0;
+      while(evalCondition(cond,state) && loopGuard++<50){
+        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types);
+        pushEvent(pc+1,'statement','Esecuzione del corpo del ciclo.',bodyChanged);
+
+        const incChanged=executeSimpleStatement(
+          inc.endsWith('++') || inc.endsWith('--') ? inc : inc+';',
+          state,types
+        );
+        const ok=evalCondition(cond,state);
+        pushEvent(
+          pc,'control',
+          ok ? 'Aggiornamento del contatore e nuova verifica: condizione vera.'
+             : 'Aggiornamento del contatore e nuova verifica: condizione falsa, il ciclo termina.',
+          incChanged
+        );
+      }
+      pc+=2;
+      continue;
+    }
+
+    const whileMatch=line.match(/^while\s*\((.+)\)\s*$/);
+    if(whileMatch && pc+1<lines.length){
+      const cond=whileMatch[1];
+      let ok=evalCondition(cond,state);
+      pushEvent(pc,'control',ok?'Verifica della condizione: vera.':'Verifica della condizione: falsa.');
+      let loopGuard=0;
+      while(ok && loopGuard++<50){
+        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types);
+        pushEvent(pc+1,'statement','Esecuzione del corpo del ciclo.',bodyChanged);
+        ok=evalCondition(cond,state);
+        pushEvent(pc,'control',ok?'Nuova verifica: condizione vera.':'Nuova verifica: condizione falsa, il ciclo termina.');
+      }
+      pc+=2;
+      continue;
+    }
+
+    const changed=executeSimpleStatement(line,state,types);
+    pushEvent(pc,'statement','Esecuzione della riga.',changed);
+    pc++;
+  }
+  return plan;
+}
+
+function renderCode(code,currentLine=-1){
+  if(!code){
+    $('#code').classList.add('hidden');
+    $('#code').innerHTML='';
+    return;
+  }
+  const lines=code.split('\n');
+  $('#code').classList.remove('hidden');
+  $('#code').innerHTML=lines.map((line,i)=>
+    '<span class="code-line'+(i===currentLine?' current':'')+'" data-line="'+i+'">'+
+      '<span class="ln">'+(i+1)+'</span>'+escapeHtml(line)+
+    '</span>'
   ).join('');
 }
 
-function updateMemory(changes){
-  const changedNames=Object.keys(changes);
-  changedNames.forEach(name=>{
-    S.mem[name]=String(changes[name]);
-    if(!S.memOrder.includes(name)){
-      S.memOrder.push(name);
-      const box=document.createElement('div');
-      box.className='mem';
-      box.dataset.var=name;
-      box.innerHTML='<div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div>';
-      $('#mem').appendChild(box);
-    }
-  });
-
-  r.querySelectorAll('.mem').forEach(box=>{
-    const name=box.dataset.var;
-    const value=box.querySelector('.value');
-    box.classList.remove('ok','changed');
-    if(Object.prototype.hasOwnProperty.call(S.mem,name)) value.textContent=S.mem[name];
-    if(changedNames.includes(name)) box.classList.add('ok','changed');
-  });
-
-  setTimeout(()=>r.querySelectorAll('.mem.changed').forEach(b=>b.classList.remove('changed')),350);
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function resetMemory(x){
-  const initial=parseInitialMemory(x);
-  S.mem={...initial.state};
-  S.memOrder=[...initial.order];
-  $('#mem').innerHTML=S.memOrder.map(name=>
-    '<div class="mem" data-var="'+name+'"><div class="name">'+name+'</div><div class="value">'+S.mem[name]+'</div></div>'
-  ).join('');
-}
-
-function changesFromTraceStep(step){
-  const changes={};
-  const assignment=/([A-Za-z_]\w*)\s*=\s*([^,←→]+)/g;
-  let m;
-  while((m=assignment.exec(step))!==null){
-    const name=m[1].trim(), value=m[2].trim();
-    if(S.memOrder.includes(name) || Object.prototype.hasOwnProperty.call(S.mem,name)){
-      changes[name]=value;
-    }
-  }
-
-  if(Object.keys(changes).length===0 && step.includes('→')){
-    const tail=step.split('→').pop().trim().replace(/\s*stop.*$/i,'');
-    const unknowns=S.memOrder.filter(name=>S.mem[name]==='?');
-    if(unknowns.length===1 && tail) changes[unknowns[0]]=tail;
-  }
-  return changes;
+function loadSnapshot(event){
+  S.mem={...event.state};
+  S.types={...event.types};
+  S.memOrder=Object.keys(S.mem);
+  drawMemory(event.changed);
 }
 
 function answer(x){
@@ -516,13 +741,7 @@ function render(){
   $('#tag').textContent=S.l===4?'problem solving':S.l===5?'condizione':S.l===6?'ciclo':'ragionamento';
   $('#prompt').textContent=x.p;
 
-  if(x.c){
-    $('#code').textContent=x.c;
-    $('#code').classList.remove('hidden');
-  }else{
-    $('#code').classList.add('hidden');
-    $('#code').textContent='';
-  }
+  renderCode(x.c || '', -1);
 
   answer(x);
   memory(x);
@@ -535,11 +754,14 @@ function render(){
   $('#trace').classList.toggle('hidden',!x.t);
 
   S.run=0;
-  if(x.t){
-    const parts=x.t.split('|');
+  S.plan=x.c ? buildExecutionPlan(x.c) : [];
+  if(x.c && S.plan.length){
     $('#runner').classList.remove('hidden');
-    $('#runnerCount').textContent='0/'+parts.length;
-    $('#runnerState').textContent='Stato iniziale: osserva i valori nelle caselle. A ogni passo vedrai la memoria cambiare.';
+    $('#runnerCount').textContent='0/'+S.plan.length;
+    $('#runnerState').innerHTML=
+      '<span class="run-block"><span class="run-label">Stato iniziale</span>'+
+      'Nessuna riga è stata ancora eseguita.</span>'+
+      '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per iniziare.</span>';
   }else{
     $('#runner').classList.add('hidden');
   }
@@ -596,38 +818,62 @@ $('#trace').addEventListener('click',()=>{
 
 $('#runLine').addEventListener('click',()=>{
   const x=ex();
-  if(!x.t)return;
-  const parts=x.t.split('|');
-  if(S.run<parts.length){
-    const step=parts[S.run];
-    const changes=changesFromTraceStep(step);
+  if(!x.c || !S.plan.length)return;
+
+  if(S.run<S.plan.length){
+    const event=S.plan[S.run];
+    const previousState={...S.mem};
+
+    loadSnapshot(event);
+    renderCode(x.c,event.lineIndex);
     S.run++;
 
-    updateMemory(changes);
+    const sourceLine=x.c.split('\n')[event.lineIndex].trim();
+    const variationLine=event.changed.length
+      ? event.changed.map(n=>{
+          const before=Object.prototype.hasOwnProperty.call(previousState,n)
+            ? previousState[n]
+            : 'non presente';
+          return n+': '+before+' → '+S.mem[n];
+        }).join('   ·   ')
+      : 'Nessuna variazione dei valori in questo passaggio.';
 
-    const names=Object.keys(changes);
     $('#runnerState').innerHTML=
-      '<strong>Passo '+S.run+':</strong> '+step+
-      (names.length
-        ? '<br><span class="muted small">In memoria cambia: '+names.map(n=>n+' = '+changes[n]).join(', ')+'</span>'
-        : '');
+      '<span class="run-block">'+
+        '<span class="run-label">Riga eseguita</span>'+
+        '<span class="run-source">Riga '+(event.lineIndex+1)+': '+escapeHtml(sourceLine)+'</span>'+
+      '</span>'+
+      '<span class="run-block run-explain">'+
+        '<span class="run-label">Cosa succede</span>'+
+        event.description+
+      '</span>'+
+      '<span class="run-block run-memory">'+
+        '<span class="run-label">Variazione in memoria</span>'+
+        variationLine+
+      '</span>';
 
-    $('#runnerCount').textContent=S.run+'/'+parts.length;
+    $('#runnerCount').textContent=S.run+'/'+S.plan.length;
 
-    if(S.run===parts.length){
-      $('#runnerState').innerHTML+='<br><span class="muted small"><strong>Esecuzione completata.</strong> Le caselle mostrano i valori finali.</span>';
+    if(S.run===S.plan.length){
+      $('#runnerState').innerHTML+=
+        '<span class="run-block run-end">Programma terminato. Le celle della “Memoria del programma” mostrano lo stato finale.</span>';
     }
   }
 });
 
 $('#resetRun').addEventListener('click',()=>{
   const x=ex();
-  if(!x.t)return;
-  const parts=x.t.split('|');
+  if(!x.c)return;
   S.run=0;
-  resetMemory(x);
-  $('#runnerCount').textContent='0/'+parts.length;
-  $('#runnerState').textContent='Stato iniziale ripristinato. Premi “Esegui una riga”.';
+  S.plan=buildExecutionPlan(x.c);
+  S.mem={}; S.memOrder=[]; S.types={};
+  drawMemory();
+  renderCode(x.c,-1);
+  $('#runnerCount').textContent='0/'+S.plan.length;
+  $('#runnerState').innerHTML=
+    '<span class="run-block"><span class="run-label">Esecuzione azzerata</span>'+
+    'La memoria del programma è stata riportata allo stato iniziale.</span>'+
+    '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per eseguire la prima riga del sorgente.</span>';
 });
 
 $('#next').addEventListener('click',()=>{

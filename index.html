@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palestra C++ – 28 esercizi di recupero</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --panel:#ffffff;
+  --card:#f9fafb;
+  --text:#1f2937;
+  --muted:#667085;
+  --border:#d9dee7;
+  --accent:#b91c1c;
+  --accent-soft:#fee2e2;
+  --ok:#15803d;
+  --warn:#b45309;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.container{
+  width:min(1180px,94%);
+  margin:24px auto 48px;
+}
+.grid{display:grid;gap:16px}
+.top{grid-template-columns:1.45fr .55fr}
+.main{grid-template-columns:1.3fr .7fr}
+.card,.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+}
+.kicker{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.16em;
+  color:var(--muted);
+}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:30px;line-height:1.15;margin-bottom:8px}
+h2{font-size:24px;margin-bottom:6px}
+h3{font-size:20px;margin-bottom:4px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.progress-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-weight:700;
+}
+.progress{
+  height:12px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:12px;
+}
+.bar{
+  height:100%;
+  width:0;
+  background:var(--accent);
+  transition:width .3s ease;
+}
+.levels{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+button{
+  font:inherit;
+  cursor:pointer;
+}
+.level,.qbtn,.btn{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 12px;
+}
+.level{
+  min-height:74px;
+  text-align:center;
+  font-size:14px;
+}
+.level.active,.qbtn.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+}
+.qbtn.done::after{
+  content:" ✓";
+  font-weight:800;
+  color:var(--ok);
+}
+.level .icon{font-size:22px}
+.qs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.exercise{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+}
+.ex-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.tag{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:12px;
+}
+pre{
+  overflow-x:auto;
+  background:#f7f7f8;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  font-family:Consolas,Monaco,monospace;
+  font-size:14px;
+  line-height:1.55;
+}
+.answer-grid{display:grid;gap:8px}
+.answer-option{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  min-height:46px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background:#fff;
+}
+input[type="text"],input[type="number"]{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  font:inherit;
+  margin-top:8px;
+}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.btn.primary{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  font-weight:700;
+}
+.feedback{margin-top:14px;font-size:14px}
+.feedback.ok{color:var(--ok);font-weight:700}
+.feedback.no{color:var(--warn)}
+.help,.steps{
+  margin-top:12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#f8fafc;
+  padding:12px;
+  font-size:14px;
+}
+#runner{
+  background:#fff7ed;
+  border-color:#fed7aa;
+}
+#runnerState{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  border:1px dashed var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  background:#fff;
+}
+.hidden{display:none!important}
+.method ol{padding-left:22px;line-height:1.75;margin-bottom:0}
+.memgrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.mem{
+  border:2px dashed var(--border);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+  transition:.2s ease;
+}
+.mem.ok{
+  border-color:var(--accent);
+  transform:scale(1.03);
+}
+.mem .name{font-size:12px;color:var(--muted)}
+.mem .value{font-size:26px;font-weight:800;margin-top:4px}
+.level-score{
+  margin-top:2px;
+  font-size:12px;
+  color:var(--muted);
+}
+.title-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.badge{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px 12px;
+  font-size:14px;
+}
+.step{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  margin-top:24px;
+}
+@media(max-width:900px){
+  .top,.main{grid-template-columns:1fr}
+  .levels{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:560px){
+  .container{width:min(96%,1180px);margin-top:12px}
+  .levels{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:25px}
+  .memgrid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .bar,.mem{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <section class="grid top">
+    <div class="panel">
+      <div class="kicker">PALESTRA C++ · RECUPERO</div>
+      <h1>Prima ragiono. Poi scrivo il codice.</h1>
+      <p class="muted small">7 livelli · 4 esercizi per livello · 28 sfide progressive.</p>
+    </div>
+    <div class="card">
+      <div class="progress-row"><span>Progresso</span><span><span id="tot">0</span>/28</span></div>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <p id="msg" class="muted small" style="margin-top:12px;margin-bottom:0">Comincia dal livello 1.</p>
+    </div>
+  </section>
+
+  <nav id="levels" class="levels" aria-label="Livelli"></nav>
+
+  <section class="grid main">
+    <div class="panel">
+      <div class="title-row">
+        <div>
+          <div id="kick" class="kicker"></div>
+          <h2 id="ttl"></h2>
+          <p id="desc" class="muted small"></p>
+        </div>
+        <div class="badge"><span id="ldone">0</span>/4</div>
+      </div>
+
+      <div id="qs" class="qs"></div>
+
+      <div class="exercise">
+        <div class="ex-head">
+          <strong id="qlab"></strong>
+          <span id="tag" class="tag"></span>
+        </div>
+        <p id="prompt" style="margin-top:16px;font-weight:600"></p>
+        <pre id="code" class="hidden"></pre>
+        <div id="ans" style="margin-top:16px"></div>
+
+        <div class="actions">
+          <button id="check" type="button" class="btn primary">Controlla</button>
+          <button id="hint" type="button" class="btn">Suggerimento</button>
+          <button id="trace" type="button" class="btn">Traccia</button>
+          <button id="next" type="button" class="btn">Successivo →</button>
+        </div>
+
+        <div id="fb" class="feedback" aria-live="polite"></div>
+        <div id="help" class="help hidden"></div>
+        <div id="steps" class="steps hidden"></div>
+
+        <div id="runner" class="help hidden" style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+            <strong>▶ Esecuzione riga per riga</strong>
+            <span id="runnerCount" class="muted small">0/0</span>
+          </div>
+          <div id="runnerState" style="margin-top:10px;font-size:15px">Premi “Esegui una riga”.</div>
+          <div class="actions" style="margin-top:12px">
+            <button id="runLine" type="button" class="btn primary">Esegui una riga</button>
+            <button id="resetRun" type="button" class="btn">Ricomincia</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="grid">
+      <div class="card method">
+        <h3>🧠 Metodo</h3>
+        <ol>
+          <li>Quali dati conosco?</li>
+          <li>Cosa devo trovare?</li>
+          <li>Come cambiano i valori?</li>
+          <li>Quali operazioni servono?</li>
+          <li>Solo ora: C++.</li>
+        </ol>
+      </div>
+
+      <div id="memPanel" class="card">
+        <h3>📦 Memoria iniziale</h3>
+        <div id="mem" class="memgrid"></div>
+      </div>
+    </aside>
+  </section>
+
+  <footer>Palestra C++ per il recupero delle basi di programmazione</footer>
+</div>
+
+<script>
+(()=>{
+const r=document;
+const L=[
+{n:'Variabili',i:'📦',d:'Segui assegnamenti e sostituzioni di valore.',e:[
+{p:'Valori finali di x e y? Scrivili separati da una virgola.',c:'int x=5;\nint y=2;\nx=x+y;\ny=x-1;',a:'7,6',m:'x=5|y=2',h:'Quando calcoli y, x vale già 7.',t:'x=5,y=2|x=7,y=2|x=7,y=6'},
+{p:'Valore finale di a?',c:'int a=3;\na=a+4;\na=a*2;',a:'14',m:'a=3',h:'Usa il nuovo valore dopo ogni riga.',t:'a=3|a=7|a=14'},
+{p:'Valore finale di n?',c:'int n=10;\nn=n-3;\nn=n+5;',a:'12',m:'n=10',h:'10 → 7 → ?',t:'n=10|n=7|n=12'},
+{p:'Valori finali di x e y?',c:'int x=2;\nint y=6;\nx=y;\ny=x+1;',a:'6,7',m:'x=2|y=6',h:'x=y sostituisce il vecchio valore di x.',t:'x=2,y=6|x=6,y=6|x=6,y=7'}]},
+{n:'Scambio',i:'🔄',d:'Impara a non perdere un valore quando lo sovrascrivi.',e:[
+{p:'Quale sequenza scambia correttamente a e b?',o:['a=b; b=a;','temp=a; a=b; b=temp;','temp=b; b=a; a=b;'],a:1,m:'a=10|b=20|temp=?',h:'Serve un contenitore temporaneo.'},
+{p:'Quale riga conserva x prima di modificarlo?',o:['x=y;','temp=x;','y=temp;'],a:1,m:'x=4|y=7|temp=?',h:'Copia x in un altro contenitore.'},
+{p:'Valori finali di p e q?',c:'int p=1,q=4;\nint t=p;\np=q;\nq=t;',a:'4,1',m:'p=1|q=4|t=?',h:'Segui t come una piccola cassaforte.',t:'t=1|p=4|q=1'},
+{p:'In questo tentativo di scambio, dove sta l’errore?',c:'int a=5,b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;',o:['temp viene sovrascritta prima di essere usata per ripristinare il vecchio valore di a','a=b è sbagliato: non si può assegnare b ad a','b=temp è sempre un’istruzione non valida'],a:0,m:'a=5|b=9|temp=?',h:'temp dovrebbe conservare il vecchio valore di a fino all’ultima assegnazione.',t:'temp=5|a=9|temp=9 ← il vecchio 5 è perso|b=9'}]},
+{n:'Espressioni',i:'🧮',d:'Calcola usando operatori e valori correnti.',e:[
+{p:'Valore finale di n?',c:'int n=4;\nn=n*3;\nn=n-2;',a:'10',m:'n=4',h:'4 → 12 → ?',t:'n=4|n=12|n=10'},
+{p:'Quanto vale c?',c:'int a=10,b=3;\nint c=a/b;',a:'3',m:'a=10|b=3|c=?',h:'Con int, 10/3 dà la parte intera.',t:'10/3 → 3'},
+{p:'Quanto vale z?',c:'int x=7,y=2;\nint z=x%y;',a:'1',m:'x=7|y=2|z=?',h:'% restituisce il resto.',t:'7 diviso 2: resto 1'},
+{p:'Quanto vale totale?',c:'double prezzo=12.5;\nint q=4;\ndouble totale=prezzo*q;',a:'50',m:'prezzo=12.5|q=4|totale=?',h:'Prezzo unitario × quantità.',t:'12.5 × 4 = 50'}]},
+{n:'Traccia',i:'🔎',d:'Aggiorna mentalmente una tabella delle variabili.',e:[
+{p:'Valori finali a,b,c?',c:'int a=3,b=5;\nint c=a+b;\na=c-2;\nb=a*2;',a:'6,12,8',m:'a=3|b=5|c=?',h:'Cambia solo la variabile a sinistra di =.',t:'c=8|a=6|b=12'},
+{p:'Valori finali x,y,z?',c:'int x=2,y=4,z=1;\nz=x+y;\nx=z*2;\ny=x-z;',a:'12,6,6',m:'x=2|y=4|z=1',h:'z cambia per primo.',t:'z=6|x=12|y=6'},
+{p:'Valori finali m,n?',c:'int m=8,n=3;\nm=m-n;\nn=m+n;',a:'5,8',m:'m=8|n=3',h:'Quando calcoli n, m vale già 5.',t:'m=5|n=8'},
+{p:'Valori finali a,b,c?',c:'int a=1,b=2,c=3;\na=b+c;\nb=a+c;\nc=a+b;',a:'5,8,13',m:'a=1|b=2|c=3',h:'Ogni riga usa lo stato corrente.',t:'a=5|b=8|c=13'}]},
+{n:'Problemi',i:'🧩',d:'Prima individua input, elaborazione e output.',e:[
+{p:'Ore lavorate + compenso orario → stipendio. Quale schema è corretto?',o:['INPUT stipendio → somma → ore','INPUT ore,compenso → moltiplicazione → stipendio','INPUT ore → divisione → compenso'],a:1,h:'Cosa entra? Quale calcolo? Cosa esce?'},
+{p:'Base e altezza → area del rettangolo. Quale schema è corretto?',o:['base,altezza → prodotto → area','area → somma → altezza','base → divisione → area'],a:0,h:'Pensa alla formula area=base×altezza.'},
+{p:'Celsius → Fahrenheit. Quale schema è corretto?',o:['Fahrenheit → C+32 → Celsius','Celsius → C×9/5+32 → Fahrenheit','Celsius,Fahrenheit → prodotto → differenza'],a:1,h:'Il dato iniziale è Celsius; il risultato richiesto è Fahrenheit.'},
+{p:'Tre voti → media. Quale schema è corretto?',o:['media → somma → voti','tre voti → (somma)/3 → media','un voto → prodotto → media'],a:1,h:'La media è l’output, non l’input.'}]},
+{n:'Decisioni',i:'🚦',d:'Valuta condizioni vere o false prima del ramo da eseguire.',e:[
+{p:'voto=7. voto>=6 è...',o:['vera','falsa'],a:0,m:'voto=7',h:'7 raggiunge la soglia 6.'},
+{p:'eta=17. eta>=18 è...',o:['vera','falsa'],a:1,m:'eta=17',h:'17 non raggiunge 18.'},
+{p:'x=5, y=8. x<y è...',o:['vera','falsa'],a:0,m:'x=5|y=8',h:'Confronta 5 e 8.'},
+{p:'n=12. n%2==0 è...',o:['vera','falsa'],a:0,m:'n=12',h:'12 diviso 2 ha resto 0.'}]},
+{n:'Cicli',i:'🔁',d:'Segui contatori e accumulatori iterazione per iterazione.',e:[
+{p:'Valore finale di somma?',c:'int somma=0;\nfor(int i=1;i<=3;i++)\n  somma=somma+i;',a:'6',m:'somma=0|i=1',h:'Aggiungi 1, poi 2, poi 3.',t:'somma=1|somma=3|somma=6'},
+{p:'Valore finale di conta?',c:'int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;',a:'4',m:'conta=0|i=0',h:'i assume 0,1,2,3: quattro iterazioni.',t:'1|2|3|4'},
+{p:'Valore finale di prodotto?',c:'int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;',a:'24',m:'prodotto=1|i=1',h:'Moltiplica progressivamente per 1,2,3,4.',t:'1|2|6|24'},
+{p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}
+];
+
+const S={l:0,q:0,d:new Set(),run:0};
+const $=s=>r.querySelector(s);
+function key(){return S.l+'-'+S.q}
+function ex(){return L[S.l].e[S.q]}
+
+function nav(){
+  const levels=$('#levels');
+  levels.innerHTML='';
+  L.forEach((x,i)=>{
+    const b=document.createElement('button');
+    const n=[0,1,2,3].filter(j=>S.d.has(i+'-'+j)).length;
+    b.type='button';
+    b.className='level'+(i===S.l?' active':'');
+    b.innerHTML='<div class="icon">'+x.i+'</div><strong>'+(i+1)+'. '+x.n+'</strong><div class="level-score">'+n+'/4</div>';
+    b.addEventListener('click',()=>{S.l=i;S.q=0;render()});
+    levels.appendChild(b);
+  });
+
+  const qs=$('#qs');
+  qs.innerHTML='';
+  for(let i=0;i<4;i++){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='qbtn'+(i===S.q?' active':'')+(S.d.has(S.l+'-'+i)?' done':'');
+    b.textContent='Esercizio '+(i+1);
+    b.addEventListener('click',()=>{S.q=i;render()});
+    qs.appendChild(b);
+  }
+}
+
+function memory(x){
+  if(!x.m){
+    $('#memPanel').classList.add('hidden');
+    return;
+  }
+  $('#memPanel').classList.remove('hidden');
+  $('#mem').innerHTML=x.m.split('|').map(v=>{
+    const z=v.split('=');
+    return '<div class="mem"><div class="name">'+z[0]+'</div><div class="value">'+z.slice(1).join('=')+'</div></div>';
+  }).join('');
+}
+
+function answer(x){
+  if(x.o){
+    $('#ans').innerHTML='<div class="answer-grid">'+x.o.map((v,i)=>
+      '<label class="answer-option"><input type="radio" name="a" value="'+i+'"><span>'+v+'</span></label>'
+    ).join('')+'</div>';
+  }else{
+    $('#ans').innerHTML='<label class="small">Risposta <span class="muted">(se sono più valori, separali con virgole)</span><input id="txt" type="text" autocomplete="off"></label>';
+  }
+}
+
+function upd(){
+  const n=S.d.size;
+  $('#tot').textContent=n;
+  $('#bar').style.width=(n/28*100)+'%';
+  $('#msg').textContent=n===28?'Percorso completato!':n+' esercizi completati su 28.';
+  $('#ldone').textContent=[0,1,2,3].filter(i=>S.d.has(S.l+'-'+i)).length;
+}
+
+function render(){
+  const l=L[S.l],x=ex();
+  nav(); upd();
+  $('#kick').textContent='LIVELLO '+(S.l+1)+' · '+l.i;
+  $('#ttl').textContent=l.n;
+  $('#desc').textContent=l.d;
+  $('#qlab').textContent='Esercizio '+(S.q+1)+' di 4';
+  $('#tag').textContent=S.l===4?'problem solving':S.l===5?'condizione':S.l===6?'ciclo':'ragionamento';
+  $('#prompt').textContent=x.p;
+
+  if(x.c){
+    $('#code').textContent=x.c;
+    $('#code').classList.remove('hidden');
+  }else{
+    $('#code').classList.add('hidden');
+    $('#code').textContent='';
+  }
+
+  answer(x);
+  memory(x);
+  $('#fb').className='feedback';
+  $('#fb').textContent=S.d.has(key())?'✓ Già completato. Puoi rifarlo.':'';
+  $('#help').classList.add('hidden');
+  $('#help').textContent=x.h || '';
+  $('#steps').classList.add('hidden');
+  $('#steps').innerHTML='';
+  $('#trace').classList.toggle('hidden',!x.t);
+
+  S.run=0;
+  if(x.t){
+    const parts=x.t.split('|');
+    $('#runner').classList.remove('hidden');
+    $('#runnerCount').textContent='0/'+parts.length;
+    $('#runnerState').textContent='Stato iniziale: osserva le variabili e premi “Esegui una riga”.';
+  }else{
+    $('#runner').classList.add('hidden');
+  }
+}
+
+$('#check').addEventListener('click',()=>{
+  const x=ex();
+  let ok=false;
+
+  if(x.o){
+    const a=r.querySelector('input[name="a"]:checked');
+    if(!a){
+      $('#fb').className='feedback no';
+      $('#fb').textContent='Scegli una risposta.';
+      return;
+    }
+    ok=Number(a.value)===x.a;
+  }else{
+    const input=$('#txt');
+    const a=input.value.replace(/\s+/g,'').replace(/;/g,',');
+    if(!a){
+      $('#fb').className='feedback no';
+      $('#fb').textContent='Inserisci una risposta.';
+      return;
+    }
+    ok=a===String(x.a).replace(/\s+/g,'');
+  }
+
+  if(ok){
+    S.d.add(key());
+    $('#fb').className='feedback ok';
+    $('#fb').textContent='✓ Corretto. Hai seguito bene il ragionamento.';
+    r.querySelectorAll('.mem').forEach(v=>v.classList.add('ok'));
+    nav(); upd();
+  }else{
+    $('#fb').className='feedback no';
+    $('#fb').textContent='Non ancora. Ricostruisci i passaggi invece di indovinare.';
+  }
+});
+
+$('#hint').addEventListener('click',()=>{
+  $('#help').classList.toggle('hidden');
+});
+
+$('#trace').addEventListener('click',()=>{
+  const x=ex();
+  if(!x.t)return;
+  $('#steps').innerHTML=x.t.split('|').map((v,i)=>
+    '<div class="step"><strong>Passo '+(i+1)+':</strong> '+v+'</div>'
+  ).join('');
+  $('#steps').classList.toggle('hidden');
+});
+
+
+$('#runLine').addEventListener('click',()=>{
+  const x=ex();
+  if(!x.t)return;
+  const parts=x.t.split('|');
+  if(S.run<parts.length){
+    S.run++;
+    $('#runnerState').innerHTML='<strong>Passo '+S.run+':</strong>&nbsp;'+parts[S.run-1];
+    $('#runnerCount').textContent=S.run+'/'+parts.length;
+
+    const mems=r.querySelectorAll('.mem');
+    mems.forEach(v=>v.classList.remove('ok'));
+    if(mems.length){
+      const target=mems[Math.min(S.run-1,mems.length-1)];
+      if(target)target.classList.add('ok');
+    }
+
+    if(S.run===parts.length){
+      $('#runnerState').innerHTML+='<br><span class="muted small">Esecuzione completata.</span>';
+    }
+  }
+});
+
+$('#resetRun').addEventListener('click',()=>{
+  const x=ex();
+  if(!x.t)return;
+  const parts=x.t.split('|');
+  S.run=0;
+  $('#runnerCount').textContent='0/'+parts.length;
+  $('#runnerState').textContent='Stato iniziale: osserva le variabili e premi “Esegui una riga”.';
+  r.querySelectorAll('.mem').forEach(v=>v.classList.remove('ok'));
+});
+
+$('#next').addEventListener('click',()=>{
+  if(S.q<3)S.q++;
+  else if(S.l<6){S.l++;S.q=0}
+  else {S.l=0;S.q=0}
+  render();
+});
+
+render();
+})();
+</script>
+</body>
+</html>

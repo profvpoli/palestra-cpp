@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Palestra C++ – 28 esercizi di recupero</title>
+<title>Palestra C++ – 58 esercizi di recupero</title>
 <style>
 :root{
   --bg:#f5f7fb;
@@ -70,7 +70,7 @@ h3{font-size:20px;margin-bottom:4px}
 }
 .levels{
   display:grid;
-  grid-template-columns:repeat(7,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
   gap:8px;
   margin:16px 0;
 }
@@ -130,6 +130,104 @@ pre{
   line-height:1.55;
 }
 .answer-grid{display:grid;gap:8px}
+.order-intro{
+  margin-bottom:12px;
+  color:var(--muted);
+  font-size:14px;
+}
+.order-list{
+  display:grid;
+  gap:9px;
+}
+.order-item{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  background:#fff;
+}
+.order-num{
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#f3f4f6;
+  font-size:13px;
+  font-weight:800;
+}
+.order-code{
+  min-width:0;
+  overflow-wrap:anywhere;
+  font-family:Consolas,Monaco,monospace;
+  font-size:14px;
+}
+.order-controls{
+  display:flex;
+  gap:5px;
+}
+.order-move{
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  font-weight:800;
+}
+.order-move:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+.order-item.correct{
+  border-color:var(--ok);
+}
+.error-lines{
+  display:grid;
+  gap:8px;
+}
+.error-line{
+  width:100%;
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  text-align:left;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:11px 12px;
+  background:#fff;
+  color:var(--text);
+}
+.error-line:hover{
+  border-color:#b8c0cc;
+}
+.error-line.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.error-line .err-ln{
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#f3f4f6;
+  font-size:13px;
+  font-weight:800;
+}
+.error-line code{
+  min-width:0;
+  overflow-wrap:anywhere;
+  font-family:Consolas,Monaco,monospace;
+  font-size:14px;
+}
+
+
 .answer-option{
   display:flex;
   align-items:flex-start;
@@ -327,10 +425,10 @@ footer{
     <div class="panel">
       <div class="kicker">PALESTRA C++ · RECUPERO</div>
       <h1>Prima ragiono. Poi scrivo il codice.</h1>
-      <p class="muted small">7 livelli · 4 esercizi per livello · 28 sfide progressive.</p>
+      <p class="muted small">12 livelli · 58 sfide progressive, con esercizi base, comprensione del codice e problem solving.</p>
     </div>
     <div class="card">
-      <div class="progress-row"><span>Progresso</span><span><span id="tot">0</span>/28</span></div>
+      <div class="progress-row"><span>Progresso</span><span><span id="tot">0</span>/<span id="maxTot">58</span></span></div>
       <div class="progress"><div id="bar" class="bar"></div></div>
       <p id="msg" class="muted small" style="margin-top:12px;margin-bottom:0">Comincia dal livello 1.</p>
     </div>
@@ -346,7 +444,7 @@ footer{
           <h2 id="ttl"></h2>
           <p id="desc" class="muted small"></p>
         </div>
-        <div class="badge"><span id="ldone">0</span>/4</div>
+        <div class="badge"><span id="ldone">0</span>/<span id="levelMax">4</span></div>
       </div>
 
       <div id="qs" class="qs"></div>
@@ -358,6 +456,11 @@ footer{
         </div>
         <p id="prompt" style="margin-top:16px;font-weight:600"></p>
         <pre id="code" class="hidden"></pre>
+        <div id="inputSim" class="help hidden" style="margin-top:14px">
+          <span class="run-label">⌨️ Input simulato</span>
+          <div id="inputValue" class="run-source" style="margin-bottom:0"></div>
+          <div class="muted small" style="margin-top:8px">È il dato che l’utente digita quando il programma incontra l’istruzione di input.</div>
+        </div>
         <div id="ans" style="margin-top:16px"></div>
 
         <div class="actions">
@@ -411,8 +514,7 @@ footer{
 <script>
 (()=>{
 const r=document;
-const L=[
-{n:'Variabili',i:'📦',d:'Segui assegnamenti e sostituzioni di valore.',e:[
+const L=[{n:'Variabili',i:'📦',d:'Segui assegnamenti e sostituzioni di valore.',e:[
 {p:'Valori finali di x e y? Scrivili separati da una virgola.',c:'int x=5;\nint y=2;\nx=x+y;\ny=x-1;',a:'7,6',m:'x=5|y=2',h:'Quando calcoli y, x vale già 7.',t:'x=5,y=2|x=7,y=2|x=7,y=6'},
 {p:'Valore finale di a?',c:'int a=3;\na=a+4;\na=a*2;',a:'14',m:'a=3',h:'Usa il nuovo valore dopo ogni riga.',t:'a=3|a=7|a=14'},
 {p:'Valore finale di n?',c:'int n=10;\nn=n-3;\nn=n+5;',a:'12',m:'n=10',h:'10 → 7 → ?',t:'n=10|n=7|n=12'},
@@ -422,16 +524,127 @@ const L=[
 {p:'Esegui lo scambio. Quali sono i valori finali di x e y?',c:'int x=4;\nint y=7;\nint temp=x;\nx=y;\ny=temp;',a:'7,4',m:'x=4|y=7|temp=?',h:'temp conserva il vecchio valore di x mentre x viene modificata.',t:'x=4|y=7|temp=4|x=7|y=4'},
 {p:'Segui l’esecuzione. Quali sono i valori finali di p e q?',c:'int p=1;\nint q=4;\nint t=p;\np=q;\nq=t;',a:'4,1',m:'p=1|q=4|t=?',h:'La variabile t funziona come un contenitore di appoggio.',t:'p=1|q=4|t=1|p=4|q=1'},
 {p:'Questo programma vuole scambiare a e b, ma contiene un errore. Eseguilo riga per riga: che cosa succede?',c:'int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;',o:['Lo scambio non avviene: alla fine a=9 e b=9','Lo scambio avviene correttamente: a=9 e b=5','Il programma non può essere eseguito perché temp non è dichiarata'],a:0,m:'a=5|b=9|temp=?',h:'Guarda che cosa accade a temp quando viene eseguita la riga temp=b.',t:'a=5|b=9|temp=5|a=9|temp=9|b=9'}]},
-{n:'Espressioni',i:'🧮',d:'Calcola usando operatori e valori correnti.',e:[
+{n:'Espressioni semplici',i:'🧮',d:'Calcola semplici espressioni usando operatori e valori correnti.',e:[
 {p:'Valore finale di n?',c:'int n=4;\nn=n*3;\nn=n-2;',a:'10',m:'n=4',h:'4 → 12 → ?',t:'n=4|n=12|n=10'},
 {p:'Quanto vale c?',c:'int a=10,b=3;\nint c=a/b;',a:'3',m:'a=10|b=3|c=?',h:'Con int, 10/3 dà la parte intera.',t:'10/3 → 3'},
 {p:'Quanto vale z?',c:'int x=7,y=2;\nint z=x%y;',a:'1',m:'x=7|y=2|z=?',h:'% restituisce il resto.',t:'7 diviso 2: resto 1'},
 {p:'Quanto vale totale?',c:'double prezzo=12.5;\nint q=4;\ndouble totale=prezzo*q;',a:'50',m:'prezzo=12.5|q=4|totale=?',h:'Prezzo unitario × quantità.',t:'12.5 × 4 = 50'}]},
-{n:'Traccia',i:'🔎',d:'Aggiorna mentalmente una tabella delle variabili.',e:[
+{n:'Segui le variabili',i:'🔎',d:'Segui passo passo come cambiano i valori delle variabili durante l’esecuzione.',e:[
 {p:'Valori finali a,b,c?',c:'int a=3,b=5;\nint c=a+b;\na=c-2;\nb=a*2;',a:'6,12,8',m:'a=3|b=5|c=?',h:'Cambia solo la variabile a sinistra di =.',t:'c=8|a=6|b=12'},
 {p:'Valori finali x,y,z?',c:'int x=2,y=4,z=1;\nz=x+y;\nx=z*2;\ny=x-z;',a:'12,6,6',m:'x=2|y=4|z=1',h:'z cambia per primo.',t:'z=6|x=12|y=6'},
 {p:'Valori finali m,n?',c:'int m=8,n=3;\nm=m-n;\nn=m+n;',a:'5,8',m:'m=8|n=3',h:'Quando calcoli n, m vale già 5.',t:'m=5|n=8'},
 {p:'Valori finali a,b,c?',c:'int a=1,b=2,c=3;\na=b+c;\nb=a+c;\nc=a+b;',a:'5,8,13',m:'a=1|b=2|c=3',h:'Ogni riga usa lo stato corrente.',t:'a=5|b=8|c=13'}]},
+{n:'Stringhe',i:'🔤',d:'Tratta anche il testo come un dato conservato e modificato nelle variabili.',e:[
+{p:'Esegui il codice. Quale valore conterrà messaggio alla fine?',c:'string nome="Luca";\nstring messaggio="Ciao "+nome;',o:['Ciao','Luca','Ciao Luca'],a:2,h:'La seconda riga concatena una stringa letterale con il contenuto di nome.',t:'nome=Luca|messaggio=Ciao Luca'},
+{p:'Dopo copia=colore, colore viene modificata. Che cosa accade a copia?',c:'string colore="rosso";\nstring copia=colore;\ncolore="blu";',o:['copia diventa blu','copia resta rosso','copia viene cancellata'],a:1,h:'L’assegnazione copia il valore presente in quel momento; le due variabili restano contenitori distinti.',t:'colore=rosso|copia=rosso|colore=blu'},
+{p:'Scrivi il valore finale contenuto nella variabile nome.',c:'string nome;\nnome="Anna";\nnome=nome+"!";',a:'Anna!',h:'Alla terza riga si usa il valore attuale di nome e gli si concatena "!".',t:'nome=?|nome=Anna|nome=Anna!'},
+{p:'Quale descrizione della memoria finale è corretta?',c:'string nome="Ada";\nstring cognome="Lovelace";\nstring completo=nome+" "+cognome;',o:['nome=Ada, cognome=Lovelace, completo=Ada Lovelace','nome=Ada Lovelace, cognome=Lovelace, completo=Ada','nome=Ada, cognome=Ada, completo=Lovelace'],a:0,h:'Ogni variabile conserva il proprio valore; completo contiene la concatenazione.',t:'nome=Ada|cognome=Lovelace|completo=Ada Lovelace'},
+{p:'Segui attentamente copie e modifiche. Quale stato finale della memoria è corretto?',c:'string a="rosso";\nstring b=a;\nstring c=b+" chiaro";\na="blu";\nb=a+" scuro";',o:['a=blu, b=blu scuro, c=rosso chiaro','a=blu, b=blu scuro, c=blu chiaro','a=rosso, b=blu scuro, c=rosso chiaro'],a:0,h:'c viene costruita quando b contiene ancora "rosso". Le modifiche successive di a e b non modificano automaticamente c.',t:'a=rosso|b=rosso|c=rosso chiaro|a=blu|b=blu scuro',hard:true},
+{p:'frase contiene ancora “Ciao Sara” anche dopo aver modificato saluto. Quale istruzione dovresti aggiungere alla fine per aggiornare frase?',c:'string nome="Sara";\nstring saluto="Ciao";\nstring frase=saluto+" "+nome;\nsaluto="Buongiorno";',o:['frase=saluto+" "+nome;','nome=frase;','saluto=frase;'],a:0,h:'frase non è un collegamento permanente alle altre variabili: contiene il risultato calcolato al momento dell’assegnazione.',t:'nome=Sara|saluto=Ciao|frase=Ciao Sara|saluto=Buongiorno',hard:true}]},
+{n:'Input',i:'⌨️',d:'Leggi dati di tipo diverso e osserva come vengono elaborati dopo l’acquisizione.',e:[
+{p:'L’utente inserisce il prezzo e la quantità. Quale descrizione rappresenta correttamente ciò che fa il programma?',c:'double prezzo;\nint quantita;\ncin >> prezzo >> quantita;\ndouble totale=prezzo*quantita;\ndouble iva=totale*0.22;\ndouble finale=totale+iva;',inp:'12.5 3',o:['Calcola il totale di 3 prodotti, l’IVA al 22% e il prezzo finale comprensivo di IVA','Somma prezzo e quantità e poi sottrae il 22%','Calcola soltanto l’IVA su un singolo prodotto'],a:0,h:'Dopo la lettura dei due dati vengono eseguiti tre passaggi: totale, IVA e prezzo finale.',t:'prezzo=?|quantita=?|prezzo=12.5,quantita=3|totale=37.5|iva=8.25|finale=45.75'},
+
+{p:'L’utente inserisce base e altezza. Quale valore finale viene calcolato oltre all’area?',c:'double base;\ndouble altezza;\ncin >> base >> altezza;\ndouble area=base*altezza;\ndouble perimetro=2*(base+altezza);\ndouble rapporto=area/perimetro;',inp:'6 4',o:['Il rapporto tra area e perimetro','La diagonale del rettangolo','La media tra base e altezza'],a:0,h:'Leggi le variabili intermedie: prima area, poi perimetro, infine rapporto.',t:'base=?|altezza=?|base=6,altezza=4|area=24|perimetro=20|rapporto=1.2'},
+
+{p:'L’utente digita “Mario Rossi”. Quale valore viene memorizzato in nome e quale messaggio viene visualizzato?',c:'string nome;\ncin >> nome;\nstring saluto="Ciao "+nome;\ncout << saluto;',inp:'Mario Rossi',o:['nome contiene Mario e viene visualizzato Ciao Mario','nome contiene Mario Rossi e viene visualizzato Ciao Mario Rossi','nome resta vuota e non viene visualizzato nulla'],a:0,h:'cin >> legge fino al primo spazio; il resto dell’input non entra nella variabile nome.',t:'nome=?|nome=Mario|saluto=Ciao Mario|cout=Ciao Mario'},
+
+{p:'L’utente digita “Mario Rossi”. Quale vantaggio produce getline in questo programma?',c:'string nomeCompleto;\ngetline(cin,nomeCompleto);\nstring messaggio="Benvenuto "+nomeCompleto;\ncout << messaggio;',inp:'Mario Rossi',o:['Legge l’intero nome e visualizza Benvenuto Mario Rossi','Legge solo Mario e visualizza Benvenuto Mario','Legge soltanto il cognome'],a:0,h:'getline conserva anche gli spazi all’interno della riga.',t:'nomeCompleto=?|nomeCompleto=Mario Rossi|messaggio=Benvenuto Mario Rossi|cout=Benvenuto Mario Rossi'},
+
+{p:'L’utente inserisce nome, età e media. Quale informazione aggiuntiva calcola il programma dopo l’input?',c:'string nome;\nint eta;\ndouble media;\ncin >> nome >> eta >> media;\nint anniMancanti=18-eta;\ndouble bonus=media+0.5;\nstring riepilogo=nome;',inp:'Giulia 15 8.5',o:['Gli anni mancanti a 18 e una media aumentata di 0.5','La differenza tra nome ed età','La media dei tre dati inseriti'],a:0,h:'Dopo l’input vengono ricavate due nuove informazioni numeriche a partire da eta e media.',t:'nome=?|eta=?|media=?|nome=Giulia,eta=15,media=8.5|anniMancanti=3|bonus=9|riepilogo=Giulia',hard:true},
+
+{p:'La stessa variabile n viene letta due volte. Quale descrizione spiega correttamente il risultato finale?',c:'int n;\ncin >> n;\nint doppio=n*2;\nint sommaParziale=doppio+3;\ncin >> n;\nint totale=sommaParziale+n;\nint finale=totale*2;',inp:'4 7',o:['Il primo valore viene usato per doppio e sommaParziale; il secondo sostituisce n e contribuisce al totale finale','Il secondo input modifica automaticamente anche doppio e sommaParziale','Entrambi gli input vengono sommati prima di ogni elaborazione'],a:0,h:'Le variabili già calcolate non si aggiornano automaticamente quando n riceve un nuovo valore.',t:'n=?|n=4|doppio=8|sommaParziale=11|n=7|totale=18|finale=36',hard:true}]},{n:'Capisci il codice',i:'🧠',d:'Leggi programmi più lunghi e individua lo scopo complessivo, non soltanto il valore di una variabile.',e:[
+{p:'Quale descrizione rappresenta meglio ciò che fa questo programma?',c:'string prodotto="Quaderno";\ndouble prezzo=2.5;\nint quantita=4;\ndouble totale=prezzo*quantita;\ndouble sconto=1.0;\ndouble finale=totale-sconto;\nstring stato="calcolato";',o:['Calcola il costo di 4 quaderni e sottrae uno sconto fisso di 1 euro','Calcola il prezzo di un solo quaderno e aggiunge 1 euro','Modifica il nome del prodotto in base al prezzo'],a:0,h:'Non concentrarti su una singola riga: individua dati iniziali, elaborazione e risultato complessivo.',t:'prodotto=Quaderno|prezzo=2.5|quantita=4|totale=10|sconto=1|finale=9|stato=calcolato',hard:true},
+{p:'Con l’input mostrato, quale operazione complessiva svolge il programma?',c:'string nome;\nint eta;\ndouble altezza;\ncin >> nome >> eta >> altezza;\nint anniMancanti=18-eta;\ndouble altezzaCm=altezza*100;\nstring stato="dati letti";',inp:'Luca 16 1.72',o:['Legge nome, età e altezza; calcola gli anni mancanti a 18 e converte l’altezza in centimetri','Legge soltanto il nome e calcola l’età media','Converte l’età in centimetri e modifica il nome'],a:0,h:'Segui il flusso: prima entrano tre dati, poi vengono prodotte due nuove informazioni numeriche.',t:'nome=?|eta=?|altezza=?|nome=Luca,eta=16,altezza=1.72|anniMancanti=2|altezzaCm=172|stato=dati letti',hard:true},
+{p:'Perché alla fine media e nuovaMedia possono avere valori diversi?',c:'string materia="Informatica";\nint voto1=7;\nint voto2=9;\ndouble media=(voto1+voto2)/2.0;\nvoto1=voto1+1;\ndouble nuovaMedia=(voto1+voto2)/2.0;\nstring stato="ricalcolata";',o:['Perché voto1 viene modificato dopo il primo calcolo e nuovaMedia viene calcolata con il nuovo valore','Perché una variabile double cambia automaticamente nel tempo','Perché string materia modifica i voti'],a:0,h:'Guarda quando viene calcolata ciascuna media rispetto alla modifica di voto1.',t:'materia=Informatica|voto1=7|voto2=9|media=8|voto1=8|nuovaMedia=8.5|stato=ricalcolata',hard:true},
+{p:'Quale affermazione descrive correttamente questo programma?',c:'string articolo="Penna";\ndouble prezzo=1.8;\nint pezzi=5;\ndouble spesa=prezzo*pezzi;\npezzi=pezzi+2;\ndouble nuovaSpesa=prezzo*pezzi;\nstring fase="aggiornata";',o:['spesa conserva il calcolo fatto con 5 pezzi, mentre nuovaSpesa usa i 7 pezzi aggiornati','spesa cambia automaticamente quando pezzi passa da 5 a 7','nuovaSpesa e spesa sono sempre identiche'],a:0,h:'Una variabile già calcolata non viene ricalcolata automaticamente quando cambia una delle variabili usate in precedenza.',t:'articolo=Penna|prezzo=1.8|pezzi=5|spesa=9|pezzi=7|nuovaSpesa=12.6|fase=aggiornata',hard:true},
+{p:'I nomi delle variabili non aiutano. Quale situazione potrebbe rappresentare questo programma?',c:'string s="Libro";\ndouble a=12.0;\nint b=3;\ndouble c=a*b;\ndouble d=c*0.10;\ndouble e=c-d;\nstring f="ok";',o:['Calcola il costo di 3 libri e applica uno sconto del 10%','Calcola la media di tre voti e aggiunge il 10%','Converte 12 euro in centimetri e poi sottrae 3'],a:0,h:'Ignora i nomi a, b, c... e osserva solo tipi, valori e operazioni: 12 × 3, poi il 10% del risultato, poi una sottrazione.',t:'s=Libro|a=12|b=3|c=36|d=3.6|e=32.4|f=ok',hard:true},
+{p:'Anche qui i nomi sono volutamente poco significativi. Quale interpretazione descrive meglio il programma?',c:'string x;\nint a;\ndouble b;\ncin >> x >> a >> b;\ndouble c=a*b;\nint d=a+2;\ndouble e=d*b;',inp:'Anna 4 2.5',o:['Legge un nome, una quantità e un valore unitario; calcola un primo totale e poi un secondo totale usando due unità in più','Legge una frase, un’età e un’altezza e calcola una media','Legge tre numeri e li somma tutti'],a:0,h:'Ricostruisci il ruolo delle variabili dalle relazioni: c=a*b, poi d=a+2, infine e=d*b.',t:'x=?|a=?|b=?|x=Anna,a=4,b=2.5|c=10|d=6|e=15',hard:true}]},
+{n:'Ordina il codice',i:'🧱',d:'Ricostruisci la sequenza logica delle istruzioni, comprese le richieste di input e la visualizzazione finale del risultato.',e:[
+{p:'Metti in ordine il codice per chiedere un numero, leggerlo, raddoppiarlo, aggiungere 3, elevarlo al quadrato, sottrarre 1 e visualizzare il risultato finale.',ord:[
+{id:'g',line:'cout << "Risultato finale: " << finale;'},
+{id:'d',line:'int quadrato=aumentato*aumentato;'},
+{id:'a',line:'int n;'},
+{id:'h',line:'cout << "Inserisci un numero: ";'},
+{id:'f',line:'int finale=quadrato-1;'},
+{id:'c',line:'int aumentato=doppio+3;'},
+{id:'b',line:'cin >> n;'},
+{id:'e',line:'int doppio=n*2;'}
+],correct:['a','h','b','e','c','d','f','g'],h:'Prima dichiara la variabile, poi chiedi il dato e leggilo. Solo dopo puoi eseguire i calcoli e infine mostrare il risultato.',hard:true},
+
+{p:'Metti in ordine il codice per chiedere il lato di un quadrato, leggerlo, calcolare l’area iniziale, raddoppiare il lato, calcolare la nuova area, trovare la differenza e visualizzarla.',ord:[
+{id:'e',line:'double nuovaArea=nuovoLato*nuovoLato;'},
+{id:'b',line:'cin >> lato;'},
+{id:'h',line:'cout << "Differenza tra le aree: " << differenza;'},
+{id:'f',line:'double differenza=nuovaArea-area;'},
+{id:'a',line:'double lato;'},
+{id:'g',line:'cout << "Inserisci il lato del quadrato: ";'},
+{id:'d',line:'double nuovoLato=lato*2;'},
+{id:'c',line:'double area=lato*lato;'}
+],correct:['a','g','b','c','d','e','f','h'],h:'La cout di richiesta deve precedere la cin. La cout finale può essere eseguita solo dopo aver calcolato la differenza.',hard:true},
+
+{p:'Metti in ordine il codice per chiedere un nome, leggerlo, preparare un saluto, costruire il messaggio, copiarlo, aggiungere un punto esclamativo alla copia e visualizzarla.',ord:[
+{id:'d',line:'string messaggio=saluto+" "+nome;'},
+{id:'a',line:'string nome;'},
+{id:'g',line:'cout << copia;'},
+{id:'f',line:'copia=copia+"!";'},
+{id:'c',line:'string saluto="Ciao";'},
+{id:'h',line:'cout << "Inserisci il nome: ";'},
+{id:'b',line:'cin >> nome;'},
+{id:'e',line:'string copia=messaggio;'}
+],correct:['a','h','b','c','d','e','f','g'],h:'Il nome deve essere richiesto e letto prima di costruire il messaggio. La copia va visualizzata solo dopo l’aggiunta del punto esclamativo.',hard:true},
+
+{p:'Metti in ordine il codice per chiedere prezzo e quantità, leggere i dati, calcolare il totale, applicare uno sconto fisso di 2 euro e visualizzare il prezzo finale.',ord:[
+{id:'c',line:'int quantita;'},
+{id:'h',line:'cout << "Prezzo finale: " << scontato;'},
+{id:'f',line:'double scontato=totale-2;'},
+{id:'a',line:'double prezzo;'},
+{id:'i',line:'cout << "Inserisci la quantita: ";'},
+{id:'e',line:'double totale=prezzo*quantita;'},
+{id:'j',line:'cout << "Inserisci il prezzo: ";'},
+{id:'d',line:'cin >> quantita;'},
+{id:'b',line:'cin >> prezzo;'}
+],correct:['a','c','j','b','i','d','e','f','h'],h:'Per ogni input: prima la cout di richiesta, poi la cin. Il risultato finale può essere mostrato solo dopo totale e sconto.',hard:true},
+
+{p:'Cassa di un negozio: metti in ordine le istruzioni per chiedere nome del prodotto, prezzo e quantità, leggere i dati, calcolare totale, sconto del 10% e prezzo finale, quindi mostrare lo scontrino finale.',ord:[
+{id:'k',line:'cout << "Totale finale: " << finale;'},
+{id:'f',line:'double finale=totale-sconto;'},
+{id:'b',line:'double prezzo;'},
+{id:'h',line:'cout << "Inserisci il prezzo: ";'},
+{id:'d',line:'cin >> prodotto;'},
+{id:'a',line:'string prodotto;'},
+{id:'j',line:'cout << "Inserisci la quantita: ";'},
+{id:'g',line:'double sconto=totale*0.10;'},
+{id:'c',line:'int quantita;'},
+{id:'i',line:'cin >> prezzo;'},
+{id:'e',line:'double totale=prezzo*quantita;'},
+{id:'l',line:'cin >> quantita;'},
+{id:'m',line:'cout << "Inserisci il prodotto: ";'}
+],correct:['a','b','c','m','d','h','i','j','l','e','g','f','k'],h:'Dichiara prima le variabili. Poi chiedi e acquisisci ogni dato nell’ordine. Solo quando prezzo e quantità sono disponibili puoi calcolare totale, sconto e finale.',hard:true},
+
+{p:'Viaggio in auto: metti in ordine le istruzioni per chiedere chilometri percorsi e litri consumati, leggere i dati, calcolare i km per litro, stimare i litri necessari per 300 km e visualizzare il risultato.',ord:[
+{id:'e',line:'double kmPerLitro=km/litri;'},
+{id:'a',line:'double km;'},
+{id:'i',line:'cout << "Litri necessari per 300 km: " << litriNecessari;'},
+{id:'g',line:'double litriNecessari=distanza/kmPerLitro;'},
+{id:'c',line:'cin >> km;'},
+{id:'h',line:'cout << "Inserisci i litri consumati: ";'},
+{id:'b',line:'double litri;'},
+{id:'j',line:'cin >> litri;'},
+{id:'f',line:'double distanza=300;'},
+{id:'d',line:'cout << "Inserisci i km percorsi: ";'}
+],correct:['a','b','d','c','h','j','e','f','g','i'],h:'Le richieste dei dati devono precedere le rispettive letture. Prima calcoli i km/l, poi puoi stimare i litri necessari per 300 km e infine mostrarli.',hard:true}]},
+{n:'Trova l’errore',i:'🐞',d:'Individua la riga che impedisce al programma di funzionare correttamente o di raggiungere l’obiettivo richiesto.',e:[
+{p:'Il programma dovrebbe leggere un numero e visualizzarne il doppio. Quale riga contiene l’errore?',errcode:'int n;\ncout << "Inserisci un numero: ";\ncin >> n;\ndoppio=n*2;\ncout << "Doppio: " << doppio;',errorLine:4,why:'La variabile doppio viene usata senza essere stata dichiarata. Una possibile correzione è: int doppio=n*2;',h:'Controlla se tutte le variabili utilizzate sono state prima dichiarate.',hard:true},
+
+{p:'Il programma dovrebbe leggere il prezzo e la quantità e calcolare il totale. Quale riga rende il risultato scorretto?',errcode:'double prezzo;\nint quantita;\ncout << "Inserisci prezzo e quantita: ";\ncin >> prezzo >> quantita;\ndouble totale=prezzo+quantita;\ncout << "Totale: " << totale;',errorLine:5,why:'Per calcolare il costo totale bisogna moltiplicare prezzo per quantità, non sommarli: totale=prezzo*quantita;',h:'Chiediti quale operazione rappresenta davvero “prezzo unitario × numero di pezzi”.',hard:true},
+
+{p:'Il programma dovrebbe chiedere un voto e poi stabilire se è sufficiente. Quale riga usa la variabile troppo presto?',errcode:'int voto;\nif(voto>=6)\n    cout << "Sufficiente";\ncout << "Inserisci il voto: ";\ncin >> voto;',errorLine:2,why:'La condizione usa voto prima che il programma abbia acquisito il valore con cin. La richiesta e la lettura devono avvenire prima dell’if.',h:'Segui il flusso dall’alto verso il basso: quando viene usata voto per la prima volta, contiene già un dato?',hard:true},
+
+{p:'Il programma dovrebbe conservare il nome completo “Mario Rossi”. Quale riga è inadatta allo scopo?',errcode:'string nome;\ncout << "Inserisci nome e cognome: ";\ncin >> nome;\ncout << "Nome completo: " << nome;',errorLine:3,why:'cin >> nome si ferma al primo spazio e memorizza solo “Mario”. Per leggere “Mario Rossi” in un’unica stringa serve getline(cin,nome).',h:'Pensa a cosa succede quando cin incontra uno spazio.',hard:true},
+
+{p:'Il programma dovrebbe calcolare la media reale di 7 e 8. Quale riga provoca la perdita della parte decimale?',errcode:'int a=7;\nint b=8;\ndouble media;\nmedia=(a+b)/2;\ncout << "Media: " << media;',errorLine:4,why:'Poiché a, b e 2 sono interi, la divisione viene eseguita come divisione intera e produce 7. Una correzione è (a+b)/2.0.',h:'Il fatto che media sia double non basta se la divisione è già stata eseguita tra interi.',hard:true},
+
+{p:'Il programma dovrebbe scambiare i valori di a e b. Quale riga distrugge il valore che temp doveva conservare?',errcode:'int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;\ncout << a << " " << b;',errorLine:5,why:'temp conteneva il vecchio valore di a (5), ma con temp=b viene sovrascritta con 9. Quindi il 5 viene perso e b riceve 9.',h:'Segui il contenuto di temp: quale valore dovrebbe custodire fino all’ultima assegnazione?',hard:true}]},
 {n:'Problemi',i:'🧩',d:'Prima individua input, elaborazione e output.',e:[
 {p:'Ore lavorate + compenso orario → stipendio. Quale schema è corretto?',o:['INPUT stipendio → somma → ore','INPUT ore,compenso → moltiplicazione → stipendio','INPUT ore → divisione → compenso'],a:1,h:'Cosa entra? Quale calcolo? Cosa esce?'},
 {p:'Base e altezza → area del rettangolo. Quale schema è corretto?',o:['base,altezza → prodotto → area','area → somma → altezza','base → divisione → area'],a:0,h:'Pensa alla formula area=base×altezza.'},
@@ -446,8 +659,7 @@ const L=[
 {p:'Valore finale di somma?',c:'int somma=0;\nfor(int i=1;i<=3;i++)\n  somma=somma+i;',a:'6',m:'somma=0|i=1',h:'Aggiungi 1, poi 2, poi 3.',t:'somma=1|somma=3|somma=6'},
 {p:'Valore finale di conta?',c:'int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;',a:'4',m:'conta=0|i=0',h:'i assume 0,1,2,3: quattro iterazioni.',t:'conta=1|conta=2|conta=3|conta=4'},
 {p:'Valore finale di prodotto?',c:'int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;',a:'24',m:'prodotto=1|i=1',h:'Moltiplica progressivamente per 1,2,3,4.',t:'prodotto=1|prodotto=2|prodotto=6|prodotto=24'},
-{p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}
-];
+{p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}];
 
 const S={l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[],plan:[],types:{}};
 const $=s=>r.querySelector(s);
@@ -459,17 +671,17 @@ function nav(){
   levels.innerHTML='';
   L.forEach((x,i)=>{
     const b=document.createElement('button');
-    const n=[0,1,2,3].filter(j=>S.d.has(i+'-'+j)).length;
+    const n=x.e.filter((_,j)=>S.d.has(i+'-'+j)).length;
     b.type='button';
     b.className='level'+(i===S.l?' active':'');
-    b.innerHTML='<div class="icon">'+x.i+'</div><strong>'+(i+1)+'. '+x.n+'</strong><div class="level-score">'+n+'/4</div>';
+    b.innerHTML='<div class="icon">'+x.i+'</div><strong>'+(i+1)+'. '+x.n+'</strong><div class="level-score">'+n+'/'+x.e.length+'</div>';
     b.addEventListener('click',()=>{S.l=i;S.q=0;render()});
     levels.appendChild(b);
   });
 
   const qs=$('#qs');
   qs.innerHTML='';
-  for(let i=0;i<4;i++){
+  for(let i=0;i<L[S.l].e.length;i++){
     const b=document.createElement('button');
     b.type='button';
     b.className='qbtn'+(i===S.q?' active':'')+(S.d.has(S.l+'-'+i)?' done':'');
@@ -533,29 +745,103 @@ function numericValue(v){
   return Number.isFinite(n)?n:0;
 }
 
-function evalExpr(expr,state){
+function evalNumericExpr(expr,state,types){
   let safe=expr.trim();
   safe=safe.replace(/\b([A-Za-z_]\w*)\b/g,(m,name)=>{
-    if(Object.prototype.hasOwnProperty.call(state,name)) return String(numericValue(state[name]));
+    if(Object.prototype.hasOwnProperty.call(state,name) && types[name]!=='string'){
+      return String(numericValue(state[name]));
+    }
     return m;
   });
-  if(!/^[0-9+\-*/%().\s]+$/.test(safe)) throw new Error('Espressione non supportata');
+  if(!/^[0-9+\-*/%().\s]+$/.test(safe)) throw new Error('Espressione numerica non supportata');
   return Function('"use strict";return ('+safe+');')();
 }
 
+function splitConcat(expr){
+  const out=[];
+  let cur='',quote=false;
+  for(let i=0;i<expr.length;i++){
+    const ch=expr[i];
+    if(ch==='"' && expr[i-1]!=='\\') quote=!quote;
+    if(ch==='+' && !quote){
+      out.push(cur.trim()); cur='';
+    }else cur+=ch;
+  }
+  if(cur.trim()!=='')out.push(cur.trim());
+  return out;
+}
+
+function evalStringExpr(expr,state,types){
+  const parts=splitConcat(expr);
+  return parts.map(part=>{
+    const p=part.trim();
+    if(/^".*"$/.test(p)){
+      try{return JSON.parse(p)}catch(e){return p.slice(1,-1)}
+    }
+    if(Object.prototype.hasOwnProperty.call(state,p)) return String(state[p]==='?'?'':state[p]);
+    if(/^[0-9.+\-*/%()\s]+$/.test(p)) return String(evalNumericExpr(p,state,types));
+    return p;
+  }).join('');
+}
+
+function evalForType(expr,type,state,types){
+  return type==='string'
+    ? evalStringExpr(expr,state,types)
+    : evalNumericExpr(expr,state,types);
+}
+
 function castValue(value,type){
-  if(type==='int') return Math.trunc(value);
+  if(type==='string') return String(value);
+  if(type==='int') return Math.trunc(Number(value));
   return Number(value);
+}
+
+function castInput(value,type){
+  if(type==='string') return String(value);
+  if(type==='int') return Math.trunc(Number(value));
+  if(type==='double') return Number(value);
+  return String(value);
+}
+
+function makeInputContext(raw){
+  const source=String(raw??'');
+  const tokens=source.trim()===''?[]:source.trim().split(/\s+/);
+  const lines=source.split(/\r?\n/);
+  return {tokens,tokenPos:0,lines,linePos:0};
 }
 
 function cloneState(state){ return JSON.parse(JSON.stringify(state)); }
 function cloneTypes(types){ return JSON.parse(JSON.stringify(types)); }
 
-function executeSimpleStatement(line,state,types){
+function executeSimpleStatement(line,state,types,inputCtx){
   const changed=[];
   let s=line.trim().replace(/;$/,'').trim();
 
-  const decl=s.match(/^(int|double)\s+(.+)$/);
+  const cinMatch=s.match(/^(?:std::)?cin\s*>>\s*(.+)$/);
+  if(cinMatch){
+    const vars=cinMatch[1].split('>>').map(v=>v.trim()).filter(Boolean);
+    vars.forEach(name=>{
+      if(!/^[A-Za-z_]\w*$/.test(name))return;
+      const token=inputCtx && inputCtx.tokenPos<inputCtx.tokens.length
+        ? inputCtx.tokens[inputCtx.tokenPos++]
+        : '';
+      state[name]=String(castInput(token,types[name]||'string'));
+      changed.push(name);
+    });
+    return changed;
+  }
+
+  const getlineMatch=s.match(/^(?:std::)?getline\s*\(\s*(?:std::)?cin\s*,\s*([A-Za-z_]\w*)\s*\)$/);
+  if(getlineMatch){
+    const name=getlineMatch[1];
+    const lineValue=inputCtx && inputCtx.linePos<inputCtx.lines.length
+      ? inputCtx.lines[inputCtx.linePos++]
+      : '';
+    state[name]=String(lineValue);
+    return [name];
+  }
+
+  const decl=s.match(/^(int|double|string)\s+(.+)$/);
   if(decl){
     const type=decl[1];
     const parts=decl[2].split(',');
@@ -567,14 +853,12 @@ function executeSimpleStatement(line,state,types){
       else { name=p.trim(); expr=null; }
       if(!/^[A-Za-z_]\w*$/.test(name)) return;
       types[name]=type;
-      if(!Object.prototype.hasOwnProperty.call(state,name)) changed.push(name);
       if(expr!==null){
-        const val=castValue(evalExpr(expr,state),type);
-        state[name]=String(val);
+        state[name]=String(castValue(evalForType(expr,type,state,types),type));
       }else{
         state[name]='?';
       }
-      if(!changed.includes(name)) changed.push(name);
+      changed.push(name);
     });
     return changed;
   }
@@ -596,8 +880,8 @@ function executeSimpleStatement(line,state,types){
   const ass=s.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
   if(ass){
     const name=ass[1],expr=ass[2];
-    const val=castValue(evalExpr(expr,state),types[name]||'double');
-    state[name]=String(val);
+    const type=types[name]||'double';
+    state[name]=String(castValue(evalForType(expr,type,state,types),type));
     return [name];
   }
   return changed;
@@ -613,9 +897,10 @@ function evalCondition(cond,state){
   return !!Function('"use strict";return ('+c+');')();
 }
 
-function buildExecutionPlan(code){
+function buildExecutionPlan(code,inputRaw=''){
   const lines=code.split('\n');
   const state={},types={},plan=[];
+  const inputCtx=makeInputContext(inputRaw);
   let pc=0,guard=0;
 
   const pushEvent=(lineIndex,kind,description,changed=[])=>{
@@ -645,12 +930,12 @@ function buildExecutionPlan(code){
 
       let loopGuard=0;
       while(evalCondition(cond,state) && loopGuard++<50){
-        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types);
+        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types,inputCtx);
         pushEvent(pc+1,'statement','Esecuzione del corpo del ciclo.',bodyChanged);
 
         const incChanged=executeSimpleStatement(
           inc.endsWith('++') || inc.endsWith('--') ? inc : inc+';',
-          state,types
+          state,types,inputCtx
         );
         const ok=evalCondition(cond,state);
         pushEvent(
@@ -671,7 +956,7 @@ function buildExecutionPlan(code){
       pushEvent(pc,'control',ok?'Verifica della condizione: vera.':'Verifica della condizione: falsa.');
       let loopGuard=0;
       while(ok && loopGuard++<50){
-        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types);
+        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types,inputCtx);
         pushEvent(pc+1,'statement','Esecuzione del corpo del ciclo.',bodyChanged);
         ok=evalCondition(cond,state);
         pushEvent(pc,'control',ok?'Nuova verifica: condizione vera.':'Nuova verifica: condizione falsa, il ciclo termina.');
@@ -680,8 +965,16 @@ function buildExecutionPlan(code){
       continue;
     }
 
-    const changed=executeSimpleStatement(line,state,types);
-    pushEvent(pc,'statement','Esecuzione della riga.',changed);
+    const changed=executeSimpleStatement(line,state,types,inputCtx);
+    let description='Esecuzione della riga.';
+    if(/^(?:std::)?cin\s*>>/.test(line)){
+      description='Il programma legge uno o più dati digitati dall’utente e li memorizza nelle variabili indicate.';
+    }else if(/^(?:std::)?getline\s*\(/.test(line)){
+      description='Il programma legge l’intera riga digitata dall’utente, compresi gli spazi.';
+    }else if(/^(int|double|string)\b/.test(line)){
+      description='Il programma crea la variabile in memoria'+(line.includes('=')?' e le assegna il valore iniziale.':'.');
+    }
+    pushEvent(pc,'statement',description,changed);
     pc++;
   }
   return plan;
@@ -713,8 +1006,177 @@ function loadSnapshot(event){
   drawMemory(event.changed);
 }
 
+
+function stripStrings(line){
+  return line.replace(/"[^"]*"/g,'');
+}
+
+function identifiers(expr){
+  const cleaned=stripStrings(expr);
+  const words=cleaned.match(/[A-Za-z_]\w*/g)||[];
+  const ignore=new Set(['int','double','string','cout','cin','endl','std','true','false']);
+  return words.filter(w=>!ignore.has(w));
+}
+
+function validateOrderedCode(x){
+  const items=[...r.querySelectorAll('#orderList .order-item')];
+  const byId={};
+  x.ord.forEach(item=>byId[item.id]=item.line);
+
+  const declared=new Set();
+  const initialized=new Set();
+  const positions={};
+  items.forEach((el,i)=>positions[el.dataset.id]=i);
+
+  function varsUsed(expr){
+    return identifiers(expr).filter(v=>!['cout','cin'].includes(v));
+  }
+
+  for(let i=0;i<items.length;i++){
+    const id=items[i].dataset.id;
+    const raw=(byId[id]||'').trim();
+    const line=raw.replace(/;$/,'').trim();
+
+    // Dichiarazione con o senza inizializzazione
+    let m=line.match(/^(int|double|string)\s+([A-Za-z_]\w*)(?:\s*=\s*(.+))?$/);
+    if(m){
+      const name=m[2], expr=m[3];
+      if(declared.has(name)) return false;
+      if(expr){
+        const used=varsUsed(expr);
+        for(const v of used){
+          if(!initialized.has(v)) return false;
+        }
+      }
+      declared.add(name);
+      if(expr) initialized.add(name);
+      continue;
+    }
+
+    // Input
+    if(/^cin\s*>>/.test(line)){
+      const vars=[...line.matchAll(/>>\s*([A-Za-z_]\w*)/g)].map(m=>m[1]);
+      if(!vars.length) return false;
+      for(const v of vars){
+        if(!declared.has(v)) return false;
+        initialized.add(v);
+      }
+      continue;
+    }
+
+    // Output: le variabili mostrate devono già avere un valore.
+    if(/^cout\s*<</.test(line)){
+      const noStrings=stripStrings(line);
+      const vars=[...noStrings.matchAll(/<<\s*([A-Za-z_]\w*)/g)]
+        .map(m=>m[1])
+        .filter(v=>v!=='endl');
+      for(const v of vars){
+        if(!initialized.has(v)) return false;
+      }
+      continue;
+    }
+
+    // Assegnazione
+    m=line.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
+    if(m){
+      const target=m[1], expr=m[2];
+      if(!declared.has(target)) return false;
+      const used=varsUsed(expr);
+      for(const v of used){
+        if(!initialized.has(v)) return false;
+      }
+      initialized.add(target);
+      continue;
+    }
+  }
+
+  // Le cout di richiesta "Inserisci..." devono precedere la cin associata
+  // secondo l'accoppiamento previsto dall'esercizio, ma possono esserci
+  // dichiarazioni intermedie.
+  const correct=x.correct||[];
+  for(let i=0;i<correct.length-1;i++){
+    const first=byId[correct[i]]||'';
+    const second=byId[correct[i+1]]||'';
+    if(/cout\s*<<\s*"Inserisci/i.test(first) && /^\s*cin\s*>>/.test(second)){
+      if(positions[correct[i]] > positions[correct[i+1]]) return false;
+    }
+  }
+
+  return true;
+}
+
+function updateOrderNumbers(){
+  const items=[...r.querySelectorAll('#orderList .order-item')];
+  items.forEach((item,i)=>{
+    item.querySelector('.order-num').textContent=i+1;
+    const up=item.querySelector('.move-up');
+    const down=item.querySelector('.move-down');
+    up.disabled=i===0;
+    down.disabled=i===items.length-1;
+  });
+}
+
+function renderOrder(x){
+  $('#ans').innerHTML=
+    '<div class="order-intro">Usa le frecce per spostare ogni istruzione. L’ordine dall’alto verso il basso sarà quello di esecuzione.</div>'+
+    '<div id="orderList" class="order-list">'+
+    x.ord.map(item=>
+      '<div class="order-item" data-id="'+item.id+'">'+
+        '<span class="order-num"></span>'+
+        '<code class="order-code">'+escapeHtml(item.line)+'</code>'+
+        '<span class="order-controls">'+
+          '<button type="button" class="order-move move-up" aria-label="Sposta istruzione verso l’alto">↑</button>'+
+          '<button type="button" class="order-move move-down" aria-label="Sposta istruzione verso il basso">↓</button>'+
+        '</span>'+
+      '</div>'
+    ).join('')+'</div>';
+
+  r.querySelectorAll('.move-up').forEach(btn=>btn.addEventListener('click',()=>{
+    const item=btn.closest('.order-item');
+    const prev=item.previousElementSibling;
+    if(prev)item.parentElement.insertBefore(item,prev);
+    updateOrderNumbers();
+  }));
+
+  r.querySelectorAll('.move-down').forEach(btn=>btn.addEventListener('click',()=>{
+    const item=btn.closest('.order-item');
+    const next=item.nextElementSibling;
+    if(next)item.parentElement.insertBefore(next,item);
+    updateOrderNumbers();
+  }));
+
+  updateOrderNumbers();
+}
+
+function renderErrorFinder(x){
+  const lines=x.errcode.split('\n');
+  $('#ans').innerHTML=
+    '<div class="order-intro">Clicca sulla riga che ritieni errata.</div>'+
+    '<div id="errorLines" class="error-lines">'+
+    lines.map((line,i)=>
+      '<button type="button" class="error-line" data-line="'+(i+1)+'">'+
+        '<span class="err-ln">'+(i+1)+'</span>'+
+        '<code>'+escapeHtml(line)+'</code>'+
+      '</button>'
+    ).join('')+
+    '</div>';
+
+  r.querySelectorAll('#errorLines .error-line').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      r.querySelectorAll('#errorLines .error-line').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      S.errorChoice=Number(btn.dataset.line);
+    });
+  });
+}
+
 function answer(x){
-  if(x.o){
+  S.errorChoice=null;
+  if(x.errcode){
+    renderErrorFinder(x);
+  }else if(x.ord){
+    renderOrder(x);
+  }else if(x.o){
     $('#ans').innerHTML='<div class="answer-grid">'+x.o.map((v,i)=>
       '<label class="answer-option"><input type="radio" name="a" value="'+i+'"><span>'+v+'</span></label>'
     ).join('')+'</div>';
@@ -725,10 +1187,13 @@ function answer(x){
 
 function upd(){
   const n=S.d.size;
+  const total=L.reduce((acc,l)=>acc+l.e.length,0);
   $('#tot').textContent=n;
-  $('#bar').style.width=(n/28*100)+'%';
-  $('#msg').textContent=n===28?'Percorso completato!':n+' esercizi completati su 28.';
-  $('#ldone').textContent=[0,1,2,3].filter(i=>S.d.has(S.l+'-'+i)).length;
+  $('#maxTot').textContent=total;
+  $('#bar').style.width=(n/total*100)+'%';
+  $('#msg').textContent=n===total?'Percorso completato!':n+' esercizi completati su '+total+'.';
+  $('#ldone').textContent=L[S.l].e.filter((_,i)=>S.d.has(S.l+'-'+i)).length;
+  $('#levelMax').textContent=L[S.l].e.length;
 }
 
 function render(){
@@ -737,11 +1202,20 @@ function render(){
   $('#kick').textContent='LIVELLO '+(S.l+1)+' · '+l.i;
   $('#ttl').textContent=l.n;
   $('#desc').textContent=l.d;
-  $('#qlab').textContent='Esercizio '+(S.q+1)+' di 4';
-  $('#tag').textContent=S.l===4?'problem solving':S.l===5?'condizione':S.l===6?'ciclo':'ragionamento';
+  $('#qlab').textContent='Esercizio '+(S.q+1)+' di '+l.e.length;
+  const tagMap={Stringhe:'stringhe',Input:'input','Capisci il codice':'comprensione','Ordina il codice':'sequenza','Trova l’errore':'debug',Problemi:'problem solving',Decisioni:'condizione',Cicli:'ciclo'};
+  $('#tag').textContent=x.hard?'sfida':(tagMap[l.n]||'ragionamento');
   $('#prompt').textContent=x.p;
 
-  renderCode(x.c || '', -1);
+  renderCode(x.c || x.errcode || '', -1);
+
+  if(Object.prototype.hasOwnProperty.call(x,'inp')){
+    $('#inputSim').classList.remove('hidden');
+    $('#inputValue').textContent=x.inp;
+  }else{
+    $('#inputSim').classList.add('hidden');
+    $('#inputValue').textContent='';
+  }
 
   answer(x);
   memory(x);
@@ -754,7 +1228,7 @@ function render(){
   $('#trace').classList.toggle('hidden',!x.t);
 
   S.run=0;
-  S.plan=x.c ? buildExecutionPlan(x.c) : [];
+  S.plan=x.c ? buildExecutionPlan(x.c,x.inp||'') : [];
   if(x.c && S.plan.length){
     $('#runner').classList.remove('hidden');
     $('#runnerCount').textContent='0/'+S.plan.length;
@@ -771,7 +1245,16 @@ $('#check').addEventListener('click',()=>{
   const x=ex();
   let ok=false;
 
-  if(x.o){
+  if(x.errcode){
+    if(!S.errorChoice){
+      $('#fb').className='feedback no';
+      $('#fb').textContent='Seleziona prima la riga che ritieni errata.';
+      return;
+    }
+    ok=S.errorChoice===x.errorLine;
+  }else if(x.ord){
+    ok=validateOrderedCode(x);
+  }else if(x.o){
     const a=r.querySelector('input[name="a"]:checked');
     if(!a){
       $('#fb').className='feedback no';
@@ -793,12 +1276,20 @@ $('#check').addEventListener('click',()=>{
   if(ok){
     S.d.add(key());
     $('#fb').className='feedback ok';
-    $('#fb').textContent='✓ Corretto. Hai seguito bene il ragionamento.';
+    $('#fb').textContent=x.errcode
+      ? '✓ Hai individuato la riga errata. '+x.why
+      : (x.ord
+          ? '✓ Sequenza valida. Le dichiarazioni, gli input, i calcoli e l’output rispettano le dipendenze del programma.'
+          : '✓ Corretto. Hai seguito bene il ragionamento.');
     r.querySelectorAll('.mem').forEach(v=>v.classList.add('ok'));
     nav(); upd();
   }else{
     $('#fb').className='feedback no';
-    $('#fb').textContent='Non ancora. Ricostruisci i passaggi invece di indovinare.';
+    $('#fb').textContent=x.errcode
+      ? 'Non è quella. Leggi il programma dall’alto verso il basso e controlla dichiarazioni, valori disponibili e operazioni.'
+      : (x.ord
+          ? 'Non ancora. Controlla che ogni variabile sia dichiarata prima dell’uso, abbia già un valore quando serve e che le richieste di input precedano le relative letture.'
+          : 'Non ancora. Ricostruisci i passaggi invece di indovinare.');
   }
 });
 
@@ -865,7 +1356,7 @@ $('#resetRun').addEventListener('click',()=>{
   const x=ex();
   if(!x.c)return;
   S.run=0;
-  S.plan=buildExecutionPlan(x.c);
+  S.plan=buildExecutionPlan(x.c,x.inp||'');
   S.mem={}; S.memOrder=[]; S.types={};
   drawMemory();
   renderCode(x.c,-1);
@@ -877,8 +1368,8 @@ $('#resetRun').addEventListener('click',()=>{
 });
 
 $('#next').addEventListener('click',()=>{
-  if(S.q<3)S.q++;
-  else if(S.l<6){S.l++;S.q=0}
+  if(S.q<L[S.l].e.length-1)S.q++;
+  else if(S.l<L.length-1){S.l++;S.q=0}
   else {S.l=0;S.q=0}
   render();
 });

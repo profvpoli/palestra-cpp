@@ -414,6 +414,523 @@ footer{
   h1{font-size:25px}
   .memgrid{grid-template-columns:1fr}
 }
+
+.help-open-btn{
+  margin-top:14px;
+  border:1px solid var(--accent);
+  background:var(--accent-soft);
+  color:var(--text);
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:800;
+}
+
+.main-menu{
+  margin-top:18px;
+}
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.menu-card{
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  background:#fff;
+  text-align:left;
+  min-height:190px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.menu-card:hover{
+  border-color:var(--accent);
+}
+.menu-card .menu-icon{
+  font-size:34px;
+  margin-bottom:12px;
+}
+.menu-card h3{
+  margin-bottom:8px;
+}
+.menu-card p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.menu-card .menu-action{
+  margin-top:18px;
+  font-weight:800;
+  color:var(--accent);
+}
+.section-toolbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:16px 0;
+}
+.section-toolbar .section-title{
+  font-weight:800;
+}
+@media(max-width:700px){
+  .menu-grid{grid-template-columns:1fr}
+}
+
+.ps-shell{
+  margin-top:16px;
+}
+.ps-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.ps-nav{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:16px;
+}
+.ps-tab{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  padding:12px;
+  text-align:center;
+  font-weight:700;
+}
+.ps-tab.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+}
+.ps-page{
+  margin-top:16px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--panel);
+  padding:20px;
+}
+.ps-problem{
+  border-left:5px solid var(--accent);
+  background:#fff7ed;
+  border-radius:12px;
+  padding:16px 18px;
+  line-height:1.55;
+  margin:14px 0 18px;
+}
+.ps-question{
+  font-weight:800;
+  margin:16px 0 10px;
+}
+.ps-options{
+  display:grid;
+  gap:9px;
+}
+.ps-choice{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:12px;
+  padding:12px 14px;
+  text-align:left;
+}
+.ps-choice.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.ps-choice.correct{
+  border-color:var(--ok);
+  background:#ecfdf3;
+}
+.ps-feedback{
+  margin-top:12px;
+  border-radius:12px;
+  padding:12px 14px;
+  background:#f8fafc;
+  border:1px solid var(--border);
+  line-height:1.5;
+}
+.ps-flow{
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr;
+  gap:10px;
+  align-items:center;
+  margin-top:16px;
+}
+.ps-flow-box{
+  min-height:92px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#fff;
+}
+.ps-arrow{
+  font-size:26px;
+  color:var(--muted);
+}
+.ps-classify{
+  display:grid;
+  gap:12px;
+  margin-top:14px;
+}
+.ps-data-row{
+  display:grid;
+  grid-template-columns:minmax(140px,1fr) minmax(180px,1.2fr);
+  gap:12px;
+  align-items:center;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+}
+.ps-data-row select{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:10px;
+  font:inherit;
+}
+.ps-examples{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:14px 0;
+}
+.ps-example{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  background:#fff;
+}
+.ps-example strong{
+  display:block;
+  font-size:20px;
+  margin-top:4px;
+}
+.ps-rule{
+  margin-top:14px;
+  border-radius:14px;
+  padding:16px;
+  border:1px dashed var(--accent);
+  background:var(--accent-soft);
+}
+.ps-method{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-top:18px;
+}
+.ps-method div{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background:#fff;
+  font-size:14px;
+}
+
+
+.ps-hub{
+  margin-top:16px;
+}
+.ps-hub-top{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+
+.ps-construct-tabs{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin:18px 0 10px;
+}
+.ps-construct-tab{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:14px;
+  padding:12px 10px;
+  font-weight:800;
+  text-align:center;
+}
+.ps-construct-tab.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.ps-construct-tab:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  background:#f3f4f6;
+}
+.ps-construct-tab:disabled::after{
+  content:"  🔒";
+}
+.ps-construct-intro{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px 15px;
+  background:#f8fafc;
+  line-height:1.5;
+}
+@media(max-width:860px){
+  .ps-construct-tabs{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .ps-construct-tabs{grid-template-columns:1fr}
+}
+
+.ps-level-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:16px 0;
+}
+.ps-level-tab{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:999px;
+  padding:9px 14px;
+  font-weight:800;
+}
+.ps-level-tab.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.ps-card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  background:#fff;
+}
+.ps-card + .ps-card{
+  margin-top:14px;
+}
+.ps-card-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.ps-step-title{
+  font-weight:800;
+  margin-bottom:10px;
+}
+.ps-step-help{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:10px;
+}
+.ps-choice-row{
+  display:grid;
+  gap:8px;
+}
+.ps-unified-choice{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:11px;
+  padding:11px 12px;
+  text-align:left;
+}
+.ps-unified-choice.selected{
+  border-color:#d6a800;
+  background:#fff4b8;
+}
+.ps-unified-choice.correct{
+  border-color:#16a34a;
+  background:#dcfce7;
+}
+.ps-unified-choice.wrong{
+  border-color:#dc2626;
+  background:#fee2e2;
+}
+.ps-specific-tip{
+  margin-top:8px;
+  border-left:4px solid #dc2626;
+  border-radius:8px;
+  padding:9px 11px;
+  background:#fff7f7;
+  line-height:1.45;
+}
+.ps-specific-tip strong{
+  display:block;
+  margin-bottom:3px;
+}
+
+.ps-inline-tip{
+  margin-top:5px;
+  margin-bottom:2px;
+}
+
+.ps-checkline{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.ps-step-feedback{
+  margin-top:10px;
+  border:1px solid var(--border);
+  background:#f8fafc;
+  border-radius:12px;
+  padding:11px 12px;
+  line-height:1.5;
+}
+.ps-final-summary{
+  margin-top:14px;
+  border:1px dashed var(--accent);
+  background:var(--accent-soft);
+  border-radius:14px;
+  padding:14px;
+  line-height:1.55;
+}
+.ps-problem-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.ps-hint-row{
+  margin-top:12px;
+  display:flex;
+  justify-content:flex-end;
+}
+.ps-hint-box{
+  margin-top:10px;
+  border:1px dashed var(--accent);
+  background:var(--accent-soft);
+  border-radius:12px;
+  padding:12px 14px;
+  line-height:1.5;
+}
+
+
+.ps-train-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.ps-difficulties{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:14px 0;
+}
+.ps-diff{
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:#fff;
+  padding:9px 14px;
+  font-weight:700;
+}
+.ps-diff.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.ps-train-progress{
+  min-width:150px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 14px;
+  background:#fff;
+}
+.ps-mini-progress{
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:#e5e7eb;
+  margin-top:8px;
+}
+.ps-mini-progress > div{
+  height:100%;
+  width:0;
+  background:var(--accent);
+  transition:width .25s ease;
+}
+.ps-problem-title{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.ps-level-badge{
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:800;
+}
+.ps-train-grid{
+  display:grid;
+  gap:14px;
+  margin-top:16px;
+}
+.ps-task{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#fff;
+}
+.ps-task-title{
+  font-weight:800;
+  margin-bottom:9px;
+}
+.ps-train-choice{
+  width:100%;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:10px;
+  padding:10px 12px;
+  text-align:left;
+  margin-top:7px;
+}
+.ps-train-choice.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.ps-train-choice.correct{
+  border-color:var(--ok);
+  background:#ecfdf3;
+}
+.ps-train-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+.ps-step-summary{
+  margin-top:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  background:#f8fafc;
+  line-height:1.55;
+}
+
+@media(max-width:760px){
+  .ps-nav{grid-template-columns:1fr}
+  .ps-flow{grid-template-columns:1fr}
+  .ps-arrow{transform:rotate(90deg);text-align:center}
+  .ps-data-row{grid-template-columns:1fr}
+  .ps-examples{grid-template-columns:1fr}
+  .ps-method{grid-template-columns:1fr}
+}
+
 @media(prefers-reduced-motion:reduce){
   .bar,.mem{transition:none}
 }
@@ -434,9 +951,145 @@ footer{
     </div>
   </section>
 
-  <nav id="levels" class="levels" aria-label="Livelli"></nav>
 
-  <section class="grid main">
+
+  <section id="mainMenu" class="panel main-menu">
+    <div class="kicker">SCEGLI IL PERCORSO</div>
+    <h2 style="margin-top:6px">Da dove vuoi cominciare?</h2>
+    <p class="muted small">Puoi lavorare sul ragionamento generale oppure esercitarti direttamente con la programmazione in C++.</p>
+
+    <div class="menu-grid">
+      <button id="goCppGym" type="button" class="menu-card">
+        <div>
+          <div class="menu-icon">💻</div>
+          <h3>Palestra C++</h3>
+          <p>Allenati con variabili, input, espressioni, comprensione del codice, riordino delle istruzioni, errori e problem solving applicato al C++.</p>
+        </div>
+        <div class="menu-action">Apri la palestra →</div>
+      </button>
+
+      <button id="goProblemSolving" type="button" class="menu-card">
+        <div>
+          <div class="menu-icon">🧠</div>
+          <h3>Problem solving</h3>
+          <p>Allenati a risolvere problemi di sequenza, condizione e ripetizione, individuando richiesta, dati e strategia prima di scrivere il codice.</p>
+        </div>
+        <div class="menu-action">Apri il percorso →</div>
+      </button>
+    </div>
+  </section>
+
+
+  <section id="psHelp" class="panel ps-shell hidden">
+    <div class="ps-head">
+      <div>
+        <div class="kicker">PROBLEM SOLVING</div>
+        <h2 style="margin-top:6px">Un problema alla volta</h2>
+        <p class="muted small">Per ogni problema segui sempre lo stesso percorso: capisci la richiesta, riconosci i dati, scegli la strategia.</p>
+      </div>
+      <button id="backFromPs" type="button" class="btn">← Torna al menu</button>
+    </div>
+
+    <div class="ps-hub">
+      <div class="ps-hub-top">
+        <div>
+          <h3 id="psUnifiedTitle" style="margin-bottom:6px"></h3>
+          <div id="psUnifiedCounter" class="muted small"></div>
+        </div>
+        <div class="ps-train-progress">
+          <strong><span id="psUnifiedSolved">0</span>/<span id="psUnifiedTotal">15</span> completati</strong>
+          <div class="ps-mini-progress"><div id="psUnifiedBar"></div></div>
+        </div>
+      </div>
+
+      <div class="ps-construct-tabs">
+        <button type="button" class="ps-construct-tab active" data-construct="sequenza">➡️ Sequenza</button>
+        <button type="button" class="ps-construct-tab" data-construct="condizione">🔀 Condizione</button>
+        <button type="button" class="ps-construct-tab" data-construct="definita">🔁 Ripetizione definita</button>
+        <button type="button" class="ps-construct-tab" data-construct="indefinita">♻️ Ripetizione indefinita</button>
+      </div>
+
+      <div id="psConstructIntro" class="ps-construct-intro"></div>
+
+      <div class="ps-level-tabs">
+        <button type="button" class="ps-level-tab active" data-level="facile">🟢 Facile</button>
+        <button type="button" class="ps-level-tab" data-level="intermedio">🟡 Intermedio</button>
+        <button type="button" class="ps-level-tab" data-level="sfida">🔴 Sfida</button>
+      </div>
+
+      <div id="psUnifiedProblem" class="ps-problem"></div>
+
+      <div class="ps-card">
+        <div class="ps-card-head">
+          <div>
+            <div class="kicker">PASSO 1</div>
+            <div class="ps-step-title">Cosa mi chiede il problema?</div>
+          </div>
+        </div>
+        <div class="ps-step-help">Individua il risultato finale che il problema vuole ottenere.</div>
+        <div id="psUnifiedGoal" class="ps-choice-row"></div>
+        <div id="psGoalFb" class="ps-step-feedback hidden"></div>
+      </div>
+
+      <div class="ps-card">
+        <div class="ps-card-head">
+          <div>
+            <div class="kicker">PASSO 2</div>
+            <div class="ps-step-title">Quali sono i dati?</div>
+          </div>
+        </div>
+        <div class="ps-step-help">Distingui tra dati di input, dati già noti e risultato di output.</div>
+        <div class="ps-task">
+          <div class="ps-task-title">Input</div>
+          <div id="psUnifiedInput" class="ps-choice-row"></div>
+        </div>
+        <div class="ps-task">
+          <div class="ps-task-title">Dato/i già noto/i</div>
+          <div id="psUnifiedKnown" class="ps-choice-row"></div>
+        </div>
+        <div class="ps-task">
+          <div class="ps-task-title">Output</div>
+          <div id="psUnifiedOutput" class="ps-choice-row"></div>
+        </div>
+        <div id="psDataFb" class="ps-step-feedback hidden"></div>
+      </div>
+
+      <div class="ps-card">
+        <div class="ps-card-head">
+          <div>
+            <div class="kicker">PASSO 3</div>
+            <div class="ps-step-title">Che strategia devo usare?</div>
+          </div>
+        </div>
+        <div class="ps-step-help">Scegli il calcolo o la sequenza di calcoli che permette di ottenere l’output.</div>
+        <div id="psUnifiedStrategy" class="ps-choice-row"></div>
+        <div id="psStrategyFb" class="ps-step-feedback hidden"></div>
+      </div>
+
+      <div class="ps-checkline">
+        <button id="psUnifiedCheck" type="button" class="btn primary">Controlla il ragionamento</button>
+      </div>
+
+      <div id="psUnifiedSummary" class="ps-final-summary hidden"></div>
+
+      <div class="ps-problem-nav">
+        <button id="psUnifiedPrev" type="button" class="btn">← Problema precedente</button>
+        <button id="psUnifiedNext" type="button" class="btn">Problema successivo →</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="cppToolbar" class="section-toolbar hidden">
+    <div>
+      <div class="kicker">PALESTRA C++</div>
+      <div class="section-title">Allenamento sulla programmazione</div>
+    </div>
+    <button id="backFromCpp" type="button" class="btn">← Torna al menu</button>
+  </div>
+
+  <nav id="levels" class="levels hidden" aria-label="Livelli"></nav>
+
+  <section id="exerciseMain" class="grid main hidden">
     <div class="panel">
       <div class="title-row">
         <div>
@@ -514,6 +1167,667 @@ footer{
 <script>
 (()=>{
 const r=document;
+
+const mainMenu=r.querySelector('#mainMenu');
+const psHelp=r.querySelector('#psHelp');
+const levelsNav=r.querySelector('#levels');
+const exerciseMain=r.querySelector('#exerciseMain');
+const cppToolbar=r.querySelector('#cppToolbar');
+
+const PS_PROBLEMS=[
+  {
+    id:'f1',level:'facile',title:'Biglietti del cinema',
+    text:'Un cinema vende i biglietti a 8,50 € ciascuno. Conoscendo il numero di biglietti acquistati, calcolare la spesa totale.',
+    goal:['Il numero di biglietti','La spesa totale','Il prezzo di un biglietto'],g:1,
+    input:['Il numero di biglietti','8,50 €','La spesa totale'],i:0,
+    known:['8,50 € per biglietto','Il numero di biglietti','La spesa totale'],k:0,
+    output:['Il prezzo unitario','Il numero di biglietti','La spesa totale'],o:2,
+    strategy:['biglietti + 8,50','biglietti × 8,50','8,50 ÷ biglietti'],s:1,
+    hint:'Il prezzo è riferito a un solo biglietto. Se i biglietti aumentano, lo stesso prezzo viene ripetuto più volte.',
+    summary:'Input: numero di biglietti. Dato noto: 8,50 €. Output: spesa totale. Strategia: numero biglietti × 8,50.'
+  },
+  {
+    id:'f2',level:'facile',title:'Resto alla cassa',
+    text:'Leggere l’importo da pagare e la somma consegnata dal cliente. Calcolare il resto.',
+    goal:['Il resto da restituire','L’importo consegnato','Il prezzo dell’acquisto'],g:0,
+    input:['Importo da pagare e somma consegnata','Solo il prezzo','Il resto'],i:0,
+    known:['Non ci sono altri valori fissi','Il resto è già noto','La somma consegnata è sempre 50 €'],k:0,
+    output:['Somma consegnata','Resto','Importo da pagare'],o:1,
+    strategy:['pagato − importo','importo − pagato','pagato + importo'],s:0,
+    hint:'Il resto è la parte della somma consegnata che avanza dopo aver pagato.',
+    summary:'Input: importo dovuto e denaro consegnato. Output: resto. Strategia: somma consegnata − importo dovuto.'
+  },
+  {
+    id:'f3',level:'facile',title:'Minuti totali',
+    text:'Leggere un numero di ore e convertirlo in minuti.',
+    goal:['Il numero di minuti','Il numero di ore','Il numero di secondi'],g:0,
+    input:['Le ore','60','I minuti'],i:0,
+    known:['1 ora = 60 minuti','Il numero di ore','I minuti'],k:0,
+    output:['Le ore','I minuti','60'],o:1,
+    strategy:['ore × 60','ore + 60','60 ÷ ore'],s:0,
+    hint:'Ogni ora contiene sempre lo stesso numero di minuti.',
+    summary:'Input: ore. Dato noto: 60 minuti per ora. Output: minuti. Strategia: ore × 60.'
+  },
+  {
+    id:'f4',level:'facile',title:'Temperatura più alta',
+    text:'Leggere due temperature e determinare quale delle due è maggiore.',
+    goal:['La temperatura maggiore','La somma delle temperature','La media'],g:0,
+    input:['Le due temperature','La temperatura maggiore','0 °C'],i:0,
+    known:['Nessun valore numerico è fissato','La prima è sempre maggiore','0 °C'],k:0,
+    output:['La temperatura maggiore','Le due temperature','La differenza'],o:0,
+    strategy:['Confrontare i due valori e scegliere il maggiore','Sommarli','Dividerli per 2'],s:0,
+    hint:'Non serve una formula: devi stabilire una relazione tra i due valori.',
+    summary:'Input: due temperature. Output: la maggiore. Strategia: confronto tra i due valori.'
+  },
+  {
+    id:'f5',level:'facile',title:'Riempire una bottiglia',
+    text:'Una bottiglia contiene al massimo 1,5 litri. Leggere quanti litri contiene già e calcolare quanti ne mancano per riempirla.',
+    goal:['I litri mancanti','La capacità massima','I litri presenti'],g:0,
+    input:['I litri già presenti','1,5 litri','I litri mancanti'],i:0,
+    known:['Capacità massima 1,5 litri','Litri presenti','Litri mancanti'],k:0,
+    output:['Litri presenti','Litri mancanti','Capacità massima'],o:1,
+    strategy:['1,5 − litri presenti','1,5 + litri presenti','litri presenti ÷ 1,5'],s:0,
+    hint:'Parti dal totale possibile e togli ciò che c’è già.',
+    summary:'Input: litri presenti. Dato noto: capacità 1,5 L. Output: litri mancanti. Strategia: capacità − quantità presente.'
+  },
+
+  {
+    id:'m1',level:'intermedio',title:'Acquisto con sconto',
+    text:'Leggere il prezzo di un prodotto e applicare uno sconto del 20%. Calcolare il prezzo finale.',
+    goal:['Il valore dello sconto','Il prezzo finale','Il prezzo iniziale'],g:1,
+    input:['Il prezzo iniziale','20%','Il prezzo finale'],i:0,
+    known:['Sconto del 20%','Prezzo iniziale','Prezzo finale'],k:0,
+    output:['Prezzo finale','Sconto percentuale','Prezzo iniziale'],o:0,
+    strategy:['sconto=prezzo×20/100; finale=prezzo−sconto','prezzo−20','prezzo÷20'],s:0,
+    hint:'Il 20% non è 20 euro: prima devi calcolare quanto vale il 20% del prezzo.',
+    summary:'Input: prezzo iniziale. Dato noto: 20%. Output: prezzo finale. Strategia: calcolare il 20% e sottrarlo.'
+  },
+  {
+    id:'m2',level:'intermedio',title:'Velocità media',
+    text:'Leggere la distanza percorsa in km e il tempo impiegato in ore. Calcolare la velocità media.',
+    goal:['La velocità media','La distanza','Il tempo'],g:0,
+    input:['Distanza e tempo','Solo la distanza','Velocità'],i:0,
+    known:['Nessun valore numerico è fissato','La velocità è sempre 100','Il tempo vale sempre 1'],k:0,
+    output:['Distanza','Tempo','Velocità media'],o:2,
+    strategy:['distanza ÷ tempo','distanza × tempo','tempo ÷ distanza'],s:0,
+    hint:'La velocità indica quanta distanza viene percorsa in una unità di tempo.',
+    summary:'Input: distanza e tempo. Output: velocità media. Strategia: distanza ÷ tempo.'
+  },
+  {
+    id:'m3',level:'intermedio',title:'Quota per partecipante',
+    text:'Una sala costa 240 €. Leggere il numero dei partecipanti e calcolare quanto deve pagare ciascuno dividendo il costo in parti uguali.',
+    goal:['La quota per persona','Il numero di partecipanti','Il costo della sala'],g:0,
+    input:['Numero partecipanti','240 €','Quota individuale'],i:0,
+    known:['Costo totale 240 €','Numero partecipanti','Quota individuale'],k:0,
+    output:['Costo totale','Quota per persona','Numero partecipanti'],o:1,
+    strategy:['240 ÷ partecipanti','240 × partecipanti','partecipanti ÷ 240'],s:0,
+    hint:'Il costo totale va ripartito in parti uguali.',
+    summary:'Input: partecipanti. Dato noto: costo 240 €. Output: quota individuale. Strategia: totale ÷ numero persone.'
+  },
+  {
+    id:'m4',level:'intermedio',title:'Età futura',
+    text:'Leggere l’età attuale di una persona e il numero di anni che passeranno. Calcolare l’età futura.',
+    goal:['L’età futura','Gli anni trascorsi','L’età attuale'],g:0,
+    input:['Età attuale e anni che passeranno','Solo l’età','Età futura'],i:0,
+    known:['Nessun valore numerico è fissato','L’età futura','Gli anni sono sempre 10'],k:0,
+    output:['Età attuale','Età futura','Anni trascorsi'],o:1,
+    strategy:['età attuale + anni','età attuale − anni','età attuale × anni'],s:0,
+    hint:'Stai spostandoti in avanti nel tempo.',
+    summary:'Input: età attuale e anni futuri. Output: età futura. Strategia: età attuale + anni.'
+  },
+  {
+    id:'m5',level:'intermedio',title:'Consumo carburante',
+    text:'Leggere i km percorsi e i litri consumati. Calcolare quanti km vengono percorsi con un litro.',
+    goal:['I km per litro','I litri consumati','I km totali'],g:0,
+    input:['Km percorsi e litri consumati','Solo i litri','Km per litro'],i:0,
+    known:['Nessun valore fisso','I km per litro','Il serbatoio contiene 50 litri'],k:0,
+    output:['Km totali','Litri consumati','Km per litro'],o:2,
+    strategy:['km ÷ litri','litri ÷ km','km × litri'],s:0,
+    hint:'La domanda è: quanti km corrispondono a un solo litro?',
+    summary:'Input: km e litri. Output: km/l. Strategia: km ÷ litri.'
+  },
+
+  {
+    id:'h1',level:'sfida',title:'Prezzo prima dello sconto',
+    text:'Dopo uno sconto del 20% un prodotto costa 80 €. Calcolare il prezzo originale.',
+    goal:['Il prezzo originale','Lo sconto in euro','Il prezzo finale'],g:0,
+    input:['Il prezzo scontato, 80 €','20%','Il prezzo originale'],i:0,
+    known:['Sconto del 20%','Prezzo originale','Prezzo finale sconosciuto'],k:0,
+    output:['Prezzo originale','Sconto','Prezzo finale'],o:0,
+    strategy:['80 rappresenta l’80% del prezzo: originale=80÷0,8','80−20','80×0,2'],s:0,
+    hint:'Se è stato tolto il 20%, il prezzo rimasto rappresenta l’80% dell’originale.',
+    summary:'Dato finale: 80 €. Dato noto: sconto 20%. Strategia inversa: 80 è l’80% del prezzo iniziale, quindi 80 ÷ 0,8.'
+  },
+  {
+    id:'h2',level:'sfida',title:'Durata totale di un viaggio',
+    text:'Un viaggio è composto da 2 ore e 35 minuti di treno e 45 minuti di autobus. Calcolare la durata totale espressa in minuti.',
+    goal:['La durata totale in minuti','La durata del treno','La durata dell’autobus'],g:0,
+    input:['Non ci sono input: tutti i dati sono già nel testo','2 ore','45 minuti'],i:0,
+    known:['2 h 35 min di treno e 45 min di autobus','Solo 45 minuti','La durata totale'],k:0,
+    output:['Durata totale in minuti','Ore di treno','Minuti di autobus'],o:0,
+    strategy:['convertire 2 ore in minuti e sommare 35 e 45','2+35+45','35−45'],s:0,
+    hint:'Prima porta tutte le durate nella stessa unità di misura.',
+    summary:'Nessun input variabile. Strategia: 2×60 + 35 + 45.'
+  },
+  {
+    id:'h3',level:'sfida',title:'Media necessaria',
+    text:'Uno studente ha preso 6 e 7. Vuole avere media 7 dopo il terzo voto. Calcolare quale voto deve ottenere.',
+    goal:['Il terzo voto necessario','La media attuale','La somma dei primi due voti'],g:0,
+    input:['Non ci sono input: i valori sono già noti','Solo il voto 6','La media 7'],i:0,
+    known:['Primi voti 6 e 7, media desiderata 7','Il terzo voto','La media finale sconosciuta'],k:0,
+    output:['Terzo voto necessario','Media attuale','Somma dei voti'],o:0,
+    strategy:['totale necessario=7×3; terzo=totale necessario−6−7','(6+7)÷2','7−6'],s:0,
+    hint:'Prima chiediti quale somma totale devono avere tre voti per produrre media 7.',
+    summary:'Strategia inversa sulla media: totale richiesto = 7×3; voto mancante = totale − voti già noti.'
+  },
+  {
+    id:'h4',level:'sfida',title:'Due tratte diverse',
+    text:'Un’auto percorre 120 km a 60 km/h e poi 90 km a 90 km/h. Calcolare il tempo totale di viaggio.',
+    goal:['Il tempo totale','La velocità media','La distanza totale'],g:0,
+    input:['Non ci sono input: tutti i valori sono nel testo','Solo le distanze','Solo le velocità'],i:0,
+    known:['120 km a 60 km/h e 90 km a 90 km/h','Il tempo totale','Una velocità unica'],k:0,
+    output:['Tempo totale','Distanza totale','Velocità media'],o:0,
+    strategy:['tempo1=120÷60; tempo2=90÷90; totale=tempo1+tempo2','(120+90)÷(60+90)','120+90'],s:0,
+    hint:'Le due tratte hanno velocità diverse: calcola separatamente la durata di ciascuna.',
+    summary:'Strategia a sottoproblemi: tempo prima tratta + tempo seconda tratta.'
+  },
+  {
+    id:'h5',level:'sfida',title:'Confronto tra due offerte',
+    text:'Offerta A: 12 € fissi più 2 € per ogni ingresso. Offerta B: 5 € per ogni ingresso. Leggere il numero di ingressi e stabilire quale offerta costa meno.',
+    goal:['Quale offerta conviene','Il costo dell’offerta A soltanto','Il numero di ingressi'],g:0,
+    input:['Numero di ingressi','12 €, 2 € e 5 €','Offerta migliore'],i:0,
+    known:['A: 12 € + 2 €/ingresso; B: 5 €/ingresso','Numero ingressi','Offerta conveniente'],k:0,
+    output:['Il costo di A','L’offerta più conveniente','Numero ingressi'],o:1,
+    strategy:['calcolare costoA=12+2×n e costoB=5×n, poi confrontarli','somma di tutti i prezzi','12÷5'],s:0,
+    hint:'Prima calcola entrambe le alternative usando lo stesso numero di ingressi; poi confronta i risultati.',
+    summary:'Strategia di confronto: calcolare due risultati separati e scegliere il minore.'
+  },
+  {
+    id:'c1',construct:'condizione',level:'facile',title:'Segno di un numero',
+    text:'Leggere un numero e stabilire se è positivo, negativo oppure uguale a zero.',
+    goal:['Calcolare il doppio del numero','Classificare il numero in base al segno','Calcolare il valore assoluto'],g:1,
+    input:['Il numero','La categoria finale','Lo zero'],i:0,
+    known:['Lo zero come valore di confronto','Il numero da leggere','La risposta finale'],k:0,
+    output:['Positivo, negativo oppure zero','Il numero inserito','Il doppio del numero'],o:0,
+    strategy:['Confrontare il numero con 0 e scegliere uno dei tre casi','Moltiplicare il numero per 0','Ripetere la lettura tre volte'],s:0,
+    hint:'Qui non devi ottenere un nuovo numero: devi scegliere tra casi diversi in base a un confronto.',
+    summary:'Costrutto: condizione. Input: numero. Strategia: confrontarlo con 0 e selezionare il caso corretto.'
+  },
+  {
+    id:'c2',construct:'condizione',level:'facile',title:'Biglietto ridotto',
+    text:'Il biglietto costa 10 €. Per chi ha meno di 18 anni costa 7 €. Leggere l’età e determinare il prezzo da pagare.',
+    goal:['Determinare il prezzo del biglietto','Calcolare l’età futura','Stabilire quanti anni mancano a 18'],g:0,
+    input:['L’età','10 € e 7 €','Il prezzo finale'],i:0,
+    known:['Prezzo intero 10 €, ridotto 7 €, soglia 18 anni','L’età','Il prezzo finale'],k:0,
+    output:['Il prezzo da pagare','L’età','La differenza da 18'],o:0,
+    strategy:['Se età < 18 scegliere 7 €, altrimenti 10 €','Sommare 7 e 10','Dividere l’età per 18'],s:0,
+    hint:'Il calcolo cambia a seconda che l’età soddisfi oppure no una condizione.',
+    summary:'Costrutto: condizione. Verificare età < 18 e scegliere uno dei due prezzi.'
+  },
+  {
+    id:'c3',construct:'condizione',level:'intermedio',title:'Spedizione gratuita',
+    text:'Leggere il totale di un ordine. Se è almeno 50 € la spedizione è gratuita, altrimenti si aggiungono 5 €. Calcolare l’importo finale.',
+    goal:['Calcolare l’importo finale','Calcolare sempre 5 € di spedizione','Trovare la soglia gratuita'],g:0,
+    input:['Il totale dell’ordine','50 € e 5 €','L’importo finale'],i:0,
+    known:['Soglia 50 € e spedizione 5 €','Il totale dell’ordine','Il prezzo finale'],k:0,
+    output:['Importo finale','Totale iniziale','Costo della merce'],o:0,
+    strategy:['Se totale ≥ 50 lasciare invariato; altrimenti aggiungere 5 €','Aggiungere sempre 5 €','Sottrarre sempre 50 €'],s:0,
+    hint:'La stessa operazione non vale per tutti gli ordini: la soglia decide quale ramo seguire.',
+    summary:'Costrutto: condizione. Confrontare il totale con 50 € e applicare o meno la spedizione.'
+  },
+  {
+    id:'c4',construct:'condizione',level:'intermedio',title:'Il maggiore tra tre valori',
+    text:'Leggere tre numeri e determinare quale dei tre è il maggiore.',
+    goal:['Trovare il valore maggiore','Calcolare la media','Ordinare necessariamente tutti e tre i valori'],g:0,
+    input:['Tre numeri','Il massimo','Il numero 3'],i:0,
+    known:['Non ci sono valori numerici fissati','Il massimo è sempre il primo','Il numero 3 è un dato da inserire'],k:0,
+    output:['Il valore maggiore','La somma','I tre valori in ordine'],o:0,
+    strategy:['Confrontare i valori aggiornando il massimo quando se ne trova uno più grande','Sommarli e dividere per 3','Moltiplicarli'],s:0,
+    hint:'Puoi considerare un valore come massimo provvisorio e sostituirlo quando ne incontri uno maggiore.',
+    summary:'Costrutto: condizione. Eseguire confronti successivi per individuare il massimo.'
+  },
+  {
+    id:'c5',construct:'condizione',level:'sfida',title:'Tariffa a fasce',
+    text:'Per i primi 100 kWh il costo è 0,20 € per kWh. I kWh oltre 100 costano 0,30 €. Leggere il consumo e calcolare il costo totale.',
+    goal:['Calcolare il costo totale','Trovare quanti kWh sono stati consumati','Calcolare sempre il costo con una sola tariffa'],g:0,
+    input:['I kWh consumati','0,20 €, 0,30 € e 100 kWh','Il costo totale'],i:0,
+    known:['Soglia 100 kWh e le due tariffe','Il consumo','La bolletta finale'],k:0,
+    output:['Costo totale','Numero di kWh','Tariffa base'],o:0,
+    strategy:['Se consumo ≤100 usare 0,20 €/kWh; altrimenti calcolare i primi 100 a 0,20 e l’eccedenza a 0,30','Moltiplicare tutto sempre per 0,30','Fare la media tra 0,20 e 0,30'],s:0,
+    hint:'Quando la soglia viene superata, non tutti i kWh hanno lo stesso prezzo.',
+    summary:'Costrutto: condizione a fasce. Distinguere il consumo entro soglia dall’eccedenza.'
+  },
+  {
+    id:'c6',construct:'condizione',level:'sfida',title:'Classificare un triangolo',
+    text:'Leggere tre lati. Verificare prima se possono formare un triangolo; se sì, stabilire se è equilatero, isoscele o scaleno.',
+    goal:['Verificare validità e tipo del triangolo','Calcolare soltanto il perimetro','Trovare il lato maggiore'],g:0,
+    input:['I tre lati','Il tipo di triangolo','La somma dei lati'],i:0,
+    known:['Le regole di validità e classificazione','I tre lati sono già noti','Il triangolo è sempre valido'],k:0,
+    output:['Validità e, se valido, tipo del triangolo','Perimetro','Area'],o:0,
+    strategy:['Prima controllare le disuguaglianze triangolari; solo se valide confrontare i lati tra loro','Confrontare solo il primo e il secondo lato','Sommare i lati e dividere per 3'],s:0,
+    hint:'Ci sono due decisioni consecutive: prima stabilisci se il triangolo esiste, poi lo classifichi.',
+    summary:'Costrutto: condizioni annidate. Prima validità, poi classificazione in base alle uguaglianze tra i lati.'
+  },
+
+  {
+    id:'d1',construct:'definita',level:'facile',title:'Somma di cinque numeri',
+    text:'Leggere esattamente 5 numeri e calcolarne la somma.',
+    goal:['Calcolare la somma dei 5 numeri','Trovare il numero maggiore','Continuare finché compare uno zero'],g:0,
+    input:['Cinque numeri','La somma','Il numero 5 come unico input'],i:0,
+    known:['Le letture da effettuare sono esattamente 5','La somma finale','I cinque valori sono già noti'],k:0,
+    output:['La somma','I cinque numeri','Il numero di letture'],o:0,
+    strategy:['Ripetere 5 volte: leggere un numero e aggiungerlo a una somma accumulata','Leggere numeri finché l’utente vuole','Moltiplicare ogni numero per 5'],s:0,
+    hint:'Sai già prima di iniziare quante volte deve essere ripetuta la stessa operazione.',
+    summary:'Costrutto: ripetizione definita. Ripetere 5 acquisizioni e aggiornare un accumulatore.'
+  },
+  {
+    id:'d2',construct:'definita',level:'facile',title:'Tabellina',
+    text:'Leggere un numero e visualizzare la sua tabellina da 1 a 10.',
+    goal:['Produrre i 10 prodotti della tabellina','Calcolare un solo prodotto','Leggere 10 numeri diversi'],g:0,
+    input:['Il numero di cui costruire la tabellina','I numeri da 1 a 10','Tutti i risultati'],i:0,
+    known:['I moltiplicatori vanno da 1 a 10','Il numero scelto','I risultati'],k:0,
+    output:['Dieci prodotti','Un solo numero','La somma da 1 a 10'],o:0,
+    strategy:['Far variare un contatore da 1 a 10 e calcolare numero × contatore','Chiedere ogni volta il moltiplicatore','Moltiplicare il numero per 10 una sola volta'],s:0,
+    hint:'Serve una variabile che assuma in ordine i valori 1, 2, 3, …, 10.',
+    summary:'Costrutto: ripetizione definita. Un contatore percorre i valori da 1 a 10.'
+  },
+  {
+    id:'d3',construct:'definita',level:'intermedio',title:'Contare i numeri pari',
+    text:'Leggere N numeri, dove N viene fornito all’inizio, e contare quanti sono pari.',
+    goal:['Contare quanti valori sono pari','Calcolare la somma di tutti i valori','Trovare N'],g:0,
+    input:['N e poi N numeri','Solo N','Il conteggio finale'],i:0,
+    known:['Dopo aver letto N si conosce il numero di ripetizioni','I numeri da leggere sono sempre 10','Il conteggio è già noto'],k:0,
+    output:['Numero di valori pari','N','Gli N valori'],o:0,
+    strategy:['Ripetere N volte la lettura; se il valore è pari incrementare un contatore','Ripetere finché viene inserito uno zero','Dividere N per 2'],s:0,
+    hint:'Qui servono insieme una ripetizione con numero noto di passi e una piccola condizione interna.',
+    summary:'Costrutto principale: ripetizione definita. Per ciascuno degli N valori verificare la parità e aggiornare un contatore.'
+  },
+  {
+    id:'d4',construct:'definita',level:'intermedio',title:'Interesse mensile',
+    text:'Leggere un capitale iniziale. Ogni mese aumenta dell’1%. Calcolare il capitale dopo 12 mesi.',
+    goal:['Calcolare il capitale dopo 12 aggiornamenti','Calcolare soltanto l’1% iniziale','Stabilire quanti mesi servono a raddoppiare'],g:0,
+    input:['Il capitale iniziale','12 mesi','Il capitale finale'],i:0,
+    known:['Aumento dell’1% ogni mese e durata di 12 mesi','Il capitale iniziale','Il risultato finale'],k:0,
+    output:['Capitale dopo 12 mesi','Interesse del primo mese','Numero di mesi'],o:0,
+    strategy:['Ripetere 12 volte l’aggiornamento capitale = capitale + 1% del capitale corrente','Aggiungere una sola volta il 12%','Moltiplicare il capitale per 12'],s:0,
+    hint:'Ogni mese l’1% va calcolato sul capitale aggiornato del mese precedente.',
+    summary:'Costrutto: ripetizione definita con aggiornamento dello stato per 12 iterazioni.'
+  },
+  {
+    id:'d5',construct:'definita',level:'sfida',title:'Temperatura massima',
+    text:'Leggere N temperature e trovare la temperatura massima registrata.',
+    goal:['Trovare il massimo tra N temperature','Calcolare la media','Contare le temperature'],g:0,
+    input:['N e le N temperature','Solo N','La temperatura massima'],i:0,
+    known:['Dopo aver letto N si conosce quante temperature arriveranno','La massima è sempre la prima','N vale sempre 7'],k:0,
+    output:['Temperatura massima','Numero di temperature','Somma delle temperature'],o:0,
+    strategy:['Usare la prima temperatura come massimo provvisorio e confrontare le successive aggiornandolo','Sommare tutte le temperature','Fermarsi appena una temperatura supera zero'],s:0,
+    hint:'Per cercare un massimo devi ricordare il migliore valore trovato fino a quel momento.',
+    summary:'Costrutto: ripetizione definita + confronto. Aggiornare un massimo provvisorio durante N iterazioni.'
+  },
+  {
+    id:'d6',construct:'definita',level:'sfida',title:'Fattoriale',
+    text:'Leggere un intero positivo N e calcolare il prodotto 1 × 2 × … × N.',
+    goal:['Calcolare il fattoriale di N','Calcolare la somma da 1 a N','Stabilire se N è pari'],g:0,
+    input:['N','Tutti i numeri da 1 a N come input','Il fattoriale'],i:0,
+    known:['I fattori sono gli interi da 1 a N','Il valore finale','N è sempre 5'],k:0,
+    output:['Il prodotto 1×2×…×N','La somma 1+2+…+N','N'],o:0,
+    strategy:['Partire da prodotto=1 e moltiplicarlo per ogni valore da 1 a N','Partire da somma=0 e aggiungere N volte N','Moltiplicare N per N'],s:0,
+    hint:'È simile a una somma accumulata, ma l’accumulatore deve partire da 1 e usare la moltiplicazione.',
+    summary:'Costrutto: ripetizione definita con accumulatore moltiplicativo.'
+  },
+
+  {
+    id:'w1',construct:'indefinita',level:'facile',title:'Somma fino allo zero',
+    text:'Leggere numeri uno alla volta e sommarli. Terminare quando viene inserito 0.',
+    goal:['Calcolare la somma dei valori inseriti prima dello zero','Leggere esattamente 10 numeri','Contare solo gli zeri'],g:0,
+    input:['Una quantità non nota di numeri terminata da 0','Esattamente 5 numeri','La somma finale'],i:0,
+    known:['Lo zero è il valore che segnala la fine','Il numero di valori da leggere','La somma'],k:0,
+    output:['La somma','Il numero zero','L’ultimo valore soltanto'],o:0,
+    strategy:['Continuare a leggere e sommare finché il valore è diverso da 0','Ripetere sempre 10 volte','Fermarsi dopo il primo numero positivo'],s:0,
+    hint:'Non sai quante letture serviranno: conosci solo la condizione che farà terminare il processo.',
+    summary:'Costrutto: ripetizione indefinita con valore sentinella 0.'
+  },
+  {
+    id:'w2',construct:'indefinita',level:'facile',title:'Password corretta',
+    text:'Chiedere una password e continuare a richiederla finché non viene inserita quella corretta.',
+    goal:['Terminare solo quando la password è corretta','Chiedere la password esattamente tre volte','Calcolare la lunghezza della password'],g:0,
+    input:['Tentativi di password in numero non noto','Tre password','La password corretta come output'],i:0,
+    known:['La password corretta con cui confrontare i tentativi','Il numero di tentativi','Il tentativo finale'],k:0,
+    output:['Conferma di accesso quando il valore è corretto','Numero fisso di tre tentativi','Una nuova password casuale'],o:0,
+    strategy:['Ripetere la richiesta mentre la password inserita è diversa da quella corretta','Ripetere tre volte senza controllare','Confrontare una sola volta'],s:0,
+    hint:'La ripetizione deve dipendere dall’esito di un confronto, non da un numero prefissato di tentativi.',
+    summary:'Costrutto: ripetizione indefinita. Continuare finché la condizione “password errata” resta vera.'
+  },
+  {
+    id:'w3',construct:'indefinita',level:'intermedio',title:'Media con sentinella',
+    text:'Leggere valori positivi. Un numero negativo indica la fine. Calcolare la media dei valori positivi inseriti.',
+    goal:['Calcolare la media dei valori prima della sentinella','Calcolare la media includendo il numero negativo','Leggere sempre 10 valori'],g:0,
+    input:['Valori positivi in quantità non nota e un negativo finale','Esattamente 10 numeri','Solo il numero negativo'],i:0,
+    known:['Un valore negativo segnala la fine','Quanti valori verranno inseriti','La media finale'],k:0,
+    output:['Media dei valori validi','Il valore negativo','Numero di iterazioni prefissato'],o:0,
+    strategy:['Finché il valore è positivo, accumulare somma e conteggio; alla fine calcolare somma÷conteggio','Sommare anche la sentinella','Dividere sempre per 10'],s:0,
+    hint:'Per la media servono due informazioni da costruire durante il ciclo: somma e numero dei valori validi.',
+    summary:'Costrutto: ripetizione indefinita + due accumulatori: somma e conteggio.'
+  },
+  {
+    id:'w4',construct:'indefinita',level:'intermedio',title:'Indovina il numero',
+    text:'Il programma ha un numero segreto. Continuare a leggere tentativi finché l’utente lo indovina e contare quanti tentativi sono serviti.',
+    goal:['Trovare quando il numero viene indovinato e contare i tentativi','Chiedere sempre 10 tentativi','Calcolare la somma dei tentativi'],g:0,
+    input:['Tentativi in numero non noto','Il numero di tentativi già noto','Il conteggio finale'],i:0,
+    known:['Il numero segreto','Quanti tentativi serviranno','Il valore dell’ultimo tentativo'],k:0,
+    output:['Numero di tentativi necessari','Somma dei tentativi','Dieci risultati'],o:0,
+    strategy:['Ripetere finché tentativo ≠ segreto e incrementare un contatore a ogni prova','Ripetere esattamente 10 volte','Fermarsi al primo tentativo maggiore del segreto'],s:0,
+    hint:'Non conosci il numero di iterazioni, ma devi ricordare quante volte hai eseguito la prova.',
+    summary:'Costrutto: ripetizione indefinita con contatore dei tentativi.'
+  },
+  {
+    id:'w5',construct:'indefinita',level:'sfida',title:'Raggiungere un obiettivo di risparmio',
+    text:'Leggere il saldo iniziale, il versamento mensile e un obiettivo. Determinare quanti mesi servono per raggiungere o superare l’obiettivo.',
+    goal:['Calcolare il numero di mesi necessario','Calcolare il saldo dopo 12 mesi','Stabilire un numero fisso di versamenti'],g:0,
+    input:['Saldo iniziale, versamento mensile e obiettivo','Solo il saldo iniziale','Il numero di mesi'],i:0,
+    known:['Ogni mese si aggiunge lo stesso versamento','Il numero di mesi necessario','L’obiettivo è sempre raggiunto in 12 mesi'],k:0,
+    output:['Numero di mesi necessari','Saldo iniziale','Versamento mensile'],o:0,
+    strategy:['Finché saldo < obiettivo, aggiungere il versamento e incrementare il numero di mesi','Ripetere sempre 12 volte','Dividere semplicemente obiettivo per saldo'],s:0,
+    hint:'La fine non dipende da un numero di mesi noto, ma dal momento in cui il saldo raggiunge una soglia.',
+    summary:'Costrutto: ripetizione indefinita controllata da una soglia.'
+  },
+  {
+    id:'w6',construct:'indefinita',level:'sfida',title:'Massimo comune divisore',
+    text:'Leggere due interi positivi e calcolare il loro MCD con l’algoritmo di Euclide: si sostituiscono ripetutamente i valori con divisore e resto finché il resto diventa 0.',
+    goal:['Calcolare il MCD','Calcolare la somma dei due numeri','Ripetere un numero fisso di divisioni'],g:0,
+    input:['Due interi positivi','Il numero di iterazioni','Il MCD'],i:0,
+    known:['Il processo termina quando il resto è 0','Quante divisioni saranno necessarie','Il MCD è sempre il minore dei due numeri'],k:0,
+    output:['Il MCD','Il numero di divisioni','La somma'],o:0,
+    strategy:['Calcolare ripetutamente il resto e aggiornare i due valori finché il resto è 0','Fare una sola divisione','Ripetere esattamente N volte'],s:0,
+    hint:'Il numero di passaggi non è prevedibile in anticipo: il nuovo resto determina se occorre continuare.',
+    summary:'Costrutto: ripetizione indefinita. Algoritmo di Euclide fino a resto 0.'
+  }
+]
+
+// ============================================================
+// SBLOCCO DELLE SOTTOSEZIONI DI PROBLEM SOLVING
+// Per rendere disponibile una sezione, cambia false in true.
+// Non è necessario modificare altro codice.
+// ============================================================
+const PS_CONSTRUCT_ENABLED={
+  sequenza:true,
+  condizione:false,
+  definita:false,
+  indefinita:false
+};
+
+function applyPsConstructAvailability(){
+  r.querySelectorAll('.ps-construct-tab').forEach(btn=>{
+    const enabled=PS_CONSTRUCT_ENABLED[btn.dataset.construct]===true;
+    btn.disabled=!enabled;
+    btn.title=enabled ? '' : 'Sezione non ancora disponibile';
+    btn.setAttribute('aria-disabled',enabled ? 'false' : 'true');
+  });
+}
+
+applyPsConstructAvailability();
+
+const PS_CONSTRUCT_INFO={
+  sequenza:{
+    label:'Sequenza',
+    text:'Problemi in cui le operazioni vengono eseguite una dopo l’altra, senza scegliere tra percorsi diversi o ripetere un blocco.'
+  },
+  condizione:{
+    label:'Condizione',
+    text:'Problemi in cui il percorso cambia in base a un confronto o a una condizione: occorre decidere quale caso applicare.'
+  },
+  definita:{
+    label:'Ripetizione definita',
+    text:'Problemi in cui un gruppo di operazioni deve essere ripetuto un numero di volte noto o determinabile prima di iniziare la ripetizione.'
+  },
+  indefinita:{
+    label:'Ripetizione indefinita',
+    text:'Problemi in cui non sappiamo in anticipo quante ripetizioni serviranno: si continua finché una condizione rimane vera o fino a una sentinella.'
+  }
+};
+
+const psState={
+  construct:'sequenza',
+  level:'facile',
+  index:0,
+  completed:new Set(),
+  answers:{}
+};
+
+function problemConstruct(p){
+  return p.construct || 'sequenza';
+}
+
+function psList(){
+  return PS_PROBLEMS.filter(p=>problemConstruct(p)===psState.construct && p.level===psState.level);
+}
+
+function renderUnifiedChoices(containerId, field, options){
+  const box=r.querySelector(containerId);
+  box.innerHTML=options.map((opt,i)=>
+    '<button type="button" class="ps-unified-choice" data-field="'+field+'" data-index="'+i+'">'+opt+'</button>'
+  ).join('');
+  box.querySelectorAll('.ps-unified-choice').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      psState.answers[field]=Number(btn.dataset.index);
+      box.querySelectorAll('.ps-inline-tip').forEach(el=>el.remove());
+      box.querySelectorAll('.ps-unified-choice').forEach(b=>b.classList.remove('selected','correct','wrong'));
+      btn.classList.add('selected');
+    });
+  });
+}
+
+function updateUnifiedProgress(){
+  const constructProblems=PS_PROBLEMS.filter(p=>problemConstruct(p)===psState.construct);
+  const ids=new Set(constructProblems.map(p=>p.id));
+  const solved=[...psState.completed].filter(id=>ids.has(id)).length;
+  const total=constructProblems.length;
+  r.querySelector('#psUnifiedSolved').textContent=solved;
+  r.querySelector('#psUnifiedTotal').textContent=total;
+  r.querySelector('#psUnifiedBar').style.width=(total ? solved/total*100 : 0)+'%';
+}
+
+function renderUnifiedProblem(){
+  const list=psList();
+  if(psState.index>=list.length) psState.index=0;
+  const p=list[psState.index];
+  psState.answers={};
+
+  const levelNames={facile:'🟢 Facile',intermedio:'🟡 Intermedio',sfida:'🔴 Sfida'};
+  const info=PS_CONSTRUCT_INFO[psState.construct];
+  r.querySelector('#psConstructIntro').innerHTML='<strong>'+info.label+'</strong> · '+info.text;
+  r.querySelector('#psUnifiedTitle').textContent=p.title;
+  r.querySelector('#psUnifiedCounter').textContent=info.label+' · '+levelNames[p.level]+' · problema '+(psState.index+1)+' di '+list.length;
+  r.querySelector('#psUnifiedProblem').textContent=p.text;
+
+  renderUnifiedChoices('#psUnifiedGoal','goal',p.goal);
+  renderUnifiedChoices('#psUnifiedInput','input',p.input);
+  renderUnifiedChoices('#psUnifiedKnown','known',p.known);
+  renderUnifiedChoices('#psUnifiedOutput','output',p.output);
+  renderUnifiedChoices('#psUnifiedStrategy','strategy',p.strategy);
+
+  ['#psGoalFb','#psDataFb','#psStrategyFb','#psUnifiedSummary'].forEach(id=>{
+    const el=r.querySelector(id);
+    el.classList.add('hidden');
+    el.innerHTML='';
+  });
+
+  r.querySelector('#psUnifiedPrev').disabled=psState.index===0;
+  r.querySelector('#psUnifiedNext').disabled=psState.index===list.length-1;
+  updateUnifiedProgress();
+}
+
+function psSpecificTip(field,p,chosenIndex){
+  const chosenMap={
+    goal:p.goal,
+    input:p.input,
+    known:p.known,
+    output:p.output,
+    strategy:p.strategy
+  };
+  const chosen=(chosenMap[field]||[])[chosenIndex] || '';
+
+  if(field==='goal'){
+    return 'Hai scelto “'+chosen+'”. Rileggi la consegna concentrandoti sul risultato che deve essere ottenuto alla fine, non su un dato usato per arrivarci.';
+  }
+
+  if(field==='input'){
+    return 'Hai scelto “'+chosen+'”. Un dato di input è un valore che deve essere fornito al programma perché può cambiare da un’esecuzione all’altra. Chiediti se questo valore è invece già fissato nel testo o rappresenta il risultato.';
+  }
+
+  if(field==='known'){
+    return 'Hai scelto “'+chosen+'”. Cerca nel testo le informazioni già fornite e che quindi non devono essere richieste all’utente.';
+  }
+
+  if(field==='output'){
+    return 'Hai scelto “'+chosen+'”. L’output è ciò che il programma deve produrre al termine dell’elaborazione: confrontalo con la richiesta iniziale del problema.';
+  }
+
+  if(field==='strategy'){
+    return p.hint || 'Prova a scomporre il problema in passaggi più piccoli e chiediti quale operazione porta dai dati disponibili al risultato richiesto.';
+  }
+
+  return '';
+}
+
+function markUnified(field, correctIndex,p){
+  const containerMap={
+    goal:'#psUnifiedGoal',
+    input:'#psUnifiedInput',
+    known:'#psUnifiedKnown',
+    output:'#psUnifiedOutput',
+    strategy:'#psUnifiedStrategy'
+  };
+  const box=r.querySelector(containerMap[field]);
+
+  // Rimuove eventuali suggerimenti del controllo precedente.
+  box.querySelectorAll('.ps-inline-tip').forEach(el=>el.remove());
+
+  box.querySelectorAll('.ps-unified-choice').forEach(btn=>{
+    const idx=Number(btn.dataset.index);
+    btn.classList.remove('correct','wrong');
+
+    if(psState.answers[field]===idx){
+      if(idx===correctIndex){
+        btn.classList.add('correct');
+      }else{
+        btn.classList.add('wrong');
+
+        const tip=r.createElement('div');
+        tip.className='ps-inline-tip ps-specific-tip';
+        tip.innerHTML='<strong>Suggerimento</strong>'+psSpecificTip(field,p,idx);
+        btn.insertAdjacentElement('afterend',tip);
+      }
+    }
+  });
+}
+
+r.querySelectorAll('.ps-construct-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(PS_CONSTRUCT_ENABLED[btn.dataset.construct]!==true) return;
+    psState.construct=btn.dataset.construct;
+    psState.level='facile';
+    psState.index=0;
+    r.querySelectorAll('.ps-construct-tab').forEach(b=>b.classList.toggle('active',b===btn));
+    r.querySelectorAll('.ps-level-tab').forEach(b=>b.classList.toggle('active',b.dataset.level==='facile'));
+    renderUnifiedProblem();
+  });
+});
+
+r.querySelectorAll('.ps-level-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    psState.level=btn.dataset.level;
+    psState.index=0;
+    r.querySelectorAll('.ps-level-tab').forEach(b=>b.classList.toggle('active',b===btn));
+    renderUnifiedProblem();
+  });
+});
+
+r.querySelector('#psUnifiedPrev').addEventListener('click',()=>{
+  if(psState.index>0){psState.index--;renderUnifiedProblem();}
+});
+
+r.querySelector('#psUnifiedNext').addEventListener('click',()=>{
+  const list=psList();
+  if(psState.index<list.length-1){psState.index++;renderUnifiedProblem();}
+});
+
+r.querySelector('#psUnifiedCheck').addEventListener('click',()=>{
+  const p=psList()[psState.index];
+  const required=['goal','input','known','output','strategy'];
+  const missing=required.filter(k=>psState.answers[k]===undefined);
+  if(missing.length){
+    const fb=r.querySelector('#psGoalFb');
+    fb.classList.remove('hidden');
+    fb.innerHTML='<strong>Completa tutte le sezioni.</strong> Prima scegli una risposta per richiesta, dati e strategia.';
+    return;
+  }
+
+  const expected={goal:p.g,input:p.i,known:p.k,output:p.o,strategy:p.s};
+  required.forEach(k=>markUnified(k,expected[k],p));
+
+  const goalOk=psState.answers.goal===p.g;
+  const dataOk=psState.answers.input===p.i && psState.answers.known===p.k && psState.answers.output===p.o;
+  const stratOk=psState.answers.strategy===p.s;
+
+  const goalFb=r.querySelector('#psGoalFb');
+  goalFb.classList.add('hidden');
+  goalFb.innerHTML='';
+
+  const dataFb=r.querySelector('#psDataFb');
+  dataFb.classList.add('hidden');
+  dataFb.innerHTML='';
+
+  const stratFb=r.querySelector('#psStrategyFb');
+  stratFb.classList.add('hidden');
+  stratFb.innerHTML='';
+
+  const summary=r.querySelector('#psUnifiedSummary');
+
+  if(goalOk && dataOk && stratOk){
+    psState.completed.add(p.id);
+    summary.classList.remove('hidden');
+    summary.innerHTML='<strong>Schema del problema</strong><br>'+p.summary;
+    updateUnifiedProgress();
+  }else{
+    summary.classList.add('hidden');
+    summary.innerHTML='';
+  }
+});
+
+function showMainMenu(){
+  mainMenu.classList.remove('hidden');
+  psHelp.classList.add('hidden');
+  levelsNav.classList.add('hidden');
+  exerciseMain.classList.add('hidden');
+  cppToolbar.classList.add('hidden');
+  mainMenu.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openProblemSolving(){
+  mainMenu.classList.add('hidden');
+  psHelp.classList.remove('hidden');
+  levelsNav.classList.add('hidden');
+  exerciseMain.classList.add('hidden');
+  cppToolbar.classList.add('hidden');
+  renderUnifiedProblem();
+  psHelp.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openCppGym(){
+  mainMenu.classList.add('hidden');
+  psHelp.classList.add('hidden');
+  levelsNav.classList.remove('hidden');
+  exerciseMain.classList.remove('hidden');
+  cppToolbar.classList.remove('hidden');
+  cppToolbar.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+r.querySelector('#goProblemSolving').addEventListener('click',openProblemSolving);
+r.querySelector('#goCppGym').addEventListener('click',openCppGym);
+r.querySelector('#backFromPs').addEventListener('click',showMainMenu);
+r.querySelector('#backFromCpp').addEventListener('click',showMainMenu);
+
 const L=[{n:'Variabili',i:'📦',d:'Segui assegnamenti e sostituzioni di valore.',e:[
 {p:'Valori finali di x e y? Scrivili separati da una virgola.',c:'int x=5;\nint y=2;\nx=x+y;\ny=x-1;',a:'7,6',m:'x=5|y=2',h:'Quando calcoli y, x vale già 7.',t:'x=5,y=2|x=7,y=2|x=7,y=6'},
 {p:'Valore finale di a?',c:'int a=3;\na=a+4;\na=a*2;',a:'14',m:'a=3',h:'Usa il nuovo valore dopo ogni riga.',t:'a=3|a=7|a=14'},

@@ -68,6 +68,49 @@ h3{font-size:20px;margin-bottom:4px}
   background:var(--accent);
   transition:width .3s ease;
 }
+
+.gym-section-tabs{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:9px;
+  margin:18px 0 10px;
+}
+.gym-section-tab{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:12px 10px;
+  font-weight:800;
+  text-align:center;
+}
+.gym-section-tab.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.gym-section-tab:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  background:#f3f4f6;
+}
+.gym-section-tab:disabled::after{
+  content:"  🔒";
+}
+.gym-section-intro{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px 15px;
+  background:#f8fafc;
+  line-height:1.5;
+  margin-bottom:8px;
+}
+@media(max-width:900px){
+  .gym-section-tabs{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .gym-section-tabs{grid-template-columns:1fr}
+}
+
 .levels{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
@@ -238,6 +281,21 @@ pre{
   padding:12px;
   background:#fff;
 }
+
+.predict-note{
+  margin-top:10px;
+  border:1px solid #d6a800;
+  background:#fff9d8;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:14px;
+  line-height:1.45;
+}
+#runLine:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
 input[type="text"],input[type="number"]{
   width:100%;
   padding:12px 14px;
@@ -363,6 +421,17 @@ input[type="text"],input[type="number"]{
   border-left-color:var(--accent);
   font-weight:700;
 }
+
+.code-line.missing-line{
+  background:#fff4b8;
+  border-left-color:#d6a800;
+  outline:1px dashed #d6a800;
+  font-weight:800;
+}
+.code-line.missing-line .ln{
+  color:#9a6b00;
+}
+
 .memory-empty{
   grid-column:1/-1;
   border:1px dashed var(--border);
@@ -786,8 +855,9 @@ footer{
 }
 .ps-final-summary{
   margin-top:14px;
-  border:1px dashed var(--accent);
-  background:var(--accent-soft);
+  border:1px solid #16a34a;
+  background:#dcfce7;
+  color:#166534;
   border-radius:14px;
   padding:14px;
   line-height:1.55;
@@ -874,6 +944,17 @@ footer{
   font-size:12px;
   font-weight:800;
 }
+
+.ps-solved-badge{
+  border:1px solid #16a34a;
+  background:#dcfce7;
+  color:#166534;
+  border-radius:999px;
+  padding:4px 9px;
+  font-size:12px;
+  font-weight:800;
+}
+
 .ps-train-grid{
   display:grid;
   gap:14px;
@@ -963,7 +1044,7 @@ footer{
         <div>
           <div class="menu-icon">💻</div>
           <h3>Palestra C++</h3>
-          <p>Allenati con variabili, input, espressioni, comprensione del codice, riordino delle istruzioni, errori e problem solving applicato al C++.</p>
+          <p>Allenati per sezioni: fondamenti, sequenza, condizione e ripetizione, con esercizi di comprensione, esecuzione, riordino e debug.</p>
         </div>
         <div class="menu-action">Apri la palestra →</div>
       </button>
@@ -994,7 +1075,10 @@ footer{
       <div class="ps-hub-top">
         <div>
           <h3 id="psUnifiedTitle" style="margin-bottom:6px"></h3>
-          <div id="psUnifiedCounter" class="muted small"></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div id="psUnifiedCounter" class="muted small"></div>
+            <span id="psUnifiedStatus" class="ps-solved-badge hidden">✓ Risolto</span>
+          </div>
         </div>
         <div class="ps-train-progress">
           <strong><span id="psUnifiedSolved">0</span>/<span id="psUnifiedTotal">15</span> completati</strong>
@@ -1023,10 +1107,10 @@ footer{
         <div class="ps-card-head">
           <div>
             <div class="kicker">PASSO 1</div>
-            <div class="ps-step-title">Cosa mi chiede il problema?</div>
+            <div class="ps-step-title">Cosa mi chiede il problema? / Qual è l’output?</div>
           </div>
         </div>
-        <div class="ps-step-help">Individua il risultato finale che il problema vuole ottenere.</div>
+        <div class="ps-step-help">Individua il risultato che il programma deve produrre alla fine.</div>
         <div id="psUnifiedGoal" class="ps-choice-row"></div>
         <div id="psGoalFb" class="ps-step-feedback hidden"></div>
       </div>
@@ -1035,10 +1119,10 @@ footer{
         <div class="ps-card-head">
           <div>
             <div class="kicker">PASSO 2</div>
-            <div class="ps-step-title">Quali sono i dati?</div>
+            <div class="ps-step-title">Quali sono i dati di input e i dati già noti?</div>
           </div>
         </div>
-        <div class="ps-step-help">Distingui tra dati di input, dati già noti e risultato di output.</div>
+        <div class="ps-step-help">Distingui tra i dati che il programma deve ricevere e quelli che sono già fissati nel testo.</div>
         <div class="ps-task">
           <div class="ps-task-title">Input</div>
           <div id="psUnifiedInput" class="ps-choice-row"></div>
@@ -1046,10 +1130,6 @@ footer{
         <div class="ps-task">
           <div class="ps-task-title">Dato/i già noto/i</div>
           <div id="psUnifiedKnown" class="ps-choice-row"></div>
-        </div>
-        <div class="ps-task">
-          <div class="ps-task-title">Output</div>
-          <div id="psUnifiedOutput" class="ps-choice-row"></div>
         </div>
         <div id="psDataFb" class="ps-step-feedback hidden"></div>
       </div>
@@ -1087,7 +1167,17 @@ footer{
     <button id="backFromCpp" type="button" class="btn">← Torna al menu</button>
   </div>
 
-  <nav id="levels" class="levels hidden" aria-label="Livelli"></nav>
+  <div id="gymSections" class="gym-section-tabs hidden" aria-label="Sezioni della Palestra C++">
+    <button type="button" class="gym-section-tab active" data-gym-section="fondamenti">🧱 Fondamenti</button>
+    <button type="button" class="gym-section-tab" data-gym-section="sequenza">➡️ Sequenza</button>
+    <button type="button" class="gym-section-tab" data-gym-section="condizione">🔀 Condizione</button>
+    <button type="button" class="gym-section-tab" data-gym-section="definita">🔁 Ripetizione definita</button>
+    <button type="button" class="gym-section-tab" data-gym-section="indefinita">♻️ Ripetizione indefinita</button>
+  </div>
+
+  <div id="gymSectionIntro" class="gym-section-intro hidden"></div>
+
+  <nav id="levels" class="levels hidden" aria-label="Attività della sezione"></nav>
 
   <section id="exerciseMain" class="grid main hidden">
     <div class="panel">
@@ -1173,6 +1263,8 @@ const psHelp=r.querySelector('#psHelp');
 const levelsNav=r.querySelector('#levels');
 const exerciseMain=r.querySelector('#exerciseMain');
 const cppToolbar=r.querySelector('#cppToolbar');
+const gymSectionsNav=r.querySelector('#gymSections');
+const gymSectionIntro=r.querySelector('#gymSectionIntro');
 
 const PS_PROBLEMS=[
   {
@@ -1209,15 +1301,15 @@ const PS_PROBLEMS=[
     summary:'Input: ore. Dato noto: 60 minuti per ora. Output: minuti. Strategia: ore × 60.'
   },
   {
-    id:'f4',level:'facile',title:'Temperatura più alta',
-    text:'Leggere due temperature e determinare quale delle due è maggiore.',
-    goal:['La temperatura maggiore','La somma delle temperature','La media'],g:0,
-    input:['Le due temperature','La temperatura maggiore','0 °C'],i:0,
-    known:['Nessun valore numerico è fissato','La prima è sempre maggiore','0 °C'],k:0,
-    output:['La temperatura maggiore','Le due temperature','La differenza'],o:0,
-    strategy:['Confrontare i due valori e scegliere il maggiore','Sommarli','Dividerli per 2'],s:0,
-    hint:'Non serve una formula: devi stabilire una relazione tra i due valori.',
-    summary:'Input: due temperature. Output: la maggiore. Strategia: confronto tra i due valori.'
+    id:'f4',level:'facile',title:'Perimetro del rettangolo',
+    text:'Leggere base e altezza di un rettangolo e calcolarne il perimetro.',
+    goal:['Calcolare il perimetro','Calcolare soltanto la base','Calcolare l’area'],g:0,
+    input:['Base e altezza','Il perimetro','Il numero 2'],i:0,
+    known:['La formula del perimetro: 2 × (base + altezza)','Base e altezza sono già fissate','Il perimetro è già noto'],k:0,
+    output:['Il perimetro','Base e altezza','L’area'],o:0,
+    strategy:['Sommare base e altezza e moltiplicare il risultato per 2','Moltiplicare base per altezza','Sommare base e altezza senza altri calcoli'],s:0,
+    hint:'Nel rettangolo ogni dimensione compare due volte lungo il bordo.',
+    summary:'Input: base e altezza. Output: perimetro. Strategia: 2 × (base + altezza).'
   },
   {
     id:'f5',level:'facile',title:'Riempire una bottiglia',
@@ -1332,15 +1424,15 @@ const PS_PROBLEMS=[
     summary:'Strategia a sottoproblemi: tempo prima tratta + tempo seconda tratta.'
   },
   {
-    id:'h5',level:'sfida',title:'Confronto tra due offerte',
-    text:'Offerta A: 12 € fissi più 2 € per ogni ingresso. Offerta B: 5 € per ogni ingresso. Leggere il numero di ingressi e stabilire quale offerta costa meno.',
-    goal:['Quale offerta conviene','Il costo dell’offerta A soltanto','Il numero di ingressi'],g:0,
-    input:['Numero di ingressi','12 €, 2 € e 5 €','Offerta migliore'],i:0,
-    known:['A: 12 € + 2 €/ingresso; B: 5 €/ingresso','Numero ingressi','Offerta conveniente'],k:0,
-    output:['Il costo di A','L’offerta più conveniente','Numero ingressi'],o:1,
-    strategy:['calcolare costoA=12+2×n e costoB=5×n, poi confrontarli','somma di tutti i prezzi','12÷5'],s:0,
-    hint:'Prima calcola entrambe le alternative usando lo stesso numero di ingressi; poi confronta i risultati.',
-    summary:'Strategia di confronto: calcolare due risultati separati e scegliere il minore.'
+    id:'h5',level:'sfida',title:'Adattare una ricetta',
+    text:'Una ricetta per 4 persone richiede 300 g di farina e 200 ml di latte. Leggere il numero di persone e calcolare quanta farina e quanto latte servono mantenendo le stesse proporzioni.',
+    goal:['Calcolare le nuove quantità di farina e latte','Calcolare soltanto il numero di persone','Stabilire quale ingrediente è maggiore'],g:0,
+    input:['Il numero di persone','300 g e 200 ml','Le nuove quantità'],i:0,
+    known:['La ricetta base è per 4 persone: 300 g di farina e 200 ml di latte','Il numero di persone è già fissato','Le nuove quantità sono già note'],k:0,
+    output:['Le quantità adattate di farina e latte','Il numero di persone','La somma degli ingredienti'],o:0,
+    strategy:['Calcolare il fattore persone÷4 e moltiplicare per esso entrambe le quantità','Sommare 300 e 200 e moltiplicare per le persone','Dividere sempre gli ingredienti per 4 senza usare il numero di persone'],s:0,
+    hint:'Prima determina di quanto deve essere ingrandita o ridotta la ricetta rispetto alle 4 persone iniziali.',
+    summary:'Input: numero di persone. Dati noti: quantità per 4 persone. Strategia: fattore = persone ÷ 4; applicare lo stesso fattore a entrambi gli ingredienti.'
   },
   {
     id:'c1',construct:'condizione',level:'facile',title:'Segno di un numero',
@@ -1361,11 +1453,45 @@ const PS_PROBLEMS=[
     known:['Prezzo intero 10 €, ridotto 7 €, soglia 18 anni','L’età','Il prezzo finale'],k:0,
     output:['Il prezzo da pagare','L’età','La differenza da 18'],o:0,
     strategy:['Se età < 18 scegliere 7 €, altrimenti 10 €','Sommare 7 e 10','Dividere l’età per 18'],s:0,
-    hint:'Il calcolo cambia a seconda che l’età soddisfi oppure no una condizione.',
+    hint:'Il prezzo dipende dal fatto che l’età sia sotto oppure sopra una soglia.',
     summary:'Costrutto: condizione. Verificare età < 18 e scegliere uno dei due prezzi.'
   },
   {
-    id:'c3',construct:'condizione',level:'intermedio',title:'Spedizione gratuita',
+    id:'c3',construct:'condizione',level:'facile',title:'Numero pari o dispari',
+    text:'Leggere un numero intero e stabilire se è pari oppure dispari.',
+    goal:['Stabilire se il numero è pari o dispari','Calcolare la metà del numero','Trovare il numero successivo'],g:0,
+    input:['Un numero intero','La risposta pari/dispari','Il numero 2'],i:0,
+    known:['Un numero è pari se il resto della divisione per 2 è 0','Il numero inserito è sempre pari','La risposta finale'],k:0,
+    output:['Pari oppure dispari','Il numero diviso per 2','Il resto della divisione'],o:0,
+    strategy:['Calcolare il resto della divisione per 2 e verificarne il valore','Dividere il numero per 2 senza controllare il resto','Confrontare il numero con 2'],s:0,
+    hint:'La parità dipende dal resto della divisione intera per 2.',
+    summary:'Costrutto: condizione. Verificare n % 2 == 0.'
+  },
+  {
+    id:'c4',construct:'condizione',level:'facile',title:'Promosso o non promosso',
+    text:'Leggere la media finale di uno studente. Se è almeno 6 visualizzare “Promosso”, altrimenti “Non promosso”.',
+    goal:['Stabilire l’esito dello studente','Calcolare una nuova media','Trovare quanti punti mancano a 10'],g:0,
+    input:['La media finale','Il valore 6','L’esito'],i:0,
+    known:['La soglia di sufficienza è 6','La media dello studente','L’esito finale'],k:0,
+    output:['Promosso oppure Non promosso','La media','Il valore 6'],o:0,
+    strategy:['Confrontare la media con 6','Sommare 6 alla media','Dividere la media per 6'],s:0,
+    hint:'Devi confrontare il dato con una soglia.',
+    summary:'Costrutto: condizione semplice a due rami.'
+  },
+  {
+    id:'c5',construct:'condizione',level:'facile',title:'Temperatura di allarme',
+    text:'Leggere una temperatura. Se supera 30 °C visualizzare “Allarme caldo”, altrimenti “Temperatura normale”.',
+    goal:['Stabilire se scatta l’allarme','Calcolare la differenza da 30','Convertire la temperatura'],g:0,
+    input:['La temperatura','30 °C','Il messaggio finale'],i:0,
+    known:['La soglia è 30 °C','La temperatura è già nota','L’allarme scatta sempre'],k:0,
+    output:['Messaggio di allarme o normalità','La temperatura inserita','La differenza da 30'],o:0,
+    strategy:['Confrontare la temperatura con 30','Sottrarre sempre 30','Moltiplicare la temperatura per 30'],s:0,
+    hint:'La soglia decide tra due messaggi diversi.',
+    summary:'Costrutto: condizione semplice su una soglia.'
+  },
+
+  {
+    id:'c6',construct:'condizione',level:'intermedio',title:'Spedizione gratuita',
     text:'Leggere il totale di un ordine. Se è almeno 50 € la spedizione è gratuita, altrimenti si aggiungono 5 €. Calcolare l’importo finale.',
     goal:['Calcolare l’importo finale','Calcolare sempre 5 € di spedizione','Trovare la soglia gratuita'],g:0,
     input:['Il totale dell’ordine','50 € e 5 €','L’importo finale'],i:0,
@@ -1373,40 +1499,107 @@ const PS_PROBLEMS=[
     output:['Importo finale','Totale iniziale','Costo della merce'],o:0,
     strategy:['Se totale ≥ 50 lasciare invariato; altrimenti aggiungere 5 €','Aggiungere sempre 5 €','Sottrarre sempre 50 €'],s:0,
     hint:'La stessa operazione non vale per tutti gli ordini: la soglia decide quale ramo seguire.',
-    summary:'Costrutto: condizione. Confrontare il totale con 50 € e applicare o meno la spedizione.'
+    summary:'Confrontare il totale con 50 € e applicare o meno la spedizione.'
   },
   {
-    id:'c4',construct:'condizione',level:'intermedio',title:'Il maggiore tra tre valori',
-    text:'Leggere tre numeri e determinare quale dei tre è il maggiore.',
-    goal:['Trovare il valore maggiore','Calcolare la media','Ordinare necessariamente tutti e tre i valori'],g:0,
-    input:['Tre numeri','Il massimo','Il numero 3'],i:0,
-    known:['Non ci sono valori numerici fissati','Il massimo è sempre il primo','Il numero 3 è un dato da inserire'],k:0,
-    output:['Il valore maggiore','La somma','I tre valori in ordine'],o:0,
-    strategy:['Confrontare i valori aggiornando il massimo quando se ne trova uno più grande','Sommarli e dividere per 3','Moltiplicarli'],s:0,
-    hint:'Puoi considerare un valore come massimo provvisorio e sostituirlo quando ne incontri uno maggiore.',
-    summary:'Costrutto: condizione. Eseguire confronti successivi per individuare il massimo.'
+    id:'c7',construct:'condizione',level:'intermedio',title:'Sconto per quantità',
+    text:'Leggere quantità e prezzo unitario. Se si acquistano almeno 10 pezzi applicare uno sconto del 15% sul totale; altrimenti nessuno sconto.',
+    goal:['Calcolare il prezzo finale','Calcolare solo la quantità','Trovare il prezzo unitario'],g:0,
+    input:['Quantità e prezzo unitario','15%','Prezzo finale'],i:0,
+    known:['Sconto 15% se quantità ≥ 10','Quantità e prezzo sono già fissati','Lo sconto si applica sempre'],k:0,
+    output:['Prezzo finale','Quantità','Percentuale di sconto'],o:0,
+    strategy:['Calcolare il totale; se quantità ≥10 calcolare e sottrarre il 15%','Sottrarre sempre 15 euro','Applicare lo sconto al prezzo unitario prima di conoscere la quantità'],s:0,
+    hint:'Prima calcola il totale, poi la quantità decide se applicare lo sconto.',
+    summary:'Sequenza + condizione: totale iniziale, controllo quantità, eventuale sconto.'
   },
   {
-    id:'c5',construct:'condizione',level:'sfida',title:'Tariffa a fasce',
-    text:'Per i primi 100 kWh il costo è 0,20 € per kWh. I kWh oltre 100 costano 0,30 €. Leggere il consumo e calcolare il costo totale.',
-    goal:['Calcolare il costo totale','Trovare quanti kWh sono stati consumati','Calcolare sempre il costo con una sola tariffa'],g:0,
-    input:['I kWh consumati','0,20 €, 0,30 € e 100 kWh','Il costo totale'],i:0,
-    known:['Soglia 100 kWh e le due tariffe','Il consumo','La bolletta finale'],k:0,
-    output:['Costo totale','Numero di kWh','Tariffa base'],o:0,
-    strategy:['Se consumo ≤100 usare 0,20 €/kWh; altrimenti calcolare i primi 100 a 0,20 e l’eccedenza a 0,30','Moltiplicare tutto sempre per 0,30','Fare la media tra 0,20 e 0,30'],s:0,
-    hint:'Quando la soglia viene superata, non tutti i kWh hanno lo stesso prezzo.',
-    summary:'Costrutto: condizione a fasce. Distinguere il consumo entro soglia dall’eccedenza.'
+    id:'c8',construct:'condizione',level:'intermedio',title:'Classificazione del voto',
+    text:'Leggere un voto da 1 a 10. Visualizzare “Insufficiente” se è minore di 6, “Sufficiente” se è da 6 a 7, “Buono” se è da 8 a 9, “Ottimo” se è 10.',
+    goal:['Classificare il voto in una fascia','Calcolare la media dei voti','Stabilire solo se è maggiore di 5'],g:0,
+    input:['Il voto','Le etichette delle fasce','La classificazione finale'],i:0,
+    known:['Le soglie delle quattro fasce','Il voto è già classificato','Il voto è sempre 10'],k:0,
+    output:['Una delle quattro classificazioni','Il voto inserito','La distanza da 10'],o:0,
+    strategy:['Valutare le soglie in ordine e assegnare una sola fascia','Controllare solo se voto ≥6','Sommare tutte le soglie'],s:0,
+    hint:'Le condizioni sono più di due e le fasce non devono sovrapporsi.',
+    summary:'Condizione multipla a fasce ordinate.'
   },
   {
-    id:'c6',construct:'condizione',level:'sfida',title:'Classificare un triangolo',
-    text:'Leggere tre lati. Verificare prima se possono formare un triangolo; se sì, stabilire se è equilatero, isoscele o scaleno.',
-    goal:['Verificare validità e tipo del triangolo','Calcolare soltanto il perimetro','Trovare il lato maggiore'],g:0,
-    input:['I tre lati','Il tipo di triangolo','La somma dei lati'],i:0,
-    known:['Le regole di validità e classificazione','I tre lati sono già noti','Il triangolo è sempre valido'],k:0,
-    output:['Validità e, se valido, tipo del triangolo','Perimetro','Area'],o:0,
-    strategy:['Prima controllare le disuguaglianze triangolari; solo se valide confrontare i lati tra loro','Confrontare solo il primo e il secondo lato','Sommare i lati e dividere per 3'],s:0,
-    hint:'Ci sono due decisioni consecutive: prima stabilisci se il triangolo esiste, poi lo classifichi.',
-    summary:'Costrutto: condizioni annidate. Prima validità, poi classificazione in base alle uguaglianze tra i lati.'
+    id:'c9',construct:'condizione',level:'intermedio',title:'Accesso a una gara',
+    text:'Uno studente può partecipare a una gara solo se ha almeno 14 anni e ha consegnato l’autorizzazione. Leggere età e stato dell’autorizzazione e stabilire se può partecipare.',
+    goal:['Stabilire se lo studente può partecipare','Calcolare l’età media','Controllare solo l’autorizzazione'],g:0,
+    input:['Età e presenza dell’autorizzazione','Solo l’età','Solo l’autorizzazione'],i:0,
+    known:['Servono contemporaneamente età ≥14 e autorizzazione presente','Basta una delle due condizioni','L’età minima è 18'],k:0,
+    output:['Può partecipare / non può partecipare','L’età','Lo stato dell’autorizzazione'],o:0,
+    strategy:['Verificare entrambe le condizioni con AND','Verificare età oppure autorizzazione con OR','Controllare solo l’età'],s:0,
+    hint:'Devono essere vere entrambe le condizioni contemporaneamente.',
+    summary:'Condizione composta con AND.'
+  },
+  {
+    id:'c10',construct:'condizione',level:'intermedio',title:'Accesso gratuito al museo',
+    text:'L’ingresso è gratuito per chi ha meno di 12 anni oppure almeno 65 anni. Negli altri casi costa 8 €. Leggere l’età e determinare il prezzo.',
+    goal:['Determinare il prezzo di ingresso','Calcolare l’età media dei visitatori','Stabilire solo se l’età è minore di 12'],g:0,
+    input:['L’età','Le soglie 12 e 65','Il prezzo finale'],i:0,
+    known:['Gratis se età <12 oppure età ≥65; altrimenti 8 €','Tutti pagano 8 €','Solo gli anziani entrano gratis'],k:0,
+    output:['0 € oppure 8 €','L’età','La fascia di età'],o:0,
+    strategy:['Verificare le due condizioni alternative con OR','Richiedere che siano vere entrambe','Sommare 12 e 65'],s:0,
+    hint:'Basta soddisfare una delle due condizioni per avere lo stesso risultato.',
+    summary:'Condizione composta con OR.'
+  },
+
+  {
+    id:'c11',construct:'condizione',level:'sfida',title:'Tariffa elettrica a tre fasce',
+    text:'Il costo dell’energia è 0,18 €/kWh per i primi 100 kWh, 0,24 €/kWh per i successivi 100 kWh e 0,32 €/kWh oltre 200 kWh. Leggere il consumo e calcolare il costo totale.',
+    goal:['Calcolare il costo totale rispettando le tre fasce','Moltiplicare tutti i kWh per una sola tariffa','Calcolare soltanto la fascia più alta raggiunta'],g:0,
+    input:['I kWh consumati','Le tre tariffe e le due soglie','Il costo totale'],i:0,
+    known:['Le fasce 0–100, 101–200, oltre 200 con tariffe diverse','Il consumo è sempre sopra 200','Tutti i kWh costano 0,32 € se si supera 200'],k:0,
+    output:['Costo totale progressivo','Numero di kWh','Tariffa massima applicata'],o:0,
+    strategy:['Calcolare separatamente la parte di consumo in ciascuna fascia e sommare i costi','Se consumo >200 moltiplicare tutto per 0,32','Fare la media delle tre tariffe e moltiplicarla per il consumo'],s:0,
+    hint:'Superare una soglia non cambia il prezzo dei kWh precedenti: ogni fascia conserva la propria tariffa.',
+    summary:'Condizioni a fasce progressive con calcolo separato delle porzioni di consumo.'
+  },
+  {
+    id:'c12',construct:'condizione',level:'sfida',title:'Ammissione a un concorso',
+    text:'Per essere ammesso un candidato deve avere almeno 18 anni e un punteggio di almeno 70. Tuttavia, chi ha almeno 90 punti è ammesso anche se ha 17 anni. Leggere età e punteggio e stabilire l’esito.',
+    goal:['Stabilire se il candidato è ammesso','Calcolare la media tra età e punteggio','Controllare solo il punteggio'],g:0,
+    input:['Età e punteggio','Le soglie 18, 70 e 90','L’esito'],i:0,
+    known:['Regola generale: età ≥18 AND punteggio ≥70; eccezione: punteggio ≥90 consente anche età 17','Serve sempre età ≥18','Basta sempre punteggio ≥70'],k:0,
+    output:['Ammesso / non ammesso','Età','Punteggio'],o:0,
+    strategy:['Valutare prima l’eccezione del punteggio ≥90 con età 17, altrimenti applicare la regola generale','Applicare solo età ≥18 AND punteggio ≥70 ignorando l’eccezione','Ammettere chiunque abbia almeno 70 punti'],s:0,
+    hint:'C’è una regola generale e una deroga specifica: devi evitare che la regola generale annulli l’eccezione.',
+    summary:'Condizioni composte con eccezione e priorità tra regole.'
+  },
+  {
+    id:'c13',construct:'condizione',level:'sfida',title:'Costo del parcheggio con più regole',
+    text:'Un parcheggio costa 2 € per la prima ora, 1,50 € per ogni ora successiva fino alla quinta, e 1 € per ogni ora oltre la quinta. Se il veicolo è elettrico si applica infine uno sconto del 20% sul totale. Leggere ore e tipo di veicolo e calcolare il costo.',
+    goal:['Calcolare il costo finale applicando fascia oraria ed eventuale sconto','Applicare sempre lo sconto del 20%','Moltiplicare tutte le ore per 2 €'],g:0,
+    input:['Numero di ore e tipo di veicolo','Le tariffe e lo sconto','Il costo finale'],i:0,
+    known:['Tariffe progressive per fasce e sconto 20% solo per veicoli elettrici','Ogni ora costa sempre 2 €','Lo sconto si applica prima di calcolare le ore'],k:0,
+    output:['Costo finale','Numero di ore','Tipo di veicolo'],o:0,
+    strategy:['Calcolare prima il costo in base alle fasce di ore, poi se il veicolo è elettrico applicare il 20% di sconto','Scegliere una sola tariffa per tutte le ore in base all’ultima fascia raggiunta','Applicare il 20% alle ore invece che al costo'],s:0,
+    hint:'Ci sono due decisioni di natura diversa: una determina come calcolare il costo base, l’altra modifica il risultato finale.',
+    summary:'Condizioni a fasce + condizione successiva indipendente per lo sconto.'
+  },
+  {
+    id:'c14',construct:'condizione',level:'sfida',title:'Valutazione di un prestito',
+    text:'Una richiesta di prestito è accettata se il reddito mensile è almeno 1800 € e la rata non supera il 30% del reddito. Se il richiedente ha un garante, è sufficiente un reddito di almeno 1400 €, ma la rata deve comunque restare entro il 30%. Leggere reddito, rata e presenza del garante e stabilire l’esito.',
+    goal:['Stabilire se il prestito può essere accettato','Calcolare solo il 30% del reddito','Controllare soltanto la presenza del garante'],g:0,
+    input:['Reddito, rata e presenza del garante','Solo reddito e rata','Le soglie 1800 e 1400'],i:0,
+    known:['Senza garante: reddito ≥1800; con garante: reddito ≥1400; in entrambi i casi rata ≤30% del reddito','Con garante la rata può superare il 30%','Il garante rende irrilevante il reddito'],k:0,
+    output:['Accettato / rifiutato','Reddito','Valore del 30%'],o:0,
+    strategy:['Calcolare il limite rata; poi usare una soglia di reddito diversa a seconda della presenza del garante, mantenendo sempre il vincolo sulla rata','Controllare solo se reddito ≥1800','Se c’è garante accettare sempre'],s:0,
+    hint:'Il garante modifica una sola delle condizioni, non tutte. Individua quale vincolo resta invariato.',
+    summary:'Condizione composta con una variabile che modifica la soglia di un solo requisito.'
+  },
+  {
+    id:'c15',construct:'condizione',level:'sfida',title:'Selezione per una borsa di studio',
+    text:'Uno studente ottiene la borsa se ha media almeno 8 e assenze non superiori a 10. Se la media è almeno 9, sono ammesse fino a 15 assenze. Tuttavia, con più di 20 assenze la borsa è sempre negata. Leggere media e assenze e stabilire l’esito.',
+    goal:['Stabilire se la borsa viene assegnata','Calcolare soltanto la media','Stabilire solo se le assenze sono meno di 20'],g:0,
+    input:['Media e numero di assenze','Le soglie 8, 9, 10, 15 e 20','L’esito'],i:0,
+    known:['Regola base: media ≥8 e assenze ≤10; con media ≥9 il limite sale a 15; oltre 20 assenze la borsa è sempre negata','Con media ≥9 le assenze non contano più','Basta avere media ≥8'],k:0,
+    output:['Borsa sì / no','Media','Numero di assenze'],o:0,
+    strategy:['Controllare prima il caso di esclusione assoluta; poi applicare il limite di assenze corretto in base alla media','Controllare soltanto media ≥8','Applicare sempre limite 15 alle assenze'],s:0,
+    hint:'C’è una regola che prevale su tutte le altre e una soglia che cambia in base alla media. L’ordine dei controlli è importante.',
+    summary:'Condizioni annidate con priorità: esclusione assoluta, poi soglia variabile in base alla media.'
   },
 
   {
@@ -1551,7 +1744,7 @@ const PS_PROBLEMS=[
 // ============================================================
 const PS_CONSTRUCT_ENABLED={
   sequenza:true,
-  condizione:false,
+  condizione:true,
   definita:false,
   indefinita:false
 };
@@ -1586,11 +1779,56 @@ const PS_CONSTRUCT_INFO={
   }
 };
 
+const PS_COMPLETED_STORAGE_KEY='palestra_cpp_problem_solving_completed_v1';
+const PS_ANSWERS_STORAGE_KEY='palestra_cpp_problem_solving_answers_v1';
+
+function loadPsCompleted(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(PS_COMPLETED_STORAGE_KEY) || '[]');
+    return Array.isArray(saved) ? saved : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function savePsCompleted(){
+  try{
+    localStorage.setItem(
+      PS_COMPLETED_STORAGE_KEY,
+      JSON.stringify([...psState.completed])
+    );
+  }catch(e){
+    // Se il browser blocca localStorage, il tracciamento resta valido
+    // almeno per la sessione corrente.
+  }
+}
+
+function loadPsAnswers(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(PS_ANSWERS_STORAGE_KEY) || '{}');
+    return saved && typeof saved==='object' ? saved : {};
+  }catch(e){
+    return {};
+  }
+}
+
+function savePsAnswers(){
+  try{
+    localStorage.setItem(
+      PS_ANSWERS_STORAGE_KEY,
+      JSON.stringify(psState.savedAnswers)
+    );
+  }catch(e){
+    // Se localStorage non è disponibile, le risposte restano solo nella sessione corrente.
+  }
+}
+
 const psState={
   construct:'sequenza',
   level:'facile',
   index:0,
-  completed:new Set(),
+  completed:new Set(loadPsCompleted()),
+  savedAnswers:loadPsAnswers(),
   answers:{}
 };
 
@@ -1604,12 +1842,30 @@ function psList(){
 
 function renderUnifiedChoices(containerId, field, options){
   const box=r.querySelector(containerId);
+  const p=psList()[psState.index];
+  const savedForProblem=psState.savedAnswers[p.id] || {};
+  const restored=savedForProblem[field];
+
   box.innerHTML=options.map((opt,i)=>
     '<button type="button" class="ps-unified-choice" data-field="'+field+'" data-index="'+i+'">'+opt+'</button>'
   ).join('');
+
+  if(restored!==undefined){
+    psState.answers[field]=Number(restored);
+    const restoredBtn=box.querySelector('.ps-unified-choice[data-index="'+restored+'"]');
+    if(restoredBtn){
+      restoredBtn.classList.add(psState.completed.has(p.id) ? 'correct' : 'selected');
+    }
+  }
+
   box.querySelectorAll('.ps-unified-choice').forEach(btn=>{
     btn.addEventListener('click',()=>{
       psState.answers[field]=Number(btn.dataset.index);
+
+      if(!psState.savedAnswers[p.id]) psState.savedAnswers[p.id]={};
+      psState.savedAnswers[p.id][field]=psState.answers[field];
+      savePsAnswers();
+
       box.querySelectorAll('.ps-inline-tip').forEach(el=>el.remove());
       box.querySelectorAll('.ps-unified-choice').forEach(b=>b.classList.remove('selected','correct','wrong'));
       btn.classList.add('selected');
@@ -1638,12 +1894,12 @@ function renderUnifiedProblem(){
   r.querySelector('#psConstructIntro').innerHTML='<strong>'+info.label+'</strong> · '+info.text;
   r.querySelector('#psUnifiedTitle').textContent=p.title;
   r.querySelector('#psUnifiedCounter').textContent=info.label+' · '+levelNames[p.level]+' · problema '+(psState.index+1)+' di '+list.length;
+  r.querySelector('#psUnifiedStatus').classList.toggle('hidden',!psState.completed.has(p.id));
   r.querySelector('#psUnifiedProblem').textContent=p.text;
 
   renderUnifiedChoices('#psUnifiedGoal','goal',p.goal);
   renderUnifiedChoices('#psUnifiedInput','input',p.input);
   renderUnifiedChoices('#psUnifiedKnown','known',p.known);
-  renderUnifiedChoices('#psUnifiedOutput','output',p.output);
   renderUnifiedChoices('#psUnifiedStrategy','strategy',p.strategy);
 
   ['#psGoalFb','#psDataFb','#psStrategyFb','#psUnifiedSummary'].forEach(id=>{
@@ -1651,6 +1907,12 @@ function renderUnifiedProblem(){
     el.classList.add('hidden');
     el.innerHTML='';
   });
+
+  if(psState.completed.has(p.id)){
+    const summary=r.querySelector('#psUnifiedSummary');
+    summary.classList.remove('hidden');
+    summary.innerHTML='<strong>✓ Esercizio già risolto correttamente</strong><br>Le risposte date sono state ripristinate.<br><br><strong>Schema del problema</strong><br>'+p.summary;
+  }
 
   r.querySelector('#psUnifiedPrev').disabled=psState.index===0;
   r.querySelector('#psUnifiedNext').disabled=psState.index===list.length-1;
@@ -1662,13 +1924,12 @@ function psSpecificTip(field,p,chosenIndex){
     goal:p.goal,
     input:p.input,
     known:p.known,
-    output:p.output,
     strategy:p.strategy
   };
   const chosen=(chosenMap[field]||[])[chosenIndex] || '';
 
   if(field==='goal'){
-    return 'Hai scelto “'+chosen+'”. Rileggi la consegna concentrandoti sul risultato che deve essere ottenuto alla fine, non su un dato usato per arrivarci.';
+    return 'Hai scelto “'+chosen+'”. Cerca nella consegna ciò che il programma deve produrre alla fine: questa è sia la richiesta del problema sia il suo output.';
   }
 
   if(field==='input'){
@@ -1677,10 +1938,6 @@ function psSpecificTip(field,p,chosenIndex){
 
   if(field==='known'){
     return 'Hai scelto “'+chosen+'”. Cerca nel testo le informazioni già fornite e che quindi non devono essere richieste all’utente.';
-  }
-
-  if(field==='output'){
-    return 'Hai scelto “'+chosen+'”. L’output è ciò che il programma deve produrre al termine dell’elaborazione: confrontalo con la richiesta iniziale del problema.';
   }
 
   if(field==='strategy'){
@@ -1695,7 +1952,6 @@ function markUnified(field, correctIndex,p){
     goal:'#psUnifiedGoal',
     input:'#psUnifiedInput',
     known:'#psUnifiedKnown',
-    output:'#psUnifiedOutput',
     strategy:'#psUnifiedStrategy'
   };
   const box=r.querySelector(containerMap[field]);
@@ -1754,20 +2010,20 @@ r.querySelector('#psUnifiedNext').addEventListener('click',()=>{
 
 r.querySelector('#psUnifiedCheck').addEventListener('click',()=>{
   const p=psList()[psState.index];
-  const required=['goal','input','known','output','strategy'];
+  const required=['goal','input','known','strategy'];
   const missing=required.filter(k=>psState.answers[k]===undefined);
   if(missing.length){
     const fb=r.querySelector('#psGoalFb');
     fb.classList.remove('hidden');
-    fb.innerHTML='<strong>Completa tutte le sezioni.</strong> Prima scegli una risposta per richiesta, dati e strategia.';
+    fb.innerHTML='<strong>Completa tutte le sezioni.</strong> Scegli una risposta per output/richiesta, input, dati noti e strategia.';
     return;
   }
 
-  const expected={goal:p.g,input:p.i,known:p.k,output:p.o,strategy:p.s};
+  const expected={goal:p.g,input:p.i,known:p.k,strategy:p.s};
   required.forEach(k=>markUnified(k,expected[k],p));
 
   const goalOk=psState.answers.goal===p.g;
-  const dataOk=psState.answers.input===p.i && psState.answers.known===p.k && psState.answers.output===p.o;
+  const dataOk=psState.answers.input===p.i && psState.answers.known===p.k;
   const stratOk=psState.answers.strategy===p.s;
 
   const goalFb=r.querySelector('#psGoalFb');
@@ -1786,8 +2042,12 @@ r.querySelector('#psUnifiedCheck').addEventListener('click',()=>{
 
   if(goalOk && dataOk && stratOk){
     psState.completed.add(p.id);
+    psState.savedAnswers[p.id]={...psState.answers};
+    savePsCompleted();
+    savePsAnswers();
+    r.querySelector('#psUnifiedStatus').classList.remove('hidden');
     summary.classList.remove('hidden');
-    summary.innerHTML='<strong>Schema del problema</strong><br>'+p.summary;
+    summary.innerHTML='<strong>✓ Tutto corretto!</strong><br>Hai individuato correttamente output, dati e strategia.<br><br><strong>Schema del problema</strong><br>'+p.summary;
     updateUnifiedProgress();
   }else{
     summary.classList.add('hidden');
@@ -1801,6 +2061,8 @@ function showMainMenu(){
   levelsNav.classList.add('hidden');
   exerciseMain.classList.add('hidden');
   cppToolbar.classList.add('hidden');
+  gymSectionsNav.classList.add('hidden');
+  gymSectionIntro.classList.add('hidden');
   mainMenu.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1810,6 +2072,8 @@ function openProblemSolving(){
   levelsNav.classList.add('hidden');
   exerciseMain.classList.add('hidden');
   cppToolbar.classList.add('hidden');
+  gymSectionsNav.classList.add('hidden');
+  gymSectionIntro.classList.add('hidden');
   renderUnifiedProblem();
   psHelp.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1820,6 +2084,14 @@ function openCppGym(){
   levelsNav.classList.remove('hidden');
   exerciseMain.classList.remove('hidden');
   cppToolbar.classList.remove('hidden');
+  gymSectionsNav.classList.remove('hidden');
+  gymSectionIntro.classList.remove('hidden');
+  if(!GYM_SECTION_ENABLED[S.g]){
+    S.g='fondamenti';
+    S.l=L.findIndex(l=>l.g==='fondamenti');
+    S.q=0;
+  }
+  render();
   cppToolbar.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1828,168 +2100,78 @@ r.querySelector('#goCppGym').addEventListener('click',openCppGym);
 r.querySelector('#backFromPs').addEventListener('click',showMainMenu);
 r.querySelector('#backFromCpp').addEventListener('click',showMainMenu);
 
-const L=[{n:'Variabili',i:'📦',d:'Segui assegnamenti e sostituzioni di valore.',e:[
-{p:'Valori finali di x e y? Scrivili separati da una virgola.',c:'int x=5;\nint y=2;\nx=x+y;\ny=x-1;',a:'7,6',m:'x=5|y=2',h:'Quando calcoli y, x vale già 7.',t:'x=5,y=2|x=7,y=2|x=7,y=6'},
-{p:'Valore finale di a?',c:'int a=3;\na=a+4;\na=a*2;',a:'14',m:'a=3',h:'Usa il nuovo valore dopo ogni riga.',t:'a=3|a=7|a=14'},
-{p:'Valore finale di n?',c:'int n=10;\nn=n-3;\nn=n+5;',a:'12',m:'n=10',h:'10 → 7 → ?',t:'n=10|n=7|n=12'},
-{p:'Valori finali di x e y?',c:'int x=2;\nint y=6;\nx=y;\ny=x+1;',a:'6,7',m:'x=2|y=6',h:'x=y sostituisce il vecchio valore di x.',t:'x=2,y=6|x=6,y=6|x=6,y=7'}]},
-{n:'Scambio',i:'🔄',d:'Osserva come una variabile temporanea permette di scambiare due valori senza perderli.',e:[
-{p:'Esegui il programma riga per riga. Quali sono i valori finali di a e b?',c:'int a=10;\nint b=20;\nint temp;\ntemp=a;\na=b;\nb=temp;',a:'20,10',m:'a=10|b=20|temp=?',h:'Osserva soprattutto che cosa contiene temp dopo temp=a.',t:'a=10|b=20|temp=?|temp=10|a=20|b=10'},
-{p:'Esegui lo scambio. Quali sono i valori finali di x e y?',c:'int x=4;\nint y=7;\nint temp=x;\nx=y;\ny=temp;',a:'7,4',m:'x=4|y=7|temp=?',h:'temp conserva il vecchio valore di x mentre x viene modificata.',t:'x=4|y=7|temp=4|x=7|y=4'},
-{p:'Segui l’esecuzione. Quali sono i valori finali di p e q?',c:'int p=1;\nint q=4;\nint t=p;\np=q;\nq=t;',a:'4,1',m:'p=1|q=4|t=?',h:'La variabile t funziona come un contenitore di appoggio.',t:'p=1|q=4|t=1|p=4|q=1'},
-{p:'Questo programma vuole scambiare a e b, ma contiene un errore. Eseguilo riga per riga: che cosa succede?',c:'int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;',o:['Lo scambio non avviene: alla fine a=9 e b=9','Lo scambio avviene correttamente: a=9 e b=5','Il programma non può essere eseguito perché temp non è dichiarata'],a:0,m:'a=5|b=9|temp=?',h:'Guarda che cosa accade a temp quando viene eseguita la riga temp=b.',t:'a=5|b=9|temp=5|a=9|temp=9|b=9'}]},
-{n:'Espressioni semplici',i:'🧮',d:'Calcola semplici espressioni usando operatori e valori correnti.',e:[
-{p:'Valore finale di n?',c:'int n=4;\nn=n*3;\nn=n-2;',a:'10',m:'n=4',h:'4 → 12 → ?',t:'n=4|n=12|n=10'},
-{p:'Quanto vale c?',c:'int a=10,b=3;\nint c=a/b;',a:'3',m:'a=10|b=3|c=?',h:'Con int, 10/3 dà la parte intera.',t:'10/3 → 3'},
-{p:'Quanto vale z?',c:'int x=7,y=2;\nint z=x%y;',a:'1',m:'x=7|y=2|z=?',h:'% restituisce il resto.',t:'7 diviso 2: resto 1'},
-{p:'Quanto vale totale?',c:'double prezzo=12.5;\nint q=4;\ndouble totale=prezzo*q;',a:'50',m:'prezzo=12.5|q=4|totale=?',h:'Prezzo unitario × quantità.',t:'12.5 × 4 = 50'}]},
-{n:'Segui le variabili',i:'🔎',d:'Segui passo passo come cambiano i valori delle variabili durante l’esecuzione.',e:[
-{p:'Valori finali a,b,c?',c:'int a=3,b=5;\nint c=a+b;\na=c-2;\nb=a*2;',a:'6,12,8',m:'a=3|b=5|c=?',h:'Cambia solo la variabile a sinistra di =.',t:'c=8|a=6|b=12'},
-{p:'Valori finali x,y,z?',c:'int x=2,y=4,z=1;\nz=x+y;\nx=z*2;\ny=x-z;',a:'12,6,6',m:'x=2|y=4|z=1',h:'z cambia per primo.',t:'z=6|x=12|y=6'},
-{p:'Valori finali m,n?',c:'int m=8,n=3;\nm=m-n;\nn=m+n;',a:'5,8',m:'m=8|n=3',h:'Quando calcoli n, m vale già 5.',t:'m=5|n=8'},
-{p:'Valori finali a,b,c?',c:'int a=1,b=2,c=3;\na=b+c;\nb=a+c;\nc=a+b;',a:'5,8,13',m:'a=1|b=2|c=3',h:'Ogni riga usa lo stato corrente.',t:'a=5|b=8|c=13'}]},
-{n:'Stringhe',i:'🔤',d:'Tratta anche il testo come un dato conservato e modificato nelle variabili.',e:[
-{p:'Esegui il codice. Quale valore conterrà messaggio alla fine?',c:'string nome="Luca";\nstring messaggio="Ciao "+nome;',o:['Ciao','Luca','Ciao Luca'],a:2,h:'La seconda riga concatena una stringa letterale con il contenuto di nome.',t:'nome=Luca|messaggio=Ciao Luca'},
-{p:'Dopo copia=colore, colore viene modificata. Che cosa accade a copia?',c:'string colore="rosso";\nstring copia=colore;\ncolore="blu";',o:['copia diventa blu','copia resta rosso','copia viene cancellata'],a:1,h:'L’assegnazione copia il valore presente in quel momento; le due variabili restano contenitori distinti.',t:'colore=rosso|copia=rosso|colore=blu'},
-{p:'Scrivi il valore finale contenuto nella variabile nome.',c:'string nome;\nnome="Anna";\nnome=nome+"!";',a:'Anna!',h:'Alla terza riga si usa il valore attuale di nome e gli si concatena "!".',t:'nome=?|nome=Anna|nome=Anna!'},
-{p:'Quale descrizione della memoria finale è corretta?',c:'string nome="Ada";\nstring cognome="Lovelace";\nstring completo=nome+" "+cognome;',o:['nome=Ada, cognome=Lovelace, completo=Ada Lovelace','nome=Ada Lovelace, cognome=Lovelace, completo=Ada','nome=Ada, cognome=Ada, completo=Lovelace'],a:0,h:'Ogni variabile conserva il proprio valore; completo contiene la concatenazione.',t:'nome=Ada|cognome=Lovelace|completo=Ada Lovelace'},
-{p:'Segui attentamente copie e modifiche. Quale stato finale della memoria è corretto?',c:'string a="rosso";\nstring b=a;\nstring c=b+" chiaro";\na="blu";\nb=a+" scuro";',o:['a=blu, b=blu scuro, c=rosso chiaro','a=blu, b=blu scuro, c=blu chiaro','a=rosso, b=blu scuro, c=rosso chiaro'],a:0,h:'c viene costruita quando b contiene ancora "rosso". Le modifiche successive di a e b non modificano automaticamente c.',t:'a=rosso|b=rosso|c=rosso chiaro|a=blu|b=blu scuro',hard:true},
-{p:'frase contiene ancora “Ciao Sara” anche dopo aver modificato saluto. Quale istruzione dovresti aggiungere alla fine per aggiornare frase?',c:'string nome="Sara";\nstring saluto="Ciao";\nstring frase=saluto+" "+nome;\nsaluto="Buongiorno";',o:['frase=saluto+" "+nome;','nome=frase;','saluto=frase;'],a:0,h:'frase non è un collegamento permanente alle altre variabili: contiene il risultato calcolato al momento dell’assegnazione.',t:'nome=Sara|saluto=Ciao|frase=Ciao Sara|saluto=Buongiorno',hard:true}]},
-{n:'Input',i:'⌨️',d:'Leggi dati di tipo diverso e osserva come vengono elaborati dopo l’acquisizione.',e:[
-{p:'L’utente inserisce il prezzo e la quantità. Quale descrizione rappresenta correttamente ciò che fa il programma?',c:'double prezzo;\nint quantita;\ncin >> prezzo >> quantita;\ndouble totale=prezzo*quantita;\ndouble iva=totale*0.22;\ndouble finale=totale+iva;',inp:'12.5 3',o:['Calcola il totale di 3 prodotti, l’IVA al 22% e il prezzo finale comprensivo di IVA','Somma prezzo e quantità e poi sottrae il 22%','Calcola soltanto l’IVA su un singolo prodotto'],a:0,h:'Dopo la lettura dei due dati vengono eseguiti tre passaggi: totale, IVA e prezzo finale.',t:'prezzo=?|quantita=?|prezzo=12.5,quantita=3|totale=37.5|iva=8.25|finale=45.75'},
+const L=[{"g":"fondamenti","n":"Variabili","i":"📦","d":"Segui assegnamenti e sostituzioni di valore.","e":[{"p":"Valori finali di x e y? Scrivili separati da una virgola.","c":"int x=5;\nint y=2;\nx=x+y;\ny=x-1;","a":"7,6","m":"x=5|y=2","h":"Quando calcoli y, x vale già 7.","t":"x=5,y=2|x=7,y=2|x=7,y=6"},{"p":"Valore finale di a?","c":"int a=3;\na=a+4;\na=a*2;","a":"14","m":"a=3","h":"Usa il nuovo valore dopo ogni riga.","t":"a=3|a=7|a=14"},{"p":"Valore finale di n?","c":"int n=10;\nn=n-3;\nn=n+5;","a":"12","m":"n=10","h":"10 → 7 → ?","t":"n=10|n=7|n=12"},{"p":"Valori finali di x e y?","c":"int x=2;\nint y=6;\nx=y;\ny=x+1;","a":"6,7","m":"x=2|y=6","h":"x=y sostituisce il vecchio valore di x.","t":"x=2,y=6|x=6,y=6|x=6,y=7"}]},{"g":"fondamenti","n":"Scambio","i":"🔄","d":"Osserva come una variabile temporanea permette di scambiare due valori senza perderli.","e":[{"p":"Esegui il programma riga per riga. Quali sono i valori finali di a e b?","c":"int a=10;\nint b=20;\nint temp;\ntemp=a;\na=b;\nb=temp;","a":"20,10","m":"a=10|b=20|temp=?","h":"Osserva soprattutto che cosa contiene temp dopo temp=a.","t":"a=10|b=20|temp=?|temp=10|a=20|b=10"},{"p":"Esegui lo scambio. Quali sono i valori finali di x e y?","c":"int x=4;\nint y=7;\nint temp=x;\nx=y;\ny=temp;","a":"7,4","m":"x=4|y=7|temp=?","h":"temp conserva il vecchio valore di x mentre x viene modificata.","t":"x=4|y=7|temp=4|x=7|y=4"},{"p":"Segui l’esecuzione. Quali sono i valori finali di p e q?","c":"int p=1;\nint q=4;\nint t=p;\np=q;\nq=t;","a":"4,1","m":"p=1|q=4|t=?","h":"La variabile t funziona come un contenitore di appoggio.","t":"p=1|q=4|t=1|p=4|q=1"},{"p":"Questo programma vuole scambiare a e b, ma contiene un errore. Eseguilo riga per riga: che cosa succede?","c":"int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;","o":["Lo scambio avviene correttamente: a=9 e b=5","Lo scambio non avviene: alla fine a=9 e b=9","Il programma non può essere eseguito perché temp non è dichiarata"],"a":1,"m":"a=5|b=9|temp=?","h":"Guarda che cosa accade a temp quando viene eseguita la riga temp=b.","t":"a=5|b=9|temp=5|a=9|temp=9|b=9"}]},{"g":"fondamenti","n":"Espressioni semplici","i":"🧮","d":"Calcola semplici espressioni usando operatori e valori correnti.","e":[{"p":"Valore finale di n?","c":"int n=4;\nn=n*3;\nn=n-2;","a":"10","m":"n=4","h":"4 → 12 → ?","t":"n=4|n=12|n=10"},{"p":"Quanto vale c?","c":"int a=10,b=3;\nint c=a/b;","a":"3","m":"a=10|b=3|c=?","h":"Con int, 10/3 dà la parte intera.","t":"10/3 → 3"},{"p":"Quanto vale z?","c":"int x=7,y=2;\nint z=x%y;","a":"1","m":"x=7|y=2|z=?","h":"% restituisce il resto.","t":"7 diviso 2: resto 1"},{"p":"Quanto vale totale?","c":"double prezzo=12.5;\nint q=4;\ndouble totale=prezzo*q;","a":"50","m":"prezzo=12.5|q=4|totale=?","h":"Prezzo unitario × quantità.","t":"12.5 × 4 = 50"}]},{"g":"fondamenti","n":"Segui le variabili","i":"🔎","d":"Segui passo passo come cambiano i valori delle variabili durante l’esecuzione.","e":[{"p":"Valori finali a,b,c?","c":"int a=3,b=5;\nint c=a+b;\na=c-2;\nb=a*2;","a":"6,12,8","m":"a=3|b=5|c=?","h":"Cambia solo la variabile a sinistra di =.","t":"c=8|a=6|b=12"},{"p":"Valori finali x,y,z?","c":"int x=2,y=4,z=1;\nz=x+y;\nx=z*2;\ny=x-z;","a":"12,6,6","m":"x=2|y=4|z=1","h":"z cambia per primo.","t":"z=6|x=12|y=6"},{"p":"Valori finali m,n?","c":"int m=8,n=3;\nm=m-n;\nn=m+n;","a":"5,8","m":"m=8|n=3","h":"Quando calcoli n, m vale già 5.","t":"m=5|n=8"},{"p":"Valori finali a,b,c?","c":"int a=1,b=2,c=3;\na=b+c;\nb=a+c;\nc=a+b;","a":"5,8,13","m":"a=1|b=2|c=3","h":"Ogni riga usa lo stato corrente.","t":"a=5|b=8|c=13"}]},{"g":"fondamenti","n":"Stringhe","i":"🔤","d":"Tratta anche il testo come un dato conservato e modificato nelle variabili.","e":[{"p":"Esegui il codice. Quale valore conterrà messaggio alla fine?","c":"string nome=\"Luca\";\nstring messaggio=\"Ciao \"+nome;","o":["Ciao","Ciao Luca","Luca"],"a":1,"h":"La seconda riga concatena una stringa letterale con il contenuto di nome.","t":"nome=Luca|messaggio=Ciao Luca"},{"p":"Dopo copia=colore, colore viene modificata. Che cosa accade a copia?","c":"string colore=\"rosso\";\nstring copia=colore;\ncolore=\"blu\";","o":["copia diventa blu","copia viene cancellata","copia resta rosso"],"a":2,"h":"L’assegnazione copia il valore presente in quel momento; le due variabili restano contenitori distinti.","t":"colore=rosso|copia=rosso|colore=blu"},{"p":"Scrivi il valore finale contenuto nella variabile nome.","c":"string nome;\nnome=\"Anna\";\nnome=nome+\"!\";","a":"Anna!","h":"Alla terza riga si usa il valore attuale di nome e gli si concatena \"!\".","t":"nome=?|nome=Anna|nome=Anna!"},{"p":"Quale descrizione della memoria finale è corretta?","c":"string nome=\"Ada\";\nstring cognome=\"Lovelace\";\nstring completo=nome+\" \"+cognome;","o":["nome=Ada, cognome=Lovelace, completo=Ada Lovelace","nome=Ada Lovelace, cognome=Lovelace, completo=Ada","nome=Ada, cognome=Ada, completo=Lovelace"],"a":0,"h":"Ogni variabile conserva il proprio valore; completo contiene la concatenazione.","t":"nome=Ada|cognome=Lovelace|completo=Ada Lovelace"},{"p":"Segui attentamente copie e modifiche. Quale stato finale della memoria è corretto?","c":"string a=\"rosso\";\nstring b=a;\nstring c=b+\" chiaro\";\na=\"blu\";\nb=a+\" scuro\";","o":["a=rosso, b=blu scuro, c=rosso chiaro","a=blu, b=blu scuro, c=blu chiaro","a=blu, b=blu scuro, c=rosso chiaro"],"a":2,"h":"c viene costruita quando b contiene ancora \"rosso\". Le modifiche successive di a e b non modificano automaticamente c.","t":"a=rosso|b=rosso|c=rosso chiaro|a=blu|b=blu scuro","hard":true},{"p":"frase contiene ancora “Ciao Sara” anche dopo aver modificato saluto. Quale istruzione dovresti aggiungere alla fine per aggiornare frase?","c":"string nome=\"Sara\";\nstring saluto=\"Ciao\";\nstring frase=saluto+\" \"+nome;\nsaluto=\"Buongiorno\";","o":["nome=frase;","frase=saluto+\" \"+nome;","saluto=frase;"],"a":1,"h":"frase non è un collegamento permanente alle altre variabili: contiene il risultato calcolato al momento dell’assegnazione.","t":"nome=Sara|saluto=Ciao|frase=Ciao Sara|saluto=Buongiorno","hard":true}]},{"g":"fondamenti","n":"Input","i":"⌨️","d":"Leggi dati di tipo diverso e osserva come vengono elaborati dopo l’acquisizione.","e":[{"p":"L’utente inserisce il prezzo e la quantità. Quale descrizione rappresenta correttamente ciò che fa il programma?","c":"double prezzo;\nint quantita;\ncin >> prezzo >> quantita;\ndouble totale=prezzo*quantita;\ndouble iva=totale*0.22;\ndouble finale=totale+iva;","inp":"12.5 3","o":["Somma prezzo e quantità e poi sottrae il 22%","Calcola il totale di 3 prodotti, l’IVA al 22% e il prezzo finale comprensivo di IVA","Calcola soltanto l’IVA su un singolo prodotto"],"a":1,"h":"Dopo la lettura dei due dati vengono eseguiti tre passaggi: totale, IVA e prezzo finale.","t":"prezzo=?|quantita=?|prezzo=12.5,quantita=3|totale=37.5|iva=8.25|finale=45.75"},{"p":"L’utente inserisce base e altezza. Quale valore finale viene calcolato oltre all’area?","c":"double base;\ndouble altezza;\ncin >> base >> altezza;\ndouble area=base*altezza;\ndouble perimetro=2*(base+altezza);\ndouble rapporto=area/perimetro;","inp":"6 4","o":["La media tra base e altezza","La diagonale del rettangolo","Il rapporto tra area e perimetro"],"a":2,"h":"Leggi le variabili intermedie: prima area, poi perimetro, infine rapporto.","t":"base=?|altezza=?|base=6,altezza=4|area=24|perimetro=20|rapporto=1.2"},{"p":"L’utente digita “Mario Rossi”. Quale valore viene memorizzato in nome e quale messaggio viene visualizzato?","c":"string nome;\ncin >> nome;\nstring saluto=\"Ciao \"+nome;\ncout << saluto;","inp":"Mario Rossi","o":["nome contiene Mario e viene visualizzato Ciao Mario","nome contiene Mario Rossi e viene visualizzato Ciao Mario Rossi","nome resta vuota e non viene visualizzato nulla"],"a":0,"h":"cin >> legge fino al primo spazio; il resto dell’input non entra nella variabile nome.","t":"nome=?|nome=Mario|saluto=Ciao Mario|cout=Ciao Mario"},{"p":"L’utente digita “Mario Rossi”. Quale vantaggio produce getline in questo programma?","c":"string nomeCompleto;\ngetline(cin,nomeCompleto);\nstring messaggio=\"Benvenuto \"+nomeCompleto;\ncout << messaggio;","inp":"Mario Rossi","o":["Legge soltanto il cognome","Legge solo Mario e visualizza Benvenuto Mario","Legge l’intero nome e visualizza Benvenuto Mario Rossi"],"a":2,"h":"getline conserva anche gli spazi all’interno della riga.","t":"nomeCompleto=?|nomeCompleto=Mario Rossi|messaggio=Benvenuto Mario Rossi|cout=Benvenuto Mario Rossi"},{"p":"L’utente inserisce nome, età e media. Quale informazione aggiuntiva calcola il programma dopo l’input?","c":"string nome;\nint eta;\ndouble media;\ncin >> nome >> eta >> media;\nint anniMancanti=18-eta;\ndouble bonus=media+0.5;\nstring riepilogo=nome;","inp":"Giulia 15 8.5","o":["La differenza tra nome ed età","Gli anni mancanti a 18 e una media aumentata di 0.5","La media dei tre dati inseriti"],"a":1,"h":"Dopo l’input vengono ricavate due nuove informazioni numeriche a partire da eta e media.","t":"nome=?|eta=?|media=?|nome=Giulia,eta=15,media=8.5|anniMancanti=3|bonus=9|riepilogo=Giulia","hard":true},{"p":"La stessa variabile n viene letta due volte. Quale descrizione spiega correttamente il risultato finale?","c":"int n;\ncin >> n;\nint doppio=n*2;\nint sommaParziale=doppio+3;\ncin >> n;\nint totale=sommaParziale+n;\nint finale=totale*2;","inp":"4 7","o":["Il primo valore viene usato per doppio e sommaParziale; il secondo sostituisce n e contribuisce al totale finale","Il secondo input modifica automaticamente anche doppio e sommaParziale","Entrambi gli input vengono sommati prima di ogni elaborazione"],"a":0,"h":"Le variabili già calcolate non si aggiornano automaticamente quando n riceve un nuovo valore.","t":"n=?|n=4|doppio=8|sommaParziale=11|n=7|totale=18|finale=36","hard":true}]},{"g":"sequenza","n":"Capisci il codice","i":"🧠","d":"Leggi programmi più lunghi e individua lo scopo complessivo, non soltanto il valore di una variabile.","e":[{"p":"Quale descrizione rappresenta meglio ciò che fa questo programma?","c":"string prodotto=\"Quaderno\";\ndouble prezzo=2.5;\nint quantita=4;\ndouble totale=prezzo*quantita;\ndouble sconto=1.0;\ndouble finale=totale-sconto;\nstring stato=\"calcolato\";","o":["Calcola il prezzo di un solo quaderno e aggiunge 1 euro","Calcola il costo di 4 quaderni e sottrae uno sconto fisso di 1 euro","Modifica il nome del prodotto in base al prezzo"],"a":1,"h":"Non concentrarti su una singola riga: individua dati iniziali, elaborazione e risultato complessivo.","t":"prodotto=Quaderno|prezzo=2.5|quantita=4|totale=10|sconto=1|finale=9|stato=calcolato","hard":true},{"p":"Con l’input mostrato, quale operazione complessiva svolge il programma?","c":"string nome;\nint eta;\ndouble altezza;\ncin >> nome >> eta >> altezza;\nint anniMancanti=18-eta;\ndouble altezzaCm=altezza*100;\nstring stato=\"dati letti\";","inp":"Luca 16 1.72","o":["Converte l’età in centimetri e modifica il nome","Legge soltanto il nome e calcola l’età media","Legge nome, età e altezza; calcola gli anni mancanti a 18 e converte l’altezza in centimetri"],"a":2,"h":"Segui il flusso: prima entrano tre dati, poi vengono prodotte due nuove informazioni numeriche.","t":"nome=?|eta=?|altezza=?|nome=Luca,eta=16,altezza=1.72|anniMancanti=2|altezzaCm=172|stato=dati letti","hard":true},{"p":"Perché alla fine media e nuovaMedia possono avere valori diversi?","c":"string materia=\"Informatica\";\nint voto1=7;\nint voto2=9;\ndouble media=(voto1+voto2)/2.0;\nvoto1=voto1+1;\ndouble nuovaMedia=(voto1+voto2)/2.0;\nstring stato=\"ricalcolata\";","o":["Perché voto1 viene modificato dopo il primo calcolo e nuovaMedia viene calcolata con il nuovo valore","Perché una variabile double cambia automaticamente nel tempo","Perché string materia modifica i voti"],"a":0,"h":"Guarda quando viene calcolata ciascuna media rispetto alla modifica di voto1.","t":"materia=Informatica|voto1=7|voto2=9|media=8|voto1=8|nuovaMedia=8.5|stato=ricalcolata","hard":true},{"p":"Quale affermazione descrive correttamente questo programma?","c":"string articolo=\"Penna\";\ndouble prezzo=1.8;\nint pezzi=5;\ndouble spesa=prezzo*pezzi;\npezzi=pezzi+2;\ndouble nuovaSpesa=prezzo*pezzi;\nstring fase=\"aggiornata\";","o":["nuovaSpesa e spesa sono sempre identiche","spesa cambia automaticamente quando pezzi passa da 5 a 7","spesa conserva il calcolo fatto con 5 pezzi, mentre nuovaSpesa usa i 7 pezzi aggiornati"],"a":2,"h":"Una variabile già calcolata non viene ricalcolata automaticamente quando cambia una delle variabili usate in precedenza.","t":"articolo=Penna|prezzo=1.8|pezzi=5|spesa=9|pezzi=7|nuovaSpesa=12.6|fase=aggiornata","hard":true},{"p":"I nomi delle variabili non aiutano. Quale situazione potrebbe rappresentare questo programma?","c":"string s=\"Libro\";\ndouble a=12.0;\nint b=3;\ndouble c=a*b;\ndouble d=c*0.10;\ndouble e=c-d;\nstring f=\"ok\";","o":["Calcola la media di tre voti e aggiunge il 10%","Calcola il costo di 3 libri e applica uno sconto del 10%","Converte 12 euro in centimetri e poi sottrae 3"],"a":1,"h":"Ignora i nomi a, b, c... e osserva solo tipi, valori e operazioni: 12 × 3, poi il 10% del risultato, poi una sottrazione.","t":"s=Libro|a=12|b=3|c=36|d=3.6|e=32.4|f=ok","hard":true},{"p":"Anche qui i nomi sono volutamente poco significativi. Quale interpretazione descrive meglio il programma?","c":"string x;\nint a;\ndouble b;\ncin >> x >> a >> b;\ndouble c=a*b;\nint d=a+2;\ndouble e=d*b;","inp":"Anna 4 2.5","o":["Legge un nome, una quantità e un valore unitario; calcola un primo totale e poi un secondo totale usando due unità in più","Legge una frase, un’età e un’altezza e calcola una media","Legge tre numeri e li somma tutti"],"a":0,"h":"Ricostruisci il ruolo delle variabili dalle relazioni: c=a*b, poi d=a+2, infine e=d*b.","t":"x=?|a=?|b=?|x=Anna,a=4,b=2.5|c=10|d=6|e=15","hard":true}]},{"g":"sequenza","n":"Ordina il codice","i":"🧱","d":"Ricostruisci la sequenza logica delle istruzioni, comprese le richieste di input e la visualizzazione finale del risultato.","e":[{"p":"Metti in ordine il codice per chiedere un numero, leggerlo, raddoppiarlo, aggiungere 3, elevarlo al quadrato, sottrarre 1 e visualizzare il risultato finale.","ord":[{"id":"g","line":"cout << \"Risultato finale: \" << finale;"},{"id":"d","line":"int quadrato=aumentato*aumentato;"},{"id":"a","line":"int n;"},{"id":"h","line":"cout << \"Inserisci un numero: \";"},{"id":"f","line":"int finale=quadrato-1;"},{"id":"c","line":"int aumentato=doppio+3;"},{"id":"b","line":"cin >> n;"},{"id":"e","line":"int doppio=n*2;"}],"correct":["a","h","b","e","c","d","f","g"],"h":"Prima dichiara la variabile, poi chiedi il dato e leggilo. Solo dopo puoi eseguire i calcoli e infine mostrare il risultato.","hard":true},{"p":"Metti in ordine il codice per chiedere il lato di un quadrato, leggerlo, calcolare l’area iniziale, raddoppiare il lato, calcolare la nuova area, trovare la differenza e visualizzarla.","ord":[{"id":"e","line":"double nuovaArea=nuovoLato*nuovoLato;"},{"id":"b","line":"cin >> lato;"},{"id":"h","line":"cout << \"Differenza tra le aree: \" << differenza;"},{"id":"f","line":"double differenza=nuovaArea-area;"},{"id":"a","line":"double lato;"},{"id":"g","line":"cout << \"Inserisci il lato del quadrato: \";"},{"id":"d","line":"double nuovoLato=lato*2;"},{"id":"c","line":"double area=lato*lato;"}],"correct":["a","g","b","c","d","e","f","h"],"h":"La cout di richiesta deve precedere la cin. La cout finale può essere eseguita solo dopo aver calcolato la differenza.","hard":true},{"p":"Metti in ordine il codice per chiedere un nome, leggerlo, preparare un saluto, costruire il messaggio, copiarlo, aggiungere un punto esclamativo alla copia e visualizzarla.","ord":[{"id":"d","line":"string messaggio=saluto+\" \"+nome;"},{"id":"a","line":"string nome;"},{"id":"g","line":"cout << copia;"},{"id":"f","line":"copia=copia+\"!\";"},{"id":"c","line":"string saluto=\"Ciao\";"},{"id":"h","line":"cout << \"Inserisci il nome: \";"},{"id":"b","line":"cin >> nome;"},{"id":"e","line":"string copia=messaggio;"}],"correct":["a","h","b","c","d","e","f","g"],"h":"Il nome deve essere richiesto e letto prima di costruire il messaggio. La copia va visualizzata solo dopo l’aggiunta del punto esclamativo.","hard":true},{"p":"Metti in ordine il codice per chiedere prezzo e quantità, leggere i dati, calcolare il totale, applicare uno sconto fisso di 2 euro e visualizzare il prezzo finale.","ord":[{"id":"c","line":"int quantita;"},{"id":"h","line":"cout << \"Prezzo finale: \" << scontato;"},{"id":"f","line":"double scontato=totale-2;"},{"id":"a","line":"double prezzo;"},{"id":"i","line":"cout << \"Inserisci la quantita: \";"},{"id":"e","line":"double totale=prezzo*quantita;"},{"id":"j","line":"cout << \"Inserisci il prezzo: \";"},{"id":"d","line":"cin >> quantita;"},{"id":"b","line":"cin >> prezzo;"}],"correct":["a","c","j","b","i","d","e","f","h"],"h":"Per ogni input: prima la cout di richiesta, poi la cin. Il risultato finale può essere mostrato solo dopo totale e sconto.","hard":true},{"p":"Cassa di un negozio: metti in ordine le istruzioni per chiedere nome del prodotto, prezzo e quantità, leggere i dati, calcolare totale, sconto del 10% e prezzo finale, quindi mostrare lo scontrino finale.","ord":[{"id":"k","line":"cout << \"Totale finale: \" << finale;"},{"id":"f","line":"double finale=totale-sconto;"},{"id":"b","line":"double prezzo;"},{"id":"h","line":"cout << \"Inserisci il prezzo: \";"},{"id":"d","line":"cin >> prodotto;"},{"id":"a","line":"string prodotto;"},{"id":"j","line":"cout << \"Inserisci la quantita: \";"},{"id":"g","line":"double sconto=totale*0.10;"},{"id":"c","line":"int quantita;"},{"id":"i","line":"cin >> prezzo;"},{"id":"e","line":"double totale=prezzo*quantita;"},{"id":"l","line":"cin >> quantita;"},{"id":"m","line":"cout << \"Inserisci il prodotto: \";"}],"correct":["a","b","c","m","d","h","i","j","l","e","g","f","k"],"h":"Dichiara prima le variabili. Poi chiedi e acquisisci ogni dato nell’ordine. Solo quando prezzo e quantità sono disponibili puoi calcolare totale, sconto e finale.","hard":true},{"p":"Viaggio in auto: metti in ordine le istruzioni per chiedere chilometri percorsi e litri consumati, leggere i dati, calcolare i km per litro, stimare i litri necessari per 300 km e visualizzare il risultato.","ord":[{"id":"e","line":"double kmPerLitro=km/litri;"},{"id":"a","line":"double km;"},{"id":"i","line":"cout << \"Litri necessari per 300 km: \" << litriNecessari;"},{"id":"g","line":"double litriNecessari=distanza/kmPerLitro;"},{"id":"c","line":"cin >> km;"},{"id":"h","line":"cout << \"Inserisci i litri consumati: \";"},{"id":"b","line":"double litri;"},{"id":"j","line":"cin >> litri;"},{"id":"f","line":"double distanza=300;"},{"id":"d","line":"cout << \"Inserisci i km percorsi: \";"}],"correct":["a","b","d","c","h","j","e","f","g","i"],"h":"Le richieste dei dati devono precedere le rispettive letture. Prima calcoli i km/l, poi puoi stimare i litri necessari per 300 km e infine mostrarli.","hard":true}]},{"g":"sequenza","n":"Trova l’errore","i":"🐞","d":"Individua l’errore in programmi che usano dichiarazioni, input, espressioni e assegnamenti in sequenza.","e":[{"p":"Il programma dovrebbe leggere un numero e visualizzarne il doppio. Quale riga contiene l’errore?","errcode":"int n;\ncout << \"Inserisci un numero: \";\ncin >> n;\ndoppio=n*2;\ncout << \"Doppio: \" << doppio;","errorLine":4,"why":"La variabile doppio viene usata senza essere stata dichiarata. Una possibile correzione è: int doppio=n*2;","h":"Controlla se tutte le variabili utilizzate sono state prima dichiarate.","hard":true},{"p":"Il programma dovrebbe leggere il prezzo e la quantità e calcolare il totale. Quale riga rende il risultato scorretto?","errcode":"double prezzo;\nint quantita;\ncout << \"Inserisci prezzo e quantita: \";\ncin >> prezzo >> quantita;\ndouble totale=prezzo+quantita;\ncout << \"Totale: \" << totale;","errorLine":5,"why":"Per calcolare il costo totale bisogna moltiplicare prezzo per quantità, non sommarli: totale=prezzo*quantita;","h":"Chiediti quale operazione rappresenta davvero “prezzo unitario × numero di pezzi”.","hard":true},{"p":"Il programma dovrebbe conservare il nome completo “Mario Rossi”. Quale riga è inadatta allo scopo?","errcode":"string nome;\ncout << \"Inserisci nome e cognome: \";\ncin >> nome;\ncout << \"Nome completo: \" << nome;","errorLine":3,"why":"cin >> nome si ferma al primo spazio e memorizza solo “Mario”. Per leggere “Mario Rossi” in un’unica stringa serve getline(cin,nome).","h":"Pensa a cosa succede quando cin incontra uno spazio.","hard":true},{"p":"Il programma dovrebbe calcolare la media reale di 7 e 8. Quale riga provoca la perdita della parte decimale?","errcode":"int a=7;\nint b=8;\ndouble media;\nmedia=(a+b)/2;\ncout << \"Media: \" << media;","errorLine":4,"why":"Poiché a, b e 2 sono interi, la divisione viene eseguita come divisione intera e produce 7. Una correzione è (a+b)/2.0.","h":"Il fatto che media sia double non basta se la divisione è già stata eseguita tra interi.","hard":true},{"p":"Il programma dovrebbe scambiare i valori di a e b. Quale riga distrugge il valore che temp doveva conservare?","errcode":"int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;\ncout << a << \" \" << b;","errorLine":5,"why":"temp conteneva il vecchio valore di a (5), ma con temp=b viene sovrascritta con 9. Quindi il 5 viene perso e b riceve 9.","h":"Segui il contenuto di temp: quale valore dovrebbe custodire fino all’ultima assegnazione?","hard":true}]},{"g":"sequenza","n":"Problemi","i":"🧩","d":"Prima individua input, elaborazione e output.","e":[{"p":"Ore lavorate + compenso orario → stipendio. Quale schema è corretto?","o":["INPUT stipendio → somma → ore","INPUT ore,compenso → moltiplicazione → stipendio","INPUT ore → divisione → compenso"],"a":1,"h":"Cosa entra? Quale calcolo? Cosa esce?"},{"p":"Base e altezza → area del rettangolo. Quale schema è corretto?","o":["base → divisione → area","area → somma → altezza","base,altezza → prodotto → area"],"a":2,"h":"Pensa alla formula area=base×altezza."},{"p":"Celsius → Fahrenheit. Quale schema è corretto?","o":["Celsius → C×9/5+32 → Fahrenheit","Fahrenheit → C+32 → Celsius","Celsius,Fahrenheit → prodotto → differenza"],"a":0,"h":"Il dato iniziale è Celsius; il risultato richiesto è Fahrenheit."},{"p":"Tre voti → media. Quale schema è corretto?","o":["media → somma → voti","un voto → prodotto → media","tre voti → (somma)/3 → media"],"a":2,"h":"La media è l’output, non l’input."}]},{"g":"condizione","n":"Capisci il codice","i":"🧠","d":"Prima prevedi il risultato, poi verifica la tua ipotesi eseguendo il programma riga per riga.","e":[{"p":"Con età esattamente 18, quale risultato produce il programma?","c":"int eta;\ncin >> eta;\nstring esito=\"Minorenne\";\nif(eta>=18)\n  esito=\"Maggiorenne\";\ncout << esito;","inp":"18","o":["Visualizza Minorenne, perché 18 non è maggiore di 18","Visualizza Maggiorenne, perché >= comprende anche 18","Non si può stabilire: 18 è un valore di confine"],"a":1,"h":"Confronta con attenzione > e >=. Prova a sostituire mentalmente eta con 18 nella condizione.","hard":true,"predict":true},{"p":"Con un ordine di esattamente 50 euro, quale valore viene visualizzato?","c":"double totale;\ncin >> totale;\ndouble finale=totale;\nif(totale>=50)\n  finale=totale*0.90;\ncout << finale;","inp":"50","o":["50, perché lo sconto vale solo oltre 50 euro","55, perché viene aggiunto il 10%","45, perché la condizione totale>=50 è vera anche per 50"],"a":2,"h":"Il punto delicato è il simbolo = dentro >=. Il valore 50 appartiene o no al caso dello sconto?","hard":true,"predict":true},{"p":"Con n=0, quale messaggio viene visualizzato?","c":"int n;\ncin >> n;\nstring tipo=\"Dispari\";\nif(n%2==0)\n  tipo=\"Pari\";\ncout << tipo;","inp":"0","o":["Pari","Dispari, perché 0 non è positivo","Né pari né dispari"],"a":0,"h":"La parità dipende dal resto della divisione per 2, non dal fatto che il numero sia positivo.","hard":true,"predict":true},{"p":"Con età 18 e punteggio 70, quale esito produce il programma?","c":"int eta;\nint punteggio;\ncin >> eta >> punteggio;\nstring esito=\"Non ammesso\";\nif(eta>=18 && punteggio>=70)\n  esito=\"Ammesso\";\ncout << esito;","inp":"18 70","o":["Non ammesso, perché almeno uno dei valori dovrebbe essere strettamente maggiore della soglia","Ammesso, perché entrambe le condizioni sono vere anche sui valori limite","Ammesso, perché con && basta che una delle due condizioni sia vera"],"a":1,"h":"Valuta separatamente eta>=18 e punteggio>=70, poi ricorda cosa richiede &&.","hard":true,"predict":true},{"p":"Con voto=10, quale valore finale assume livello?","c":"int voto;\ncin >> voto;\nstring livello=\"Insufficiente\";\nif(voto>=6)\n  livello=\"Sufficiente\";\nif(voto>=8)\n  livello=\"Buono\";\nif(voto==10)\n  livello=\"Ottimo\";\ncout << livello;","inp":"10","o":["Sufficiente, perché il primo if vero termina la scelta","Buono, perché voto>=8 è la condizione più alta con >=","Ottimo, perché gli if sono indipendenti e l’ultimo aggiorna nuovamente livello"],"a":2,"h":"Questi non sono rami else if: sono tre if indipendenti. Segui tutte le assegnazioni in ordine.","hard":true,"predict":true}]},{"g":"condizione","n":"Ordina il codice","i":"🧱","d":"Ricostruisci l’ordine corretto quando un’elaborazione contiene una decisione.","e":[{"p":"Metti in ordine il programma che legge l’età, assegna 10 euro come prezzo normale, applica il prezzo ridotto di 7 euro ai minori di 18 anni e visualizza il prezzo finale.","ord":[{"id":"e","line":"if(eta<18) prezzo=7;"},{"id":"a","line":"int eta;"},{"id":"f","line":"cout << \"Prezzo: \" << prezzo;"},{"id":"d","line":"double prezzo=10;"},{"id":"c","line":"cin >> eta;"},{"id":"b","line":"cout << \"Inserisci eta: \";"}],"correct":["a","b","c","d","e","f"],"mustBefore":[["c","e"],["d","e"],["e","f"]],"h":"La condizione può essere valutata solo dopo aver letto l’età. Il prezzo deve avere un valore iniziale prima dell’eventuale modifica.","hard":true},{"p":"Metti in ordine il programma che legge il totale di un ordine, aggiunge 5 euro di spedizione solo se il totale è inferiore a 50 euro e visualizza il risultato.","ord":[{"id":"f","line":"cout << \"Totale finale: \" << finale;"},{"id":"c","line":"cin >> totale;"},{"id":"a","line":"double totale;"},{"id":"e","line":"if(totale<50) finale=totale+5;"},{"id":"d","line":"double finale=totale;"},{"id":"b","line":"cout << \"Inserisci totale: \";"}],"correct":["a","b","c","d","e","f"],"mustBefore":[["c","d"],["d","e"],["e","f"]],"h":"Prima devi conoscere il totale; poi copi il valore in finale e solo successivamente puoi decidere se aggiungere la spedizione.","hard":true},{"p":"Metti in ordine il programma che legge un intero, considera inizialmente il numero dispari, modifica il risultato se il numero è pari e infine visualizza la classificazione.","ord":[{"id":"d","line":"string tipo=\"Dispari\";"},{"id":"f","line":"cout << tipo;"},{"id":"b","line":"cout << \"Inserisci un numero: \";"},{"id":"e","line":"if(n%2==0) tipo=\"Pari\";"},{"id":"a","line":"int n;"},{"id":"c","line":"cin >> n;"}],"correct":["a","b","c","d","e","f"],"mustBefore":[["c","e"],["d","e"],["e","f"]],"h":"Il numero deve essere disponibile prima del controllo di parità; tipo deve essere inizializzata prima dell’if.","hard":true},{"p":"Metti in ordine il programma che legge età e punteggio, considera inizialmente il candidato non ammesso e lo ammette solo se entrambe le condizioni sono soddisfatte.","ord":[{"id":"g","line":"cout << esito;"},{"id":"a","line":"int eta;"},{"id":"f","line":"if(eta>=18 && punteggio>=70) esito=\"Ammesso\";"},{"id":"d","line":"cin >> eta >> punteggio;"},{"id":"c","line":"cout << \"Inserisci eta e punteggio: \";"},{"id":"e","line":"string esito=\"Non ammesso\";"},{"id":"b","line":"int punteggio;"}],"correct":["a","b","c","d","e","f","g"],"mustBefore":[["d","f"],["e","f"],["f","g"]],"h":"Entrambi i dati devono essere letti prima del confronto. L’esito di default deve esistere prima dell’eventuale modifica.","hard":true},{"p":"Metti in ordine il programma che classifica un voto: parte da “Insufficiente”, poi aggiorna il livello alle soglie 6, 8 e 10 e infine visualizza il risultato.","ord":[{"id":"h","line":"if(voto==10) livello=\"Ottimo\";"},{"id":"b","line":"cout << \"Inserisci voto: \";"},{"id":"f","line":"if(voto>=6) livello=\"Sufficiente\";"},{"id":"i","line":"cout << livello;"},{"id":"a","line":"int voto;"},{"id":"g","line":"if(voto>=8) livello=\"Buono\";"},{"id":"d","line":"string livello=\"Insufficiente\";"},{"id":"c","line":"cin >> voto;"}],"correct":["a","b","c","d","f","g","h","i"],"mustBefore":[["c","f"],["d","f"],["f","g"],["g","h"],["h","i"]],"h":"Le soglie devono essere valutate dalla più bassa alla più alta, perché ogni if può aggiornare il valore assegnato dal precedente.","hard":true}]},{"g":"condizione","n":"Completa il codice","i":"🧩","d":"Scegli la riga mancante: alcuni esercizi allenano soprattutto la sintassi, altri richiedono di capire quale istruzione è logicamente adatta al programma.","e":[{"p":"Nel programma manca la dichiarazione della variabile usata nella condizione. Quale riga completa correttamente il codice?","gapcode":"???\ncin >> voto;\nif(voto>=6)\n  cout << \"Sufficiente\";","o":["int voto;","voto int;","int = voto;"],"a":0,"why":"In C++ la dichiarazione corretta usa prima il tipo e poi il nome della variabile: int voto;. Le altre due forme non rispettano la sintassi.","h":"Ricorda l’ordine della dichiarazione: tipo → nome variabile → punto e virgola.","hard":false,"syntaxFocus":true},{"p":"Il programma deve applicare uno sconto del 10% solo se il totale è almeno 50 euro. Quale riga manca?","gapcode":"double totale;\ncin >> totale;\ndouble finale;\n???\nif(totale>=50)\n  finale=totale*0.90;\ncout << finale;","o":["finale=0;","finale=totale;","totale=finale;"],"a":1,"why":"finale deve conservare il totale anche quando l’if è falso. finale=0 è sintatticamente valida ma produce un risultato logicamente errato; totale=finale usa invece finale prima che abbia un valore.","h":"Chiediti cosa succede se totale è minore di 50: finale deve comunque avere un valore prima della cout.","hard":true},{"p":"Quale riga legge correttamente nella variabile eta il valore inserito dall’utente?","gapcode":"int eta;\ncout << \"Inserisci eta: \";\n???\nif(eta>=18)\n  cout << \"Maggiorenne\";","o":["cout >> eta;","cin << eta;","cin >> eta;"],"a":2,"why":"L’input standard usa cin con l’operatore >>. cout serve invece per l’output e usa <<.","h":"Per leggere un dato devi usare il flusso di input, non quello di output.","hard":false,"syntaxFocus":true},{"p":"Il programma deve leggere l’età prima di stabilire se la persona è maggiorenne. Quale riga manca?","gapcode":"int eta;\ncout << \"Inserisci eta: \";\n???\nif(eta>=18)\n  cout << \"Maggiorenne\";","o":["cin >> eta;","cin >> anni;","cout << eta;"],"a":0,"why":"Prima di usare eta nella condizione bisogna acquisire un valore. cin >> eta; legge il dato nella variabile già dichiarata.","h":"La variabile eta esiste, ma prima dell’if deve ricevere il valore inserito dall’utente.","hard":true},{"p":"Quale riga contiene un if scritto correttamente dal punto di vista sintattico?","gapcode":"int n;\ncin >> n;\n???\n  cout << \"Maggiore di 3\";","o":["if n>3","if(n>3)","if(>3)"],"a":1,"why":"In C++ la condizione dell’if va racchiusa tra parentesi tonde e deve essere un’espressione completa, quindi if(n>3).","h":"Controlla sia le parentesi sia la presenza della variabile su cui viene effettuato il confronto.","hard":false,"syntaxFocus":true},{"p":"Il programma deve visualizzare “Maggiorenne” per età almeno 18 e “Minorenne” in tutti gli altri casi. Quale riga manca?","gapcode":"int eta;\ncin >> eta;\nif(eta>=18)\n  cout << \"Maggiorenne\";\n???\n  cout << \"Minorenne\";","o":["else if(eta>18)","else(eta<18)","else"],"a":2,"why":"else copre tutti i casi in cui eta>=18 è falsa. else if(eta>18) è sintatticamente valida ma semanticamente incoerente: ripete un caso già escluso; else(eta<18) è sintatticamente errata.","h":"Se vuoi coprire semplicemente tutti i casi rimanenti dopo un if, non serve formulare un nuovo confronto.","hard":true},{"p":"Il programma deve gestire un secondo caso tramite else if. Quale riga è scritta correttamente?","gapcode":"int voto;\ncin >> voto;\nif(voto<6)\n  cout << \"Insufficiente\";\n???\n  cout << \"Sufficiente\";","o":["else if(voto<8)","else(voto<8)","elseif(voto<8)"],"a":0,"why":"La forma corretta è else if(condizione). else da solo non accetta una condizione e elseif non è una parola chiave del C++.","h":"In C++ else e if restano due parole separate.","hard":false,"syntaxFocus":true},{"p":"Il programma deve classificare il voto: meno di 6 “Insufficiente”, da 6 a 7 “Sufficiente”, da 8 a 9 “Buono”, 10 “Ottimo”. Quale riga manca?","gapcode":"int voto;\ncin >> voto;\nif(voto<6)\n  cout << \"Insufficiente\";\n???\n  cout << \"Sufficiente\";\nelse if(voto<10)\n  cout << \"Buono\";\nelse\n  cout << \"Ottimo\";","o":["else if(voto<=8)","else if(voto<8)","else if(voto>=8)"],"a":1,"why":"Dopo voto<6, voto<8 descrive esattamente 6 e 7. voto<=8 includerebbe erroneamente anche 8; voto>=8 assegnerebbe “Sufficiente” proprio ai voti più alti.","h":"Considera quali valori sono già stati esclusi dal primo if e quale intervallo deve descrivere il ramo successivo.","hard":true},{"p":"Quale riga confronta correttamente la variabile scelta con il valore 1?","gapcode":"int scelta;\ncin >> scelta;\n???\n  cout << \"Hai scelto 1\";","o":["if(scelta=1)","if(scelta===1)","if(scelta==1)"],"a":2,"why":"Per confrontare due valori in C++ si usa ==. Il singolo = è assegnazione; === non è un operatore di confronto del C++.","h":"Chiediti se vuoi assegnare un valore oppure verificare che due valori siano uguali.","hard":false,"syntaxFocus":true},{"p":"Per accedere servono contemporaneamente età almeno 18 e autorizzazione uguale a 1. Quale riga manca?","gapcode":"int eta;\nint autorizzazione;\ncin >> eta >> autorizzazione;\n???\n  cout << \"Accesso consentito\";\nelse\n  cout << \"Accesso negato\";","o":["if(eta>=18 || autorizzazione==1)","if(eta>=18 && autorizzazione==1)","if(eta>=18 && permesso==1)"],"a":1,"why":"Devono essere vere entrambe le condizioni, quindi serve &&. Inoltre la variabile corretta è autorizzazione: permesso non è stata dichiarata.","h":"“Servono contemporaneamente” significa che una sola condizione vera non basta. Controlla anche che tutti i nomi usati siano stati dichiarati.","hard":true}]},{"g":"condizione","n":"Trova l’errore","i":"🐞","d":"Individua errori tipici nell’uso delle condizioni e degli operatori logici.","e":[{"p":"Il programma dovrebbe chiedere un voto e poi stabilire se è sufficiente. Quale riga usa la variabile troppo presto?","errcode":"int voto;\nif(voto>=6)\n    cout << \"Sufficiente\";\ncout << \"Inserisci il voto: \";\ncin >> voto;","errorLine":2,"why":"La condizione usa voto prima che il programma abbia acquisito il valore con cin. La richiesta e la lettura devono avvenire prima dell’if.","h":"Quando viene valutata la condizione, voto contiene già un valore inserito dall’utente?","hard":true},{"p":"Il programma dovrebbe verificare se n è uguale a 0. Quale riga contiene l’operatore sbagliato?","errcode":"int n;\ncin >> n;\nif(n=0)\n    cout << \"Zero\";\nelse\n    cout << \"Diverso da zero\";","errorLine":3,"why":"Nella condizione serve il confronto ==, non l’assegnazione =. La forma corretta è if(n==0).","h":"Distingui l’operatore di assegnazione da quello di confronto.","hard":true},{"p":"Anche un ragazzo che ha esattamente 18 anni deve essere considerato maggiorenne. Quale riga è errata?","errcode":"int eta;\ncin >> eta;\nif(eta>18)\n    cout << \"Maggiorenne\";\nelse\n    cout << \"Minorenne\";","errorLine":3,"why":"Con eta>18 il valore 18 viene escluso. Serve eta>=18.","h":"Controlla con attenzione il valore di confine della condizione.","hard":true},{"p":"Per accedere servono sia età almeno 18 sia autorizzazione uguale a 1. Quale riga rende sufficiente una sola delle due condizioni?","errcode":"int eta, autorizzazione;\ncin >> eta >> autorizzazione;\nif(eta>=18 || autorizzazione==1)\n    cout << \"Accesso consentito\";\nelse\n    cout << \"Accesso negato\";","errorLine":3,"why":"L’operatore || rende sufficiente una sola condizione vera. Poiché devono essere vere entrambe, serve &&.","h":"La parola “sia ... sia ...” suggerisce che entrambe le condizioni devono essere soddisfatte.","hard":true},{"p":"La spedizione deve costare 5 euro solo per ordini inferiori a 50 euro. Quale riga applica la regola al contrario?","errcode":"double totale;\ncin >> totale;\ndouble finale=totale;\nif(totale>=50)\n    finale=totale+5;\ncout << finale;","errorLine":4,"why":"La spedizione va aggiunta quando totale<50, non quando totale>=50.","h":"Rileggi la regola e chiediti in quale dei due casi deve essere modificato il totale.","hard":true}]},{"g":"condizione","n":"Decisioni","i":"🚦","d":"Allenati soprattutto sui valori di confine: sono quelli che fanno emergere gli errori tra <, <=, > e >=.","e":[{"p":"voto=6. voto>=6 è...","o":["falsa","vera"],"a":1,"m":"voto=6","h":"6 è esattamente la soglia: >= include anche il valore limite."},{"p":"eta=18. eta>18 è...","o":["falsa","vera"],"a":0,"m":"eta=18","h":"> richiede un valore strettamente maggiore: 18 non è maggiore di 18."},{"p":"x=5, y=5. x<y è...","o":["vera","falsa"],"a":1,"m":"x=5|y=5","h":"Due valori uguali non soddisfano <."},{"p":"n=0. n%2==0 è...","o":["vera","falsa"],"a":0,"m":"n=0","h":"0 diviso 2 ha resto 0: anche 0 è pari."},{"p":"totale=50. totale<50 è...","o":["vera","falsa"],"a":1,"m":"totale=50","h":"Il valore è uguale alla soglia, non inferiore."}]},{"g":"definita","n":"Segui il for","i":"🔁","d":"Segui contatori e accumulatori quando il numero di iterazioni è definito.","e":[{"p":"Valore finale di somma?","c":"int somma=0;\nfor(int i=1;i<=3;i++)\n  somma=somma+i;","a":"6","m":"somma=0|i=1","h":"Aggiungi 1, poi 2, poi 3.","t":"somma=1|somma=3|somma=6"},{"p":"Valore finale di conta?","c":"int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;","a":"4","m":"conta=0|i=0","h":"i assume 0,1,2,3: quattro iterazioni.","t":"conta=1|conta=2|conta=3|conta=4"},{"p":"Valore finale di prodotto?","c":"int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;","a":"24","m":"prodotto=1|i=1","h":"Moltiplica progressivamente per 1,2,3,4.","t":"prodotto=1|prodotto=2|prodotto=6|prodotto=24"}]},{"g":"indefinita","n":"Segui il while","i":"♻️","d":"Segui una ripetizione che continua finché una condizione rimane vera.","e":[{"p":"Valore finale di n?","c":"int n=2;\nwhile(n<5)\n  n++;","a":"5","m":"n=2","h":"Il ciclo termina quando n<5 diventa falsa.","t":"n=3|n=4|n=5 → stop"}]}];
 
-{p:'L’utente inserisce base e altezza. Quale valore finale viene calcolato oltre all’area?',c:'double base;\ndouble altezza;\ncin >> base >> altezza;\ndouble area=base*altezza;\ndouble perimetro=2*(base+altezza);\ndouble rapporto=area/perimetro;',inp:'6 4',o:['Il rapporto tra area e perimetro','La diagonale del rettangolo','La media tra base e altezza'],a:0,h:'Leggi le variabili intermedie: prima area, poi perimetro, infine rapporto.',t:'base=?|altezza=?|base=6,altezza=4|area=24|perimetro=20|rapporto=1.2'},
+// Le disponibilità della Palestra seguono quelle del Problem Solving:
+// cambiando PS_CONSTRUCT_ENABLED si sbloccano automaticamente entrambe le aree.
+const GYM_SECTION_ENABLED={
+  fondamenti:true,
+  sequenza:PS_CONSTRUCT_ENABLED.sequenza,
+  condizione:PS_CONSTRUCT_ENABLED.condizione,
+  definita:PS_CONSTRUCT_ENABLED.definita,
+  indefinita:PS_CONSTRUCT_ENABLED.indefinita
+};
 
-{p:'L’utente digita “Mario Rossi”. Quale valore viene memorizzato in nome e quale messaggio viene visualizzato?',c:'string nome;\ncin >> nome;\nstring saluto="Ciao "+nome;\ncout << saluto;',inp:'Mario Rossi',o:['nome contiene Mario e viene visualizzato Ciao Mario','nome contiene Mario Rossi e viene visualizzato Ciao Mario Rossi','nome resta vuota e non viene visualizzato nulla'],a:0,h:'cin >> legge fino al primo spazio; il resto dell’input non entra nella variabile nome.',t:'nome=?|nome=Mario|saluto=Ciao Mario|cout=Ciao Mario'},
+const GYM_SECTION_INFO={
+  fondamenti:{label:'Fondamenti',text:'Variabili, espressioni, stringhe e input: gli strumenti di base necessari prima di lavorare sui costrutti di controllo.'},
+  sequenza:{label:'Sequenza',text:'Comprendi, ricostruisci e correggi programmi in cui le istruzioni vengono eseguite una dopo l’altra.'},
+  condizione:{label:'Condizione',text:'Allenati a valutare condizioni e a riconoscere quando l’esecuzione deve scegliere tra percorsi diversi.'},
+  definita:{label:'Ripetizione definita',text:'Allenati con cicli in cui il numero di iterazioni è noto o determinabile prima dell’esecuzione.'},
+  indefinita:{label:'Ripetizione indefinita',text:'Allenati con cicli che continuano finché una condizione rimane vera.'}
+};
 
-{p:'L’utente digita “Mario Rossi”. Quale vantaggio produce getline in questo programma?',c:'string nomeCompleto;\ngetline(cin,nomeCompleto);\nstring messaggio="Benvenuto "+nomeCompleto;\ncout << messaggio;',inp:'Mario Rossi',o:['Legge l’intero nome e visualizza Benvenuto Mario Rossi','Legge solo Mario e visualizza Benvenuto Mario','Legge soltanto il cognome'],a:0,h:'getline conserva anche gli spazi all’interno della riga.',t:'nomeCompleto=?|nomeCompleto=Mario Rossi|messaggio=Benvenuto Mario Rossi|cout=Benvenuto Mario Rossi'},
-
-{p:'L’utente inserisce nome, età e media. Quale informazione aggiuntiva calcola il programma dopo l’input?',c:'string nome;\nint eta;\ndouble media;\ncin >> nome >> eta >> media;\nint anniMancanti=18-eta;\ndouble bonus=media+0.5;\nstring riepilogo=nome;',inp:'Giulia 15 8.5',o:['Gli anni mancanti a 18 e una media aumentata di 0.5','La differenza tra nome ed età','La media dei tre dati inseriti'],a:0,h:'Dopo l’input vengono ricavate due nuove informazioni numeriche a partire da eta e media.',t:'nome=?|eta=?|media=?|nome=Giulia,eta=15,media=8.5|anniMancanti=3|bonus=9|riepilogo=Giulia',hard:true},
-
-{p:'La stessa variabile n viene letta due volte. Quale descrizione spiega correttamente il risultato finale?',c:'int n;\ncin >> n;\nint doppio=n*2;\nint sommaParziale=doppio+3;\ncin >> n;\nint totale=sommaParziale+n;\nint finale=totale*2;',inp:'4 7',o:['Il primo valore viene usato per doppio e sommaParziale; il secondo sostituisce n e contribuisce al totale finale','Il secondo input modifica automaticamente anche doppio e sommaParziale','Entrambi gli input vengono sommati prima di ogni elaborazione'],a:0,h:'Le variabili già calcolate non si aggiornano automaticamente quando n riceve un nuovo valore.',t:'n=?|n=4|doppio=8|sommaParziale=11|n=7|totale=18|finale=36',hard:true}]},{n:'Capisci il codice',i:'🧠',d:'Leggi programmi più lunghi e individua lo scopo complessivo, non soltanto il valore di una variabile.',e:[
-{p:'Quale descrizione rappresenta meglio ciò che fa questo programma?',c:'string prodotto="Quaderno";\ndouble prezzo=2.5;\nint quantita=4;\ndouble totale=prezzo*quantita;\ndouble sconto=1.0;\ndouble finale=totale-sconto;\nstring stato="calcolato";',o:['Calcola il costo di 4 quaderni e sottrae uno sconto fisso di 1 euro','Calcola il prezzo di un solo quaderno e aggiunge 1 euro','Modifica il nome del prodotto in base al prezzo'],a:0,h:'Non concentrarti su una singola riga: individua dati iniziali, elaborazione e risultato complessivo.',t:'prodotto=Quaderno|prezzo=2.5|quantita=4|totale=10|sconto=1|finale=9|stato=calcolato',hard:true},
-{p:'Con l’input mostrato, quale operazione complessiva svolge il programma?',c:'string nome;\nint eta;\ndouble altezza;\ncin >> nome >> eta >> altezza;\nint anniMancanti=18-eta;\ndouble altezzaCm=altezza*100;\nstring stato="dati letti";',inp:'Luca 16 1.72',o:['Legge nome, età e altezza; calcola gli anni mancanti a 18 e converte l’altezza in centimetri','Legge soltanto il nome e calcola l’età media','Converte l’età in centimetri e modifica il nome'],a:0,h:'Segui il flusso: prima entrano tre dati, poi vengono prodotte due nuove informazioni numeriche.',t:'nome=?|eta=?|altezza=?|nome=Luca,eta=16,altezza=1.72|anniMancanti=2|altezzaCm=172|stato=dati letti',hard:true},
-{p:'Perché alla fine media e nuovaMedia possono avere valori diversi?',c:'string materia="Informatica";\nint voto1=7;\nint voto2=9;\ndouble media=(voto1+voto2)/2.0;\nvoto1=voto1+1;\ndouble nuovaMedia=(voto1+voto2)/2.0;\nstring stato="ricalcolata";',o:['Perché voto1 viene modificato dopo il primo calcolo e nuovaMedia viene calcolata con il nuovo valore','Perché una variabile double cambia automaticamente nel tempo','Perché string materia modifica i voti'],a:0,h:'Guarda quando viene calcolata ciascuna media rispetto alla modifica di voto1.',t:'materia=Informatica|voto1=7|voto2=9|media=8|voto1=8|nuovaMedia=8.5|stato=ricalcolata',hard:true},
-{p:'Quale affermazione descrive correttamente questo programma?',c:'string articolo="Penna";\ndouble prezzo=1.8;\nint pezzi=5;\ndouble spesa=prezzo*pezzi;\npezzi=pezzi+2;\ndouble nuovaSpesa=prezzo*pezzi;\nstring fase="aggiornata";',o:['spesa conserva il calcolo fatto con 5 pezzi, mentre nuovaSpesa usa i 7 pezzi aggiornati','spesa cambia automaticamente quando pezzi passa da 5 a 7','nuovaSpesa e spesa sono sempre identiche'],a:0,h:'Una variabile già calcolata non viene ricalcolata automaticamente quando cambia una delle variabili usate in precedenza.',t:'articolo=Penna|prezzo=1.8|pezzi=5|spesa=9|pezzi=7|nuovaSpesa=12.6|fase=aggiornata',hard:true},
-{p:'I nomi delle variabili non aiutano. Quale situazione potrebbe rappresentare questo programma?',c:'string s="Libro";\ndouble a=12.0;\nint b=3;\ndouble c=a*b;\ndouble d=c*0.10;\ndouble e=c-d;\nstring f="ok";',o:['Calcola il costo di 3 libri e applica uno sconto del 10%','Calcola la media di tre voti e aggiunge il 10%','Converte 12 euro in centimetri e poi sottrae 3'],a:0,h:'Ignora i nomi a, b, c... e osserva solo tipi, valori e operazioni: 12 × 3, poi il 10% del risultato, poi una sottrazione.',t:'s=Libro|a=12|b=3|c=36|d=3.6|e=32.4|f=ok',hard:true},
-{p:'Anche qui i nomi sono volutamente poco significativi. Quale interpretazione descrive meglio il programma?',c:'string x;\nint a;\ndouble b;\ncin >> x >> a >> b;\ndouble c=a*b;\nint d=a+2;\ndouble e=d*b;',inp:'Anna 4 2.5',o:['Legge un nome, una quantità e un valore unitario; calcola un primo totale e poi un secondo totale usando due unità in più','Legge una frase, un’età e un’altezza e calcola una media','Legge tre numeri e li somma tutti'],a:0,h:'Ricostruisci il ruolo delle variabili dalle relazioni: c=a*b, poi d=a+2, infine e=d*b.',t:'x=?|a=?|b=?|x=Anna,a=4,b=2.5|c=10|d=6|e=15',hard:true}]},
-{n:'Ordina il codice',i:'🧱',d:'Ricostruisci la sequenza logica delle istruzioni, comprese le richieste di input e la visualizzazione finale del risultato.',e:[
-{p:'Metti in ordine il codice per chiedere un numero, leggerlo, raddoppiarlo, aggiungere 3, elevarlo al quadrato, sottrarre 1 e visualizzare il risultato finale.',ord:[
-{id:'g',line:'cout << "Risultato finale: " << finale;'},
-{id:'d',line:'int quadrato=aumentato*aumentato;'},
-{id:'a',line:'int n;'},
-{id:'h',line:'cout << "Inserisci un numero: ";'},
-{id:'f',line:'int finale=quadrato-1;'},
-{id:'c',line:'int aumentato=doppio+3;'},
-{id:'b',line:'cin >> n;'},
-{id:'e',line:'int doppio=n*2;'}
-],correct:['a','h','b','e','c','d','f','g'],h:'Prima dichiara la variabile, poi chiedi il dato e leggilo. Solo dopo puoi eseguire i calcoli e infine mostrare il risultato.',hard:true},
-
-{p:'Metti in ordine il codice per chiedere il lato di un quadrato, leggerlo, calcolare l’area iniziale, raddoppiare il lato, calcolare la nuova area, trovare la differenza e visualizzarla.',ord:[
-{id:'e',line:'double nuovaArea=nuovoLato*nuovoLato;'},
-{id:'b',line:'cin >> lato;'},
-{id:'h',line:'cout << "Differenza tra le aree: " << differenza;'},
-{id:'f',line:'double differenza=nuovaArea-area;'},
-{id:'a',line:'double lato;'},
-{id:'g',line:'cout << "Inserisci il lato del quadrato: ";'},
-{id:'d',line:'double nuovoLato=lato*2;'},
-{id:'c',line:'double area=lato*lato;'}
-],correct:['a','g','b','c','d','e','f','h'],h:'La cout di richiesta deve precedere la cin. La cout finale può essere eseguita solo dopo aver calcolato la differenza.',hard:true},
-
-{p:'Metti in ordine il codice per chiedere un nome, leggerlo, preparare un saluto, costruire il messaggio, copiarlo, aggiungere un punto esclamativo alla copia e visualizzarla.',ord:[
-{id:'d',line:'string messaggio=saluto+" "+nome;'},
-{id:'a',line:'string nome;'},
-{id:'g',line:'cout << copia;'},
-{id:'f',line:'copia=copia+"!";'},
-{id:'c',line:'string saluto="Ciao";'},
-{id:'h',line:'cout << "Inserisci il nome: ";'},
-{id:'b',line:'cin >> nome;'},
-{id:'e',line:'string copia=messaggio;'}
-],correct:['a','h','b','c','d','e','f','g'],h:'Il nome deve essere richiesto e letto prima di costruire il messaggio. La copia va visualizzata solo dopo l’aggiunta del punto esclamativo.',hard:true},
-
-{p:'Metti in ordine il codice per chiedere prezzo e quantità, leggere i dati, calcolare il totale, applicare uno sconto fisso di 2 euro e visualizzare il prezzo finale.',ord:[
-{id:'c',line:'int quantita;'},
-{id:'h',line:'cout << "Prezzo finale: " << scontato;'},
-{id:'f',line:'double scontato=totale-2;'},
-{id:'a',line:'double prezzo;'},
-{id:'i',line:'cout << "Inserisci la quantita: ";'},
-{id:'e',line:'double totale=prezzo*quantita;'},
-{id:'j',line:'cout << "Inserisci il prezzo: ";'},
-{id:'d',line:'cin >> quantita;'},
-{id:'b',line:'cin >> prezzo;'}
-],correct:['a','c','j','b','i','d','e','f','h'],h:'Per ogni input: prima la cout di richiesta, poi la cin. Il risultato finale può essere mostrato solo dopo totale e sconto.',hard:true},
-
-{p:'Cassa di un negozio: metti in ordine le istruzioni per chiedere nome del prodotto, prezzo e quantità, leggere i dati, calcolare totale, sconto del 10% e prezzo finale, quindi mostrare lo scontrino finale.',ord:[
-{id:'k',line:'cout << "Totale finale: " << finale;'},
-{id:'f',line:'double finale=totale-sconto;'},
-{id:'b',line:'double prezzo;'},
-{id:'h',line:'cout << "Inserisci il prezzo: ";'},
-{id:'d',line:'cin >> prodotto;'},
-{id:'a',line:'string prodotto;'},
-{id:'j',line:'cout << "Inserisci la quantita: ";'},
-{id:'g',line:'double sconto=totale*0.10;'},
-{id:'c',line:'int quantita;'},
-{id:'i',line:'cin >> prezzo;'},
-{id:'e',line:'double totale=prezzo*quantita;'},
-{id:'l',line:'cin >> quantita;'},
-{id:'m',line:'cout << "Inserisci il prodotto: ";'}
-],correct:['a','b','c','m','d','h','i','j','l','e','g','f','k'],h:'Dichiara prima le variabili. Poi chiedi e acquisisci ogni dato nell’ordine. Solo quando prezzo e quantità sono disponibili puoi calcolare totale, sconto e finale.',hard:true},
-
-{p:'Viaggio in auto: metti in ordine le istruzioni per chiedere chilometri percorsi e litri consumati, leggere i dati, calcolare i km per litro, stimare i litri necessari per 300 km e visualizzare il risultato.',ord:[
-{id:'e',line:'double kmPerLitro=km/litri;'},
-{id:'a',line:'double km;'},
-{id:'i',line:'cout << "Litri necessari per 300 km: " << litriNecessari;'},
-{id:'g',line:'double litriNecessari=distanza/kmPerLitro;'},
-{id:'c',line:'cin >> km;'},
-{id:'h',line:'cout << "Inserisci i litri consumati: ";'},
-{id:'b',line:'double litri;'},
-{id:'j',line:'cin >> litri;'},
-{id:'f',line:'double distanza=300;'},
-{id:'d',line:'cout << "Inserisci i km percorsi: ";'}
-],correct:['a','b','d','c','h','j','e','f','g','i'],h:'Le richieste dei dati devono precedere le rispettive letture. Prima calcoli i km/l, poi puoi stimare i litri necessari per 300 km e infine mostrarli.',hard:true}]},
-{n:'Trova l’errore',i:'🐞',d:'Individua la riga che impedisce al programma di funzionare correttamente o di raggiungere l’obiettivo richiesto.',e:[
-{p:'Il programma dovrebbe leggere un numero e visualizzarne il doppio. Quale riga contiene l’errore?',errcode:'int n;\ncout << "Inserisci un numero: ";\ncin >> n;\ndoppio=n*2;\ncout << "Doppio: " << doppio;',errorLine:4,why:'La variabile doppio viene usata senza essere stata dichiarata. Una possibile correzione è: int doppio=n*2;',h:'Controlla se tutte le variabili utilizzate sono state prima dichiarate.',hard:true},
-
-{p:'Il programma dovrebbe leggere il prezzo e la quantità e calcolare il totale. Quale riga rende il risultato scorretto?',errcode:'double prezzo;\nint quantita;\ncout << "Inserisci prezzo e quantita: ";\ncin >> prezzo >> quantita;\ndouble totale=prezzo+quantita;\ncout << "Totale: " << totale;',errorLine:5,why:'Per calcolare il costo totale bisogna moltiplicare prezzo per quantità, non sommarli: totale=prezzo*quantita;',h:'Chiediti quale operazione rappresenta davvero “prezzo unitario × numero di pezzi”.',hard:true},
-
-{p:'Il programma dovrebbe chiedere un voto e poi stabilire se è sufficiente. Quale riga usa la variabile troppo presto?',errcode:'int voto;\nif(voto>=6)\n    cout << "Sufficiente";\ncout << "Inserisci il voto: ";\ncin >> voto;',errorLine:2,why:'La condizione usa voto prima che il programma abbia acquisito il valore con cin. La richiesta e la lettura devono avvenire prima dell’if.',h:'Segui il flusso dall’alto verso il basso: quando viene usata voto per la prima volta, contiene già un dato?',hard:true},
-
-{p:'Il programma dovrebbe conservare il nome completo “Mario Rossi”. Quale riga è inadatta allo scopo?',errcode:'string nome;\ncout << "Inserisci nome e cognome: ";\ncin >> nome;\ncout << "Nome completo: " << nome;',errorLine:3,why:'cin >> nome si ferma al primo spazio e memorizza solo “Mario”. Per leggere “Mario Rossi” in un’unica stringa serve getline(cin,nome).',h:'Pensa a cosa succede quando cin incontra uno spazio.',hard:true},
-
-{p:'Il programma dovrebbe calcolare la media reale di 7 e 8. Quale riga provoca la perdita della parte decimale?',errcode:'int a=7;\nint b=8;\ndouble media;\nmedia=(a+b)/2;\ncout << "Media: " << media;',errorLine:4,why:'Poiché a, b e 2 sono interi, la divisione viene eseguita come divisione intera e produce 7. Una correzione è (a+b)/2.0.',h:'Il fatto che media sia double non basta se la divisione è già stata eseguita tra interi.',hard:true},
-
-{p:'Il programma dovrebbe scambiare i valori di a e b. Quale riga distrugge il valore che temp doveva conservare?',errcode:'int a=5;\nint b=9;\nint temp=a;\na=b;\ntemp=b;\nb=temp;\ncout << a << " " << b;',errorLine:5,why:'temp conteneva il vecchio valore di a (5), ma con temp=b viene sovrascritta con 9. Quindi il 5 viene perso e b riceve 9.',h:'Segui il contenuto di temp: quale valore dovrebbe custodire fino all’ultima assegnazione?',hard:true}]},
-{n:'Problemi',i:'🧩',d:'Prima individua input, elaborazione e output.',e:[
-{p:'Ore lavorate + compenso orario → stipendio. Quale schema è corretto?',o:['INPUT stipendio → somma → ore','INPUT ore,compenso → moltiplicazione → stipendio','INPUT ore → divisione → compenso'],a:1,h:'Cosa entra? Quale calcolo? Cosa esce?'},
-{p:'Base e altezza → area del rettangolo. Quale schema è corretto?',o:['base,altezza → prodotto → area','area → somma → altezza','base → divisione → area'],a:0,h:'Pensa alla formula area=base×altezza.'},
-{p:'Celsius → Fahrenheit. Quale schema è corretto?',o:['Fahrenheit → C+32 → Celsius','Celsius → C×9/5+32 → Fahrenheit','Celsius,Fahrenheit → prodotto → differenza'],a:1,h:'Il dato iniziale è Celsius; il risultato richiesto è Fahrenheit.'},
-{p:'Tre voti → media. Quale schema è corretto?',o:['media → somma → voti','tre voti → (somma)/3 → media','un voto → prodotto → media'],a:1,h:'La media è l’output, non l’input.'}]},
-{n:'Decisioni',i:'🚦',d:'Valuta condizioni vere o false prima del ramo da eseguire.',e:[
-{p:'voto=7. voto>=6 è...',o:['vera','falsa'],a:0,m:'voto=7',h:'7 raggiunge la soglia 6.'},
-{p:'eta=17. eta>=18 è...',o:['vera','falsa'],a:1,m:'eta=17',h:'17 non raggiunge 18.'},
-{p:'x=5, y=8. x<y è...',o:['vera','falsa'],a:0,m:'x=5|y=8',h:'Confronta 5 e 8.'},
-{p:'n=12. n%2==0 è...',o:['vera','falsa'],a:0,m:'n=12',h:'12 diviso 2 ha resto 0.'}]},
-{n:'Cicli',i:'🔁',d:'Segui contatori e accumulatori iterazione per iterazione.',e:[
-{p:'Valore finale di somma?',c:'int somma=0;\nfor(int i=1;i<=3;i++)\n  somma=somma+i;',a:'6',m:'somma=0|i=1',h:'Aggiungi 1, poi 2, poi 3.',t:'somma=1|somma=3|somma=6'},
-{p:'Valore finale di conta?',c:'int conta=0;\nfor(int i=0;i<4;i++)\n  conta++;',a:'4',m:'conta=0|i=0',h:'i assume 0,1,2,3: quattro iterazioni.',t:'conta=1|conta=2|conta=3|conta=4'},
-{p:'Valore finale di prodotto?',c:'int prodotto=1;\nfor(int i=1;i<=4;i++)\n  prodotto=prodotto*i;',a:'24',m:'prodotto=1|i=1',h:'Moltiplica progressivamente per 1,2,3,4.',t:'prodotto=1|prodotto=2|prodotto=6|prodotto=24'},
-{p:'Valore finale di n?',c:'int n=2;\nwhile(n<5)\n  n++;',a:'5',m:'n=2',h:'Il ciclo termina quando n<5 diventa falsa.',t:'n=3|n=4|n=5 → stop'}]}];
-
-const S={l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[],plan:[],types:{}};
+const S={g:'fondamenti',l:0,q:0,d:new Set(),run:0,mem:{},memOrder:[],plan:[],types:{}};
 const $=s=>r.querySelector(s);
 function key(){return S.l+'-'+S.q}
 function ex(){return L[S.l].e[S.q]}
 
+function gymLevelIndices(group=S.g){
+  return L.map((x,i)=>({x,i})).filter(v=>v.x.g===group).map(v=>v.i);
+}
+
+function applyGymSectionAvailability(){
+  r.querySelectorAll('.gym-section-tab').forEach(btn=>{
+    const enabled=GYM_SECTION_ENABLED[btn.dataset.gymSection]===true;
+    btn.disabled=!enabled;
+    btn.title=enabled?'':'Sezione non ancora disponibile';
+    btn.classList.toggle('active',btn.dataset.gymSection===S.g);
+  });
+}
+
+function updateGymSectionIntro(){
+  const info=GYM_SECTION_INFO[S.g];
+  if(info) gymSectionIntro.innerHTML='<strong>'+info.label+'</strong> · '+info.text;
+}
+
+function selectGymSection(group){
+  if(GYM_SECTION_ENABLED[group]!==true)return;
+  const first=L.findIndex(l=>l.g===group);
+  if(first<0)return;
+  S.g=group;
+  S.l=first;
+  S.q=0;
+  applyGymSectionAvailability();
+  updateGymSectionIntro();
+  render();
+}
+
+r.querySelectorAll('.gym-section-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>selectGymSection(btn.dataset.gymSection));
+});
+applyGymSectionAvailability();
+
 function nav(){
   const levels=$('#levels');
   levels.innerHTML='';
-  L.forEach((x,i)=>{
+  const ids=gymLevelIndices();
+  ids.forEach((idx,pos)=>{
+    const x=L[idx];
     const b=document.createElement('button');
-    const n=x.e.filter((_,j)=>S.d.has(i+'-'+j)).length;
+    const n=x.e.filter((_,j)=>S.d.has(idx+'-'+j)).length;
     b.type='button';
-    b.className='level'+(i===S.l?' active':'');
-    b.innerHTML='<div class="icon">'+x.i+'</div><strong>'+(i+1)+'. '+x.n+'</strong><div class="level-score">'+n+'/'+x.e.length+'</div>';
-    b.addEventListener('click',()=>{S.l=i;S.q=0;render()});
+    b.className='level'+(idx===S.l?' active':'');
+    b.innerHTML='<div class="icon">'+x.i+'</div><strong>'+(pos+1)+'. '+x.n+'</strong><div class="level-score">'+n+'/'+x.e.length+'</div>';
+    b.addEventListener('click',()=>{S.l=idx;S.q=0;render()});
     levels.appendChild(b);
   });
 
@@ -2003,6 +2185,8 @@ function nav(){
     b.addEventListener('click',()=>{S.q=i;render()});
     qs.appendChild(b);
   }
+  applyGymSectionAvailability();
+  updateGymSectionIntro();
 }
 
 function parseInitialMemory(x){
@@ -2232,6 +2416,34 @@ function buildExecutionPlan(code,inputRaw=''){
     const raw=lines[pc], line=raw.trim();
     if(!line){ pc++; continue; }
 
+    const ifMatch=line.match(/^if\s*\((.+)\)\s*$/);
+    if(ifMatch && pc+1<lines.length){
+      const cond=ifMatch[1];
+      const ok=evalCondition(cond,state);
+      pushEvent(
+        pc,
+        'control',
+        ok ? 'Verifica della condizione: vera.' : 'Verifica della condizione: falsa.'
+      );
+
+      if(ok){
+        const bodyChanged=executeSimpleStatement(lines[pc+1],state,types,inputCtx);
+        pushEvent(pc+1,'statement','La condizione è vera: viene eseguita l’istruzione controllata dall’if.',bodyChanged);
+      }
+
+      let next=pc+2;
+      if(next<lines.length && lines[next].trim()==='else' && next+1<lines.length){
+        if(!ok){
+          const elseChanged=executeSimpleStatement(lines[next+1],state,types,inputCtx);
+          pushEvent(next+1,'statement','La condizione è falsa: viene eseguita l’istruzione del ramo else.',elseChanged);
+        }
+        pc=next+2;
+      }else{
+        pc=pc+2;
+      }
+      continue;
+    }
+
     const forMatch=line.match(/^for\s*\(\s*(int\s+)?([A-Za-z_]\w*)\s*=\s*([^;]+);\s*([^;]+);\s*([^)]+)\)\s*$/);
     if(forMatch && pc+1<lines.length){
       const varName=forMatch[2];
@@ -2302,11 +2514,12 @@ function renderCode(code,currentLine=-1){
   }
   const lines=code.split('\n');
   $('#code').classList.remove('hidden');
-  $('#code').innerHTML=lines.map((line,i)=>
-    '<span class="code-line'+(i===currentLine?' current':'')+'" data-line="'+i+'">'+
-      '<span class="ln">'+(i+1)+'</span>'+escapeHtml(line)+
-    '</span>'
-  ).join('');
+  $('#code').innerHTML=lines.map((line,i)=>{
+    const missing=line.trim()==='???';
+    return '<span class="code-line'+(i===currentLine?' current':'')+(missing?' missing-line':'')+'" data-line="'+i+'">'+
+      '<span class="ln">'+(i+1)+'</span>'+(missing?'⟵ RIGA MANCANTE':escapeHtml(line))+
+    '</span>';
+  }).join('');
 }
 
 function escapeHtml(s){
@@ -2390,6 +2603,46 @@ function validateOrderedCode(x){
       continue;
     }
 
+    // Condizione con istruzione semplice sulla stessa riga:
+    // es. if(eta<18) prezzo=7;
+    m=line.match(/^if\s*\((.+)\)\s*(.+)$/);
+    if(m){
+      const cond=m[1];
+      const body=m[2].trim();
+
+      const usedInCond=varsUsed(cond);
+      for(const v of usedInCond){
+        if(!initialized.has(v)) return false;
+      }
+
+      let bm=body.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
+      if(bm){
+        const target=bm[1], expr=bm[2];
+        if(!declared.has(target)) return false;
+        const used=varsUsed(expr);
+        for(const v of used){
+          if(!initialized.has(v)) return false;
+        }
+        // Il target deve già avere un valore di default:
+        // l'if potrebbe infatti risultare falso.
+        if(!initialized.has(target)) return false;
+        continue;
+      }
+
+      if(/^cout\s*<</.test(body)){
+        const noStrings=stripStrings(body);
+        const vars=[...noStrings.matchAll(/<<\s*([A-Za-z_]\w*)/g)]
+          .map(mm=>mm[1])
+          .filter(v=>v!=='endl');
+        for(const v of vars){
+          if(!initialized.has(v)) return false;
+        }
+        continue;
+      }
+
+      return false;
+    }
+
     // Assegnazione
     m=line.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
     if(m){
@@ -2401,6 +2654,17 @@ function validateOrderedCode(x){
       }
       initialized.add(target);
       continue;
+    }
+  }
+
+  // Vincoli logici aggiuntivi dichiarati dall'esercizio.
+  // Consentono più ordinamenti equivalenti, ma impediscono che una
+  // decisione venga eseguita dopo la visualizzazione del risultato.
+  if(Array.isArray(x.mustBefore)){
+    for(const pair of x.mustBefore){
+      const a=pair[0], b=pair[1];
+      if(positions[a]===undefined || positions[b]===undefined) return false;
+      if(positions[a] > positions[b]) return false;
     }
   }
 
@@ -2493,19 +2757,37 @@ function answer(x){
   }else if(x.o){
     $('#ans').innerHTML='<div class="answer-grid">'+x.o.map((v,i)=>
       '<label class="answer-option"><input type="radio" name="a" value="'+i+'"><span>'+v+'</span></label>'
-    ).join('')+'</div>';
+    ).join('')+'</div>'+
+    (x.predict
+      ? '<div class="predict-note"><strong>🔮 Prima fai una previsione.</strong> Scegli la risposta che ritieni corretta: solo dopo potrai eseguire il codice riga per riga e verificare la tua ipotesi.</div>'
+      : '');
+
+    if(x.predict){
+      r.querySelectorAll('input[name="a"]').forEach(radio=>{
+        radio.addEventListener('change',()=>{
+          $('#runLine').disabled=false;
+          if(S.run===0){
+            $('#runnerState').innerHTML=
+              '<span class="run-block"><span class="run-label">Previsione registrata</span>'+
+              'Hai scelto cosa pensi che accadrà.</span>'+
+              '<span class="run-block run-explain">Ora usa <strong>“Esegui riga successiva”</strong> per verificare il ragionamento.</span>';
+          }
+        });
+      });
+    }
   }else{
     $('#ans').innerHTML='<label class="small">Risposta <span class="muted">(se sono più valori, separali con virgole)</span><input id="txt" type="text" autocomplete="off"></label>';
   }
 }
 
 function upd(){
-  const n=S.d.size;
-  const total=L.reduce((acc,l)=>acc+l.e.length,0);
+  const enabledLevelIds=L.map((l,i)=>({l,i})).filter(v=>GYM_SECTION_ENABLED[v.l.g]===true).map(v=>v.i);
+  const total=enabledLevelIds.reduce((acc,i)=>acc+L[i].e.length,0);
+  const n=enabledLevelIds.reduce((acc,i)=>acc+L[i].e.filter((_,j)=>S.d.has(i+'-'+j)).length,0);
   $('#tot').textContent=n;
   $('#maxTot').textContent=total;
-  $('#bar').style.width=(n/total*100)+'%';
-  $('#msg').textContent=n===total?'Percorso completato!':n+' esercizi completati su '+total+'.';
+  $('#bar').style.width=(total ? n/total*100 : 0)+'%';
+  $('#msg').textContent=n===total && total>0?'Percorso disponibile completato!':n+' esercizi completati su '+total+' disponibili.';
   $('#ldone').textContent=L[S.l].e.filter((_,i)=>S.d.has(S.l+'-'+i)).length;
   $('#levelMax').textContent=L[S.l].e.length;
 }
@@ -2513,15 +2795,16 @@ function upd(){
 function render(){
   const l=L[S.l],x=ex();
   nav(); upd();
-  $('#kick').textContent='LIVELLO '+(S.l+1)+' · '+l.i;
+  const sectionInfo=GYM_SECTION_INFO[S.g];
+  $('#kick').textContent=(sectionInfo?sectionInfo.label.toUpperCase():'PALESTRA')+' · '+l.i;
   $('#ttl').textContent=l.n;
   $('#desc').textContent=l.d;
   $('#qlab').textContent='Esercizio '+(S.q+1)+' di '+l.e.length;
-  const tagMap={Stringhe:'stringhe',Input:'input','Capisci il codice':'comprensione','Ordina il codice':'sequenza','Trova l’errore':'debug',Problemi:'problem solving',Decisioni:'condizione',Cicli:'ciclo'};
+  const tagMap={Stringhe:'stringhe',Input:'input','Capisci il codice':'comprensione','Ordina il codice':'sequenza','Completa il codice':'completamento','Trova l’errore':'debug',Problemi:'problem solving',Decisioni:'condizione','Segui il for':'for','Segui il while':'while'};
   $('#tag').textContent=x.hard?'sfida':(tagMap[l.n]||'ragionamento');
   $('#prompt').textContent=x.p;
 
-  renderCode(x.c || x.errcode || '', -1);
+  renderCode(x.c || x.errcode || x.gapcode || '', -1);
 
   if(Object.prototype.hasOwnProperty.call(x,'inp')){
     $('#inputSim').classList.remove('hidden');
@@ -2546,10 +2829,14 @@ function render(){
   if(x.c && S.plan.length){
     $('#runner').classList.remove('hidden');
     $('#runnerCount').textContent='0/'+S.plan.length;
-    $('#runnerState').innerHTML=
-      '<span class="run-block"><span class="run-label">Stato iniziale</span>'+
-      'Nessuna riga è stata ancora eseguita.</span>'+
-      '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per iniziare.</span>';
+    $('#runLine').disabled=!!x.predict;
+    $('#runnerState').innerHTML=x.predict
+      ? '<span class="run-block"><span class="run-label">Prima della simulazione</span>'+
+        'Fai prima la tua previsione scegliendo una risposta.</span>'+
+        '<span class="run-block run-explain">L’esecuzione riga per riga si sbloccherà dopo la scelta.</span>'
+      : '<span class="run-block"><span class="run-label">Stato iniziale</span>'+
+        'Nessuna riga è stata ancora eseguita.</span>'+
+        '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per iniziare.</span>';
   }else{
     $('#runner').classList.add('hidden');
   }
@@ -2592,18 +2879,22 @@ $('#check').addEventListener('click',()=>{
     $('#fb').className='feedback ok';
     $('#fb').textContent=x.errcode
       ? '✓ Hai individuato la riga errata. '+x.why
-      : (x.ord
-          ? '✓ Sequenza valida. Le dichiarazioni, gli input, i calcoli e l’output rispettano le dipendenze del programma.'
-          : '✓ Corretto. Hai seguito bene il ragionamento.');
+      : (x.gapcode
+          ? '✓ Riga corretta. '+x.why
+          : (x.ord
+              ? '✓ Sequenza valida. Le dichiarazioni, gli input, i calcoli e l’output rispettano le dipendenze del programma.'
+              : '✓ Corretto. Hai seguito bene il ragionamento.'));
     r.querySelectorAll('.mem').forEach(v=>v.classList.add('ok'));
     nav(); upd();
   }else{
     $('#fb').className='feedback no';
     $('#fb').textContent=x.errcode
       ? 'Non è quella. Leggi il programma dall’alto verso il basso e controlla dichiarazioni, valori disponibili e operazioni.'
-      : (x.ord
-          ? 'Non ancora. Controlla che ogni variabile sia dichiarata prima dell’uso, abbia già un valore quando serve e che le richieste di input precedano le relative letture.'
-          : 'Non ancora. Ricostruisci i passaggi invece di indovinare.');
+      : (x.gapcode
+          ? 'Non ancora. La riga scelta non rende corretto il programma. Controlla sintassi, nomi delle variabili e significato logico della condizione.'
+          : (x.ord
+              ? 'Non ancora. Controlla che ogni variabile sia dichiarata prima dell’uso, abbia già un valore quando serve e che le richieste di input precedano le relative letture.'
+              : 'Non ancora. Ricostruisci i passaggi invece di indovinare.'));
   }
 });
 
@@ -2675,16 +2966,30 @@ $('#resetRun').addEventListener('click',()=>{
   drawMemory();
   renderCode(x.c,-1);
   $('#runnerCount').textContent='0/'+S.plan.length;
-  $('#runnerState').innerHTML=
-    '<span class="run-block"><span class="run-label">Esecuzione azzerata</span>'+
-    'La memoria del programma è stata riportata allo stato iniziale.</span>'+
-    '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per eseguire la prima riga del sorgente.</span>';
+  const predictionMade=!!r.querySelector('input[name="a"]:checked');
+  $('#runLine').disabled=!!x.predict && !predictionMade;
+  $('#runnerState').innerHTML=(x.predict && !predictionMade)
+    ? '<span class="run-block"><span class="run-label">Esecuzione azzerata</span>'+
+      'Prima di eseguire, scegli nuovamente la tua previsione.</span>'
+    : '<span class="run-block"><span class="run-label">Esecuzione azzerata</span>'+
+      'La memoria del programma è stata riportata allo stato iniziale.</span>'+
+      '<span class="run-block run-explain">Premi <strong>“Esegui riga successiva”</strong> per eseguire la prima riga del sorgente.</span>';
 });
 
 $('#next').addEventListener('click',()=>{
-  if(S.q<L[S.l].e.length-1)S.q++;
-  else if(S.l<L.length-1){S.l++;S.q=0}
-  else {S.l=0;S.q=0}
+  if(S.q<L[S.l].e.length-1){
+    S.q++;
+  }else{
+    const ids=gymLevelIndices();
+    const pos=ids.indexOf(S.l);
+    if(pos>=0 && pos<ids.length-1){
+      S.l=ids[pos+1];
+      S.q=0;
+    }else if(ids.length){
+      S.l=ids[0];
+      S.q=0;
+    }
+  }
   render();
 });
 

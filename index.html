@@ -1091,15 +1091,6 @@ footer{
         <div class="menu-action">Apri la palestra →</div>
       </button>
 
-      <button id="goArrayGym" type="button" class="menu-card">
-        <div>
-          <div class="menu-icon">▦</div>
-          <h3>Array statici</h3>
-          <p>Accedi direttamente ai 35 esercizi sugli array: indici, calcoli, ricerche e casi limite. La struttura e i progressi sono quelli della Palestra C++.</p>
-        </div>
-        <div class="menu-action">Apri gli array →</div>
-      </button>
-
       <button id="goProblemSolving" type="button" class="menu-card">
         <div>
           <div class="menu-icon">🧠</div>
@@ -2189,7 +2180,6 @@ function openCppGym(){
 
 r.querySelector('#goProblemSolving').addEventListener('click',openProblemSolving);
 r.querySelector('#goCppGym').addEventListener('click',openCppGym);
-r.querySelector('#goArrayGym').addEventListener('click',()=>{ selectGymSection('array'); openCppGym(); });
 r.querySelector('#backFromPs').addEventListener('click',showMainMenu);
 r.querySelector('#backFromCpp').addEventListener('click',showMainMenu);
 
